@@ -106,7 +106,7 @@ func subscribeToLogAlerts() -> Effect<ApiAction, Never> {
     .eraseToEffect()
     .cancellable(id: LogAlertSubscriptionId())
   #else
-    .empty
+    .none
   #endif
 }
 
