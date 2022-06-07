@@ -1,6 +1,6 @@
 //
 //  ApiCore.swift
-//  Components6000/ApiViewer
+//  Api6000Components/ApiViewer
 //
 //  Created by Douglas Adams on 11/24/21.
 //
@@ -545,14 +545,9 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.pickerState = nil
       state.loginState = nil
       // alert the user
-      state.alert = .init(title: TextState(
-                                    """
-                                    \(logEntry.level == .warning ? "A Warning" : "An Error") was logged:
-                                    
-                                    \(logEntry.msg)
-                                    """
-      )
-      )
+      state.alert = .init(title: TextState("\(logEntry.level == .warning ? "A Warning" : "An Error") was logged:"),
+                          message: TextState(logEntry.msg))
+
       return .none
       
     case .tcpMessage(let message):

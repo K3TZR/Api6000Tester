@@ -1,6 +1,6 @@
 //
 //  NonGuiClientView.swift
-//  Components6000/ApiViewer/Subviews/ObjectsSubViews
+//  Api6000Components/ApiViewer/Subviews/ObjectsSubViews
 //
 //  Created by Douglas Adams on 1/25/22.
 //
