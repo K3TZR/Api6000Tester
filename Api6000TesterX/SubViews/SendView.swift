@@ -6,41 +6,37 @@
 //
 
 import SwiftUI
-import ComposableArchitecture
+
 import Api6000
 
 // ----------------------------------------------------------------------------
 // MARK: - View
 
 struct SendView: View {
-  let store: Store<ApiState, ApiAction>
-
+  @ObservedObject var model: ApiModel
+  
   @State var someText = ""
-
+  
   var body: some View {
-
-    WithViewStore(self.store) { viewStore in
-      HStack(spacing: 25) {
-        Group {
-          Button("Send") { viewStore.send(.sendButton) }
+    
+    HStack(spacing: 25) {
+      Group {
+        Button("Send") { model.sendButton() }
           .keyboardShortcut(.defaultAction)
-
-          HStack(spacing: 0) {
-            Image(systemName: "x.circle").foregroundColor(viewStore.radio == nil ? .gray : nil)
-              .onTapGesture {
-                viewStore.send(.commandTextField(""))
-              }.disabled(viewStore.radio == nil)
-            TextField("Command to send", text: viewStore.binding(
-              get: \.commandToSend,
-              send: { value in .commandTextField(value) } ))
-          }
+        
+        HStack(spacing: 0) {
+          Image(systemName: "x.circle").foregroundColor(model.isConnected == false ? .gray : nil)
+            .onTapGesture { model.commandToSend = "" }
+            .disabled(model.isConnected == false)
+          TextField("Command to send", text: $model.commandToSend)
         }
-        .disabled(viewStore.radio == nil)
-
-        Spacer()
-        Toggle("Clear on Send", isOn: viewStore.binding(get: \.clearOnSend, send: .toggle(\.clearOnSend)))
       }
+      .disabled(model.isConnected == false)
+      
+      Spacer()
+      Toggle("Clear on Send", isOn: $model.clearOnSend)
     }
+    
   }
 }
 
@@ -49,13 +45,7 @@ struct SendView: View {
 
 struct SendView_Previews: PreviewProvider {
   static var previews: some View {
-    SendView(
-      store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
-      )
-    )
+    SendView(model: ApiModel() )
       .frame(minWidth: 975)
       .padding()
   }

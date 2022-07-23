@@ -6,46 +6,51 @@
 //
 
 import SwiftUI
-import ComposableArchitecture
-import simd
 
 // ----------------------------------------------------------------------------
 // MARK: - View
 
 struct MessagesView: View {
-  let store: Store<ApiState, ApiAction>
+  @ObservedObject var model: ApiModel
+  
+  func chooseColor(_ text: String) -> Color {
+    if text.prefix(1) == "C" { return Color(.systemGreen) }                         // Commands
+    if text.prefix(1) == "R" && text.contains("|0|") { return Color(.systemGray) }  // Replies no error
+    if text.prefix(1) == "R" && !text.contains("|0|") { return Color(.systemRed) }  // Replies w/error
+    if text.prefix(2) == "S0" { return Color(.systemOrange) }                       // S0
+
+    return Color(.textColor)
+  }
   
   var body: some View {
     
-    WithViewStore(self.store) { viewStore in
-      ScrollView([.horizontal, .vertical]) {
-        
-        VStack(alignment: .leading) {
-          if viewStore.filteredMessages.count == 0 {
-            Text("TCP messages will be displayed here")
+    ScrollView([.horizontal, .vertical]) {
+      
+      VStack(alignment: .leading) {
+        if model.filteredMessages.count == 0 {
+          Text("TCP messages will be displayed here")
+        } else {
+          if model.reverseLog {
+            ForEach(model.filteredMessages.reversed(), id: \.id) { message in
+              HStack {
+                if model.showTimes { Text("\(message.timeInterval)") }
+                Text(message.text)
+              }
+              .foregroundColor( message.color )
+            }
           } else {
-            if viewStore.reverseLog {
-              ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
-                HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval)") }
-                  Text(message.text)
-                }
-                .foregroundColor( message.color )
+            ForEach(model.filteredMessages, id: \.id) { message in
+              HStack {
+                if model.showTimes { Text("\(message.timeInterval)") }
+                Text(message.text)
               }
-            } else {
-              ForEach(viewStore.filteredMessages, id: \.id) { message in
-                HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval)") }
-                  Text(message.text)
-                }
-                .foregroundColor( message.color )
-              }
+              .foregroundColor( chooseColor(message.text) )
             }
           }
         }
-        .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
-        .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
       }
+      .font(.system(size: model.fontSize, weight: .regular, design: .monospaced))
+      .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
     }
   }
 }
@@ -55,13 +60,7 @@ struct MessagesView: View {
 
 struct MessagesView_Previews: PreviewProvider {
   static var previews: some View {
-    MessagesView(
-      store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
-      )
-    )
+    MessagesView(model: ApiModel() )
       .frame(minWidth: 975)
       .padding()
   }

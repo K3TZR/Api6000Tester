@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import ComposableArchitecture
 
 import Api6000
 
@@ -14,28 +13,20 @@ import Api6000
 // MARK: - View
 
 struct BottomButtonsView: View {
-  let store: Store<ApiState, ApiAction>
-
-  @State var fontSize: CGFloat = 12
+  @ObservedObject var model: ApiModel
 
   var body: some View {
-
-    WithViewStore(self.store) { viewStore in
-      HStack {
-        Stepper("Font Size",
-                value: viewStore.binding(
-                  get: \.fontSize,
-                  send: { value in .fontSizeStepper(value) }),
-                in: 8...14)
-        Text(String(format: "%2.0f", viewStore.fontSize)).frame(alignment: .leading)
-        Spacer()
-        Button("Reverse") { viewStore.send(.toggle(\.reverseLog))}
-        Spacer()
-        HStack(spacing: 40) {
-          Toggle("Clear on Connect", isOn: viewStore.binding(get: \.clearOnConnect, send: .toggle(\.clearOnConnect)))
-          Toggle("Clear on Disconnect", isOn: viewStore.binding(get: \.clearOnDisconnect, send: .toggle(\.clearOnDisconnect)))
-          Button("Clear Now") { viewStore.send(.clearNowButton)}
-        }
+    
+    HStack {
+      Stepper("Font Size", value: $model.fontSize, in: 8...14)
+      Text( String(format: "%2.0f", model.fontSize) ).frame(alignment: .leading)
+      Spacer()
+      Button("Reverse") { model.reverseButton() }
+      Spacer()
+      HStack(spacing: 40) {
+        Toggle("Clear on Connect", isOn: $model.clearOnConnect)
+        Toggle("Clear on Disconnect", isOn: $model.clearOnDisconnect)
+        Button("Clear Now") { model.clearNowButton() }
       }
     }
   }
@@ -46,13 +37,7 @@ struct BottomButtonsView: View {
 
 struct BottomButtonsView_Previews: PreviewProvider {
   static var previews: some View {
-    BottomButtonsView(
-      store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
-      )
-    )
+    BottomButtonsView(model: ApiModel() )
       .frame(minWidth: 975)
       .padding()
   }

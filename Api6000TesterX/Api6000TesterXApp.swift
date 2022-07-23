@@ -34,18 +34,12 @@ struct Api6000TesterXApp: App {
   var body: some Scene {
 
     WindowGroup("Api6000TesterX  (v" + Version().string + ")") {
-      ApiView(
-        store: Store(
-          initialState: ApiState(),
-          reducer: apiReducer,
-          environment: ApiEnvironment()
-        )
-      )
-      .toolbar {
-        Button("Log View") { OpenWindows.LogView.open() }
-        Button("Close") { NSApplication.shared.keyWindow?.close()  }
-        Button("Close All") { NSApplication.shared.terminate(self)  }
-      }
+      ApiView(model: ApiModel())
+        .toolbar {
+          Button("Log View") { OpenWindows.LogView.open() }
+          Button("Close") { NSApplication.shared.keyWindow?.close()  }
+          Button("Close All") { NSApplication.shared.terminate(self)  }
+        }
         .frame(minWidth: 975, minHeight: 400)
         .padding()
     }
