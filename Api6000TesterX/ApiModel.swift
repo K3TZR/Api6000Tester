@@ -95,8 +95,8 @@ public class ApiModel: ObservableObject {
   // MARK: - Properties held in User Defaults
 
   @AppStorage("isGui") var isGui: Bool = false
-  @AppStorage("clearOnConnect") var clearOnConnect: Bool = false
-  @AppStorage("clearOnDisconnect") var clearOnDisconnect: Bool = false
+  @AppStorage("clearOnStart") var clearOnStart: Bool = false
+  @AppStorage("clearOnStop") var clearOnStop: Bool = false
   @AppStorage("clearOnSend") var clearOnSend: Bool = false
   @AppStorage("connectionMode") var connectionMode: String = ConnectionMode.local.rawValue {
     didSet { Task { await finishInitialization() }}}
@@ -130,7 +130,8 @@ public class ApiModel: ObservableObject {
   @Published public var showClient = false
   @Published public var showLogin = false
   @Published public var showPicker = false
-  @Published public var reverseLog = false
+  @Published public var showProgress = false
+  @Published public var showMessagesFromTop = false
 
   // ----------------------------------------------------------------------------
   // MARK: - Private properties
@@ -229,7 +230,12 @@ public class ApiModel: ObservableObject {
   @MainActor func startStopButton() {
     // current state?
     if isConnected == false {
-      // NOT connected, check for a default
+      // NOT connected
+      if clearOnStart {
+        messages.removeAll()
+        filteredMessages.removeAll()
+      }
+      // check for a default
       let (packet, station) = getDefault(isGui)
       if useDefault && packet != nil {
         // YES, is it Wan?
@@ -258,17 +264,15 @@ public class ApiModel: ObservableObject {
       
     } else {
       // CONNECTED, disconnect
-      Model.shared.radio?.disconnect()
+      Model.shared.disconnect()
       isConnected = false
-      if clearOnDisconnect {
+      if clearOnStop {
         messages.removeAll()
         filteredMessages.removeAll()
       }
     }
   }
 
-  func reverseButton() { reverseLog.toggle() }
-  
   func clearNowButton() {
     messages.removeAll()
     filteredMessages.removeAll()
@@ -579,10 +583,6 @@ public class ApiModel: ObservableObject {
       if await Model.shared.radio!.connect(packet) {
         // connected
         await filterMessages()
-        if clearOnConnect {
-          messages.removeAll()
-          filteredMessages.removeAll()
-        }
       } else {
         // failed
         isConnected = false

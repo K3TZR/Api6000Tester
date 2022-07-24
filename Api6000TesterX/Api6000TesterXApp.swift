@@ -45,13 +45,10 @@ struct Api6000TesterXApp: App {
     }
     
     WindowGroup("Api6000TesterX  (Log View)") {
-      LogView(store: Store(
-        initialState: LogState(),
-        reducer: logReducer,
-        environment: LogEnvironment() )
-      )
+      LogView(model: LogModel() )
       .toolbar {
         Button("Close") { NSApplication.shared.keyWindow?.close()  }
+        Button("Close All") { NSApplication.shared.terminate(self)  }
       }
       .frame(minWidth: 975, minHeight: 400)
       .padding()

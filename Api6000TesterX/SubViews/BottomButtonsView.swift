@@ -21,11 +21,19 @@ struct BottomButtonsView: View {
       Stepper("Font Size", value: $model.fontSize, in: 8...14)
       Text( String(format: "%2.0f", model.fontSize) ).frame(alignment: .leading)
       Spacer()
-      Button("Reverse") { model.reverseButton() }
+
+      HStack {
+        Text(model.showMessagesFromTop ? "Goto Bottom" : "Goto Top")
+        Image(systemName: model.showMessagesFromTop ? "arrow.down.square" : "arrow.up.square").font(.title)
+          .onTapGesture { model.showMessagesFromTop.toggle() }
+      }
+      .disabled(model.isConnected == false)
+      .frame(width: 120, alignment: .trailing)
       Spacer()
+
       HStack(spacing: 40) {
-        Toggle("Clear on Connect", isOn: $model.clearOnConnect)
-        Toggle("Clear on Disconnect", isOn: $model.clearOnDisconnect)
+        Toggle("Clear on Start", isOn: $model.clearOnStart)
+        Toggle("Clear on Stop", isOn: $model.clearOnStop)
         Button("Clear Now") { model.clearNowButton() }
       }
     }

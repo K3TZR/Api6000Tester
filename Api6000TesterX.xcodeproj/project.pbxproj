@@ -29,6 +29,7 @@
 		9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC752887A6A900563DF5 /* MessagesView.swift */; };
 		9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7A288857D000563DF5 /* SendView.swift */; };
 		9FF2CC7D2888599900563DF5 /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7C2888599900563DF5 /* FiltersView.swift */; };
+		9FF2CC7F288CDE3C00563DF5 /* ObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7E288CDE3C00563DF5 /* ObjectsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		9FF2CC792888508400563DF5 /* UtilityComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UtilityComponents; path = ../Packages/UtilityComponents; sourceTree = "<group>"; };
 		9FF2CC7A288857D000563DF5 /* SendView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendView.swift; sourceTree = "<group>"; };
 		9FF2CC7C2888599900563DF5 /* FiltersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersView.swift; sourceTree = "<group>"; };
+		9FF2CC7E288CDE3C00563DF5 /* ObjectsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 		9F5F4F8A28334778000E8145 /* SubViews */ = {
 			isa = PBXGroup;
 			children = (
+				9FF2CC7E288CDE3C00563DF5 /* ObjectsView.swift */,
 				9FF2CC7C2888599900563DF5 /* FiltersView.swift */,
 				9FF2CC7A288857D000563DF5 /* SendView.swift */,
 				9FF2CC752887A6A900563DF5 /* MessagesView.swift */,
@@ -222,6 +225,7 @@
 				9F5F4F02283321C5000E8145 /* Api6000TesterXApp.swift in Sources */,
 				9FF2CC7D2888599900563DF5 /* FiltersView.swift in Sources */,
 				9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */,
+				9FF2CC7F288CDE3C00563DF5 /* ObjectsView.swift in Sources */,
 				9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */,
 				9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */,
 				9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */,
@@ -366,7 +370,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000TesterX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -396,7 +400,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000TesterX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

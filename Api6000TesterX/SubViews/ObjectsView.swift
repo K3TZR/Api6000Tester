@@ -12,25 +12,25 @@ import ComposableArchitecture
 // MARK: - View
 
 struct ObjectsView: View {
-  let store: Store<ApiState, ApiAction>
+  @ObservedObject var model: ApiModel
   
   var body: some View {
-    WithViewStore(self.store) { viewStore in
       ScrollView([.horizontal, .vertical]) {
         VStack(alignment: .leading) {
-          if viewStore.radio == nil {
+          if model.isConnected == false {
             Text("Radio objects will be displayed here")
-          } else {
-            RadioView(store: store)
-            GuiClientsView(store: store)
-            if viewStore.isGui == false { NonGuiClientView(store: store) }
           }
+//          else {
+//            RadioView(store: store)
+//            GuiClientsView(store: store)
+//            if model.isGui == false { NonGuiClientView(model: model) }
+//          }
         }
       }
-      .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
+      .font(.system(size: model.fontSize, weight: .regular, design: .monospaced))
       .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
     }
-  }
+//  }
 }
 
 // ----------------------------------------------------------------------------
@@ -38,41 +38,15 @@ struct ObjectsView: View {
 
 import Api6000
 
-import Shared
-
 struct ObjectsView_Previews: PreviewProvider {
 
   static var previews: some View {
-    ObjectsView(
-      store: Store(
-        initialState: ApiState(
-          isGui: false,
-          radio: Radio(testPacket,
-                       connectionType: .nonGui,
-                       command: Tcp(),
-                       stream: Udp())
-        ),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
-      )
-    )
+    ObjectsView(model: ApiModel())
       .frame(minWidth: 975)
       .padding()
       .previewDisplayName("----- Non Gui -----")
 
-    ObjectsView(
-      store: Store(
-        initialState: ApiState(
-          isGui: true,
-          radio: Radio(testPacket,
-                       connectionType: .gui,
-                       command: Tcp(),
-                       stream: Udp())
-        ),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
-      )
-    )
+    ObjectsView(model: ApiModel())
       .frame(minWidth: 975)
       .padding()
       .previewDisplayName("----- Gui -----")

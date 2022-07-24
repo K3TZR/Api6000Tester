@@ -27,12 +27,11 @@ public struct ApiView: View {
       FiltersView(model: model)
       
       Divider().background(Color(.red))
-      //
-      //      VSplitView {
-      //        ObjectsView(model: model)
-      Divider().background(Color(.green))
-      MessagesView(model: model)
-      //      }
+      VSplitView {
+//        ObjectsView(model: model)
+        Divider().background(Color(.green))
+        MessagesView(model: model)
+      }
       Spacer()
       Divider().background(Color(.red))
       BottomButtonsView(model: model)
@@ -46,6 +45,10 @@ public struct ApiView: View {
     //      dismiss: .alertDismissed
     //    )
     
+    .sheet(isPresented: $model.showProgress ) {
+      ProgressView("Stopping")
+    }
+    
     // Picker sheet
     .sheet( isPresented: $model.showPicker ) {
       PickerView(model: model.pickerModel!)
@@ -55,11 +58,11 @@ public struct ApiView: View {
     .sheet( isPresented: $model.showLogin ) {
       LoginView(model: model.loginModel!)
     }
-
-      // Connection sheet
-      .sheet( isPresented: $model.showClient ) {
-        ClientView(model: model.clientModel!)
-      }
+    
+    // Connection sheet
+    .sheet( isPresented: $model.showClient ) {
+      ClientView(model: model.clientModel!)
+    }
   }
 }
 
