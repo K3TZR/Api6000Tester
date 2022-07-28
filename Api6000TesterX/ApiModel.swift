@@ -131,12 +131,13 @@ public class ApiModel: ObservableObject {
   @Published public var showLogin = false
   @Published public var showPicker = false
   @Published public var showProgress = false
-  @Published public var showMessagesFromTop = false
+  @Published public var gotoTop = false
+
+  @Published public var forceUpdate = false
 
   // ----------------------------------------------------------------------------
   // MARK: - Private properties
 
-  private var forceUpdate = false
   private var initialized = false
   private var lanListener: LanListener? = nil
   private var station: String? = nil
@@ -168,6 +169,7 @@ public class ApiModel: ObservableObject {
     // if the first time, start various effects
     if initialized == false {
       initialized = true
+      gotoTop = false
       // instantiate the Logger,
       _ = XCGWrapper(logLevel: .debug)
       // start subscriptions
@@ -511,23 +513,45 @@ public class ApiModel: ObservableObject {
   
   func clientReceived(_ update: ClientNotification) {
     // a guiClient change has been observed
-    // are we connected as a nonGui?
-    if isGui == false {
-      // YES, is there a clientId for our connected Station?
-      if update.client.clientId != nil && update.client.station == station {
-        // YES, bind to it
-        Task {
-          await Model.shared.radio?.bindToGuiClient(update.client.clientId)
+    switch update.action {
+    case .added:
+//      if isConnected && isGui == false {
+//        // YES, is there a clientId for our connected Station?
+//        if update.client.clientId != nil && update.client.station == station {
+//          // YES, bind to it
+//          Task {
+//            await Model.shared.radio?.bindToGuiClient(update.client.clientId)
+//          }
+//        }
+//      }
+    break
+    
+    case .completed:
+      if isConnected && isGui == false {
+        // YES, is there a clientId for our connected Station?
+        if update.client.clientId != nil && update.client.station == station {
+          // YES, bind to it
+          Task {
+            await Model.shared.radio?.bindToGuiClient(update.client.clientId)
+          }
         }
       }
+    case .deleted:
+      forceUpdate.toggle()
     }
   }
   
   @MainActor func packetReceived(_ update: PacketNotification) {
+//    switch update.action {
+//    case .added:
+//    case .updated:
+//    case .deleted:
+//    }
     // a packet change has been observed
     if pickerModel != nil {
       pickerModel!.pickables = getPickables(isGui, guiDefault, nonGuiDefault)
     }
+    forceUpdate.toggle()
   }
   
   func testResultReceived(_ result: TestNotification) {

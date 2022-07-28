@@ -14,21 +14,30 @@ import ComposableArchitecture
 struct ObjectsView: View {
   @ObservedObject var model: ApiModel
   
+  @State var update: Bool = false
+  
   var body: some View {
       ScrollView([.horizontal, .vertical]) {
         VStack(alignment: .leading) {
           if model.isConnected == false {
-            Text("Radio objects will be displayed here")
+            HStack {
+              Text("Radio objects will be displayed here")
+            }
+            .padding(.trailing, 1400)
+//            .border(.red)
           }
-//          else {
-//            RadioView(store: store)
-//            GuiClientsView(store: store)
+          else {
+            RadioView()
+              .padding(.trailing, 1400)
+//              .border(.red)
+            GuiClientsView()
 //            if model.isGui == false { NonGuiClientView(model: model) }
-//          }
+          }
         }
       }
       .font(.system(size: model.fontSize, weight: .regular, design: .monospaced))
       .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
+//      .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
     }
 //  }
 }

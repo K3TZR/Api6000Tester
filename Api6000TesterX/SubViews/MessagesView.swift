@@ -42,12 +42,12 @@ struct MessagesView: View {
               .tag(message.id)
               .foregroundColor( chooseColor(message.text) )
             }
-            .onChange(of: model.showMessagesFromTop, perform: { _ in
-              let id = model.showMessagesFromTop ? model.filteredMessages.first!.id : model.filteredMessages.last!.id
-              proxy.scrollTo(id, anchor: .bottomLeading)
+            .onChange(of: model.gotoTop, perform: { _ in
+              let id = model.gotoTop ? model.filteredMessages.first!.id : model.filteredMessages.last!.id
+              proxy.scrollTo(id, anchor: .topLeading)
             })
             .onChange(of: model.filteredMessages.count, perform: { _ in
-              let id = model.showMessagesFromTop ? model.filteredMessages.first!.id : model.filteredMessages.last!.id
+              let id = model.gotoTop ? model.filteredMessages.first!.id : model.filteredMessages.last!.id
               proxy.scrollTo(id, anchor: .bottomLeading)
             })
           }

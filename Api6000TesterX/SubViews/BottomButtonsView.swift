@@ -23,11 +23,11 @@ struct BottomButtonsView: View {
       Spacer()
 
       HStack {
-        Text(model.showMessagesFromTop ? "Goto Bottom" : "Goto Top")
-        Image(systemName: model.showMessagesFromTop ? "arrow.down.square" : "arrow.up.square").font(.title)
-          .onTapGesture { model.showMessagesFromTop.toggle() }
+        Text(model.gotoTop ? "Goto Bottom" : "Goto Top")
+        Image(systemName: model.gotoTop ? "arrow.down.square" : "arrow.up.square").font(.title)
+          .onTapGesture { model.gotoTop.toggle() }
       }
-      .disabled(model.isConnected == false)
+//      .disabled(model.isConnected == false)
       .frame(width: 120, alignment: .trailing)
       Spacer()
 

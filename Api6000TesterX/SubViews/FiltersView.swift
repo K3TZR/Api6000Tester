@@ -31,7 +31,7 @@ struct FilterObjectsView: View {
       }
       .pickerStyle(MenuPickerStyle())
     }
-    .disabled(model.isConnected == false)
+//    .disabled(model.isConnected == false)
     .frame(width: 300)
   }
 }
@@ -49,7 +49,7 @@ struct FilterMessagesView: View {
       }
       .pickerStyle(MenuPickerStyle())
     }
-    .disabled(model.isConnected == false)
+//    .disabled(model.isConnected == false)
     .frame(width: 300)
     
     Image(systemName: "x.circle").foregroundColor(model.isConnected == false ? .gray : nil)

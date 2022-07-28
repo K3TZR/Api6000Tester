@@ -28,7 +28,7 @@ public struct ApiView: View {
       
       Divider().background(Color(.red))
       VSplitView {
-//        ObjectsView(model: model)
+        ObjectsView(model: model)
         Divider().background(Color(.green))
         MessagesView(model: model)
       }
