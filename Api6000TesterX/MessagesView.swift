@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - View
 
 struct MessagesView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   
   func chooseColor(_ text: String) -> Color {
@@ -30,29 +30,29 @@ struct MessagesView: View {
         
         VStack(alignment: .leading) {
           
-          if model.filteredMessages.count == 0 {
+          if apiModel.filteredMessages.count == 0 {
             Text("TCP messages will be displayed here")
 
           } else {
-            ForEach(model.filteredMessages, id: \.id) { message in
+            ForEach(apiModel.filteredMessages, id: \.id) { message in
               HStack {
-                if model.showTimes { Text("\(message.timeInterval)") }
+                if apiModel.showTimes { Text("\(message.timeInterval)") }
                 Text(message.text)
               }
               .tag(message.id)
               .foregroundColor( chooseColor(message.text) )
             }
-            .onChange(of: model.gotoTop, perform: { _ in
-              let id = model.gotoTop ? model.filteredMessages.first!.id : model.filteredMessages.last!.id
+            .onChange(of: apiModel.gotoTop, perform: { _ in
+              let id = apiModel.gotoTop ? apiModel.filteredMessages.first!.id : apiModel.filteredMessages.last!.id
               proxy.scrollTo(id, anchor: .topLeading)
             })
-            .onChange(of: model.filteredMessages.count, perform: { _ in
-              let id = model.gotoTop ? model.filteredMessages.first!.id : model.filteredMessages.last!.id
+            .onChange(of: apiModel.filteredMessages.count, perform: { _ in
+              let id = apiModel.gotoTop ? apiModel.filteredMessages.first!.id : apiModel.filteredMessages.last!.id
               proxy.scrollTo(id, anchor: .bottomLeading)
             })
           }
         }
-        .font(.system(size: model.fontSize, weight: .regular, design: .monospaced))
+        .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
         .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
       }
     }
@@ -64,7 +64,7 @@ struct MessagesView: View {
 
 struct MessagesView_Previews: PreviewProvider {
   static var previews: some View {
-    MessagesView(model: ApiModel() )
+    MessagesView(apiModel: ApiModel() )
       .frame(minWidth: 975)
       .padding()
   }

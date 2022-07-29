@@ -13,28 +13,28 @@ import Api6000
 // MARK: - View
 
 struct BottomButtonsView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
 
   var body: some View {
     
     HStack {
-      Stepper("Font Size", value: $model.fontSize, in: 8...14)
-      Text( String(format: "%2.0f", model.fontSize) ).frame(alignment: .leading)
+      Stepper("Font Size", value: $apiModel.fontSize, in: 8...14)
+      Text( String(format: "%2.0f", apiModel.fontSize) ).frame(alignment: .leading)
       Spacer()
 
       HStack {
-        Text(model.gotoTop ? "Goto Bottom" : "Goto Top")
-        Image(systemName: model.gotoTop ? "arrow.down.square" : "arrow.up.square").font(.title)
-          .onTapGesture { model.gotoTop.toggle() }
+        Text(apiModel.gotoTop ? "Goto Bottom" : "Goto Top")
+        Image(systemName: apiModel.gotoTop ? "arrow.down.square" : "arrow.up.square").font(.title)
+          .onTapGesture { apiModel.gotoTop.toggle() }
       }
-//      .disabled(model.isConnected == false)
+//      .disabled(apiModel.isConnected == false)
       .frame(width: 120, alignment: .trailing)
       Spacer()
 
       HStack(spacing: 40) {
-        Toggle("Clear on Start", isOn: $model.clearOnStart)
-        Toggle("Clear on Stop", isOn: $model.clearOnStop)
-        Button("Clear Now") { model.clearNowButton() }
+        Toggle("Clear on Start", isOn: $apiModel.clearOnStart)
+        Toggle("Clear on Stop", isOn: $apiModel.clearOnStop)
+        Button("Clear Now") { apiModel.clearNowButton() }
       }
     }
   }
@@ -45,7 +45,7 @@ struct BottomButtonsView: View {
 
 struct BottomButtonsView_Previews: PreviewProvider {
   static var previews: some View {
-    BottomButtonsView(model: ApiModel() )
+    BottomButtonsView(apiModel: ApiModel() )
       .frame(minWidth: 975)
       .padding()
   }

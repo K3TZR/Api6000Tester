@@ -601,10 +601,8 @@ public class ApiModel: ObservableObject {
   private func openSelection(_ packet: Packet, _ disconnectHandle: Handle?) {
     isConnected = true
     Task {
-      // instantiate a Radio object
-      await Model.shared.createRadio(packet: packet, isGui: isGui, disconnectHandle: disconnectHandle, station: "Mac", program: "Api6000Tester", testerMode: true)
-      // try to connect
-      if await Model.shared.radio!.connect(packet) {
+      // instantiate a Radio object and attempt to connect
+      if await Model.shared.createRadio(packet: packet, isGui: isGui, disconnectHandle: disconnectHandle, station: "Mac", program: "Api6000Tester", testerMode: true) {
         // connected
         await filterMessages()
       } else {

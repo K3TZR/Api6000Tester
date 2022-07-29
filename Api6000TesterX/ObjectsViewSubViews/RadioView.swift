@@ -15,17 +15,17 @@ struct RadioView: View {
   
   var body: some View {
     VStack(alignment: .leading) {
-      if model.radio == nil {
+      if model.activePacketId == nil {
         EmptyView()
       } else {
         HStack(spacing: 20) {
-          Text(model.radio!.packet.nickname).frame(width: 120, alignment: .leading)
-          Text(model.radio!.packet.source.rawValue)
-          Text(model.radio!.packet.publicIp)
-          Text(model.radio!.packet.version)
-          Text(model.radio!.packet.model)
-          Text(model.radio!.packet.serial)
-          Text(model.radio!.packet.guiClientStations)
+          Text(model.packets[id: model.activePacketId!]!.nickname).frame(width: 120, alignment: .leading)
+          Text(model.packets[id: model.activePacketId!]!.source.rawValue)
+          Text(model.packets[id: model.activePacketId!]!.publicIp)
+          Text(model.packets[id: model.activePacketId!]!.version)
+          Text(model.packets[id: model.activePacketId!]!.model)
+          Text(model.packets[id: model.activePacketId!]!.serial)
+          Text(model.packets[id: model.activePacketId!]!.guiClientStations)
           Group {
             Text("Atu \(model.radio!.atuPresent ? "Y" : "N")")
             Text("Gps \(model.radio!.gpsPresent ? "Y" : "N")")
@@ -36,7 +36,7 @@ struct RadioView: View {
 
         //        if model.radio!.atuPresent {  AtuView(store: store) }
         //        if model.radio!.gpsPresent {  GpsView(store: store) }
-        .foregroundColor( model.radio!.packet.source == .local ? Color(.systemGreen) : Color(.systemRed))
+        .foregroundColor( model.packets[id: model.activePacketId!]!.source == .local ? Color(.systemGreen) : Color(.systemRed))
       }
     }
 //    .frame(maxWidth: .infinity, alignment: .leading)

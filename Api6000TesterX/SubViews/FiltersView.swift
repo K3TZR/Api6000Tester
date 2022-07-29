@@ -8,65 +8,65 @@
 import SwiftUI
 
 struct FiltersView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   var body: some View {
     HStack(spacing: 100) {
-      FilterObjectsView(model: model)
-      FilterMessagesView(model: model)
+      FilterObjectsView(apiModel: apiModel)
+      FilterMessagesView(apiModel: apiModel)
     }
   }
 }
 
 struct FilterObjectsView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   var body: some View {
     
     HStack {
-      Picker("Show objects of type", selection: $model.objectFilter) {
+      Picker("Show objects of type", selection: $apiModel.objectFilter) {
         ForEach(ObjectFilter.allCases, id: \.self) {
           Text($0.rawValue).tag($0.rawValue)
         }
       }
       .pickerStyle(MenuPickerStyle())
     }
-//    .disabled(model.isConnected == false)
+//    .disabled(apiModel.isConnected == false)
     .frame(width: 300)
   }
 }
 
 struct FilterMessagesView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   var body: some View {
     
     HStack {
-      Picker("Show messages of type", selection: $model.messageFilter) {
+      Picker("Show messages of type", selection: $apiModel.messageFilter) {
         ForEach(MessageFilter.allCases, id: \.self) {
           Text($0.rawValue).tag($0.rawValue)
         }
       }
       .pickerStyle(MenuPickerStyle())
     }
-//    .disabled(model.isConnected == false)
+//    .disabled(apiModel.isConnected == false)
     .frame(width: 300)
     
-    Image(systemName: "x.circle").foregroundColor(model.isConnected == false ? .gray : nil)
-      .disabled(model.isConnected == false)
+    Image(systemName: "x.circle").foregroundColor(apiModel.isConnected == false ? .gray : nil)
+      .disabled(apiModel.isConnected == false)
       .onTapGesture {
-        model.messageFilterText = ""
+        apiModel.messageFilterText = ""
       }
     
-    TextField("", text: model.$messageFilterText )
-      .disabled(model.isConnected == false)
+    TextField("", text: apiModel.$messageFilterText )
+      .disabled(apiModel.isConnected == false)
   }
 }
 
 struct FiltersView_Previews: PreviewProvider {
   
   static var previews: some View {
-    FiltersView(model: ApiModel() )
+    FiltersView(apiModel: ApiModel() )
     .frame(minWidth: 975)
     .padding()
   }

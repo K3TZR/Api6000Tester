@@ -17,26 +17,26 @@ import Shared
 // MARK: - View
 
 public struct ApiView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   public var body: some View {
     
     VStack(alignment: .leading) {
-      TopButtonsView(model: model)
-      SendView(model: model)
-      FiltersView(model: model)
+      TopButtonsView(apiModel: apiModel)
+      SendView(apiModel: apiModel)
+      FiltersView(apiModel: apiModel)
       
       Divider().background(Color(.red))
       VSplitView {
-        ObjectsView(model: model)
+        ObjectsView(apiModel: apiModel)
         Divider().background(Color(.green))
-        MessagesView(model: model)
+        MessagesView(apiModel: apiModel)
       }
       Spacer()
       Divider().background(Color(.red))
-      BottomButtonsView(model: model)
+      BottomButtonsView(apiModel: apiModel)
     }
-    .onAppear(perform: { model.onAppear() } )
+    .onAppear(perform: { apiModel.onAppear() } )
     // initialize on first appearance
     
     // alert dialogs
@@ -45,23 +45,23 @@ public struct ApiView: View {
     //      dismiss: .alertDismissed
     //    )
     
-    .sheet(isPresented: $model.showProgress ) {
+    .sheet(isPresented: $apiModel.showProgress ) {
       ProgressView("Stopping")
     }
     
     // Picker sheet
-    .sheet( isPresented: $model.showPicker ) {
-      PickerView(model: model.pickerModel!)
+    .sheet( isPresented: $apiModel.showPicker ) {
+      PickerView(model: apiModel.pickerModel!)
     }
       
     // Login sheet
-    .sheet( isPresented: $model.showLogin ) {
-      LoginView(model: model.loginModel!)
+    .sheet( isPresented: $apiModel.showLogin ) {
+      LoginView(model: apiModel.loginModel!)
     }
     
     // Connection sheet
-    .sheet( isPresented: $model.showClient ) {
-      ClientView(model: model.clientModel!)
+    .sheet( isPresented: $apiModel.showClient ) {
+      ClientView(model: apiModel.clientModel!)
     }
   }
 }
@@ -71,7 +71,7 @@ public struct ApiView: View {
 
 struct ApiView_Previews: PreviewProvider {
   static var previews: some View {
-    ApiView(model: ApiModel())
+    ApiView(apiModel: ApiModel())
       .frame(minWidth: 975, minHeight: 400)
       .padding()
   }

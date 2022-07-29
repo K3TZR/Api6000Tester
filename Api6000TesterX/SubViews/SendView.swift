@@ -13,7 +13,7 @@ import Api6000
 // MARK: - View
 
 struct SendView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   @State var someText = ""
   
@@ -21,20 +21,20 @@ struct SendView: View {
     
     HStack(spacing: 25) {
       Group {
-        Button("Send") { model.sendButton() }
+        Button("Send") { apiModel.sendButton() }
           .keyboardShortcut(.defaultAction)
         
         HStack(spacing: 0) {
-          Image(systemName: "x.circle").foregroundColor(model.isConnected == false ? .gray : nil)
-            .onTapGesture { model.commandToSend = "" }
-            .disabled(model.isConnected == false)
-          TextField("Command to send", text: $model.commandToSend)
+          Image(systemName: "x.circle").foregroundColor(apiModel.isConnected == false ? .gray : nil)
+            .onTapGesture { apiModel.commandToSend = "" }
+            .disabled(apiModel.isConnected == false)
+          TextField("Command to send", text: $apiModel.commandToSend)
         }
       }
-      .disabled(model.isConnected == false)
+      .disabled(apiModel.isConnected == false)
       
       Spacer()
-      Toggle("Clear on Send", isOn: $model.clearOnSend)
+      Toggle("Clear on Send", isOn: $apiModel.clearOnSend)
     }
     
   }
@@ -45,7 +45,7 @@ struct SendView: View {
 
 struct SendView_Previews: PreviewProvider {
   static var previews: some View {
-    SendView(model: ApiModel() )
+    SendView(apiModel: ApiModel() )
       .frame(minWidth: 975)
       .padding()
   }

@@ -11,23 +11,23 @@ import SwiftUI
 // MARK: - View
 
 public struct TopButtonsView: View {
-  @ObservedObject var model: ApiModel
+  @ObservedObject var apiModel: ApiModel
   
   public  var body: some View {
     
     HStack(spacing: 30) {
-      Button(model.isConnected ? "Stop" : "Start") { model.startStopButton() }
-        .keyboardShortcut(model.isConnected ? .cancelAction : .defaultAction)
+      Button(apiModel.isConnected ? "Stop" : "Start") { apiModel.startStopButton() }
+        .keyboardShortcut(apiModel.isConnected ? .cancelAction : .defaultAction)
       
       HStack(spacing: 20) {
-        Toggle("Gui", isOn: $model.isGui)
-          .disabled(model.isConnected )
-        Toggle("Times", isOn: $model.showTimes)
-        Toggle("Pings", isOn: $model.showPings)
+        Toggle("Gui", isOn: $apiModel.isGui)
+          .disabled(apiModel.isConnected )
+        Toggle("Times", isOn: $apiModel.showTimes)
+        Toggle("Pings", isOn: $apiModel.showPings)
       }
       
       Spacer()
-      Picker("", selection: $model.connectionMode) {
+      Picker("", selection: $apiModel.connectionMode) {
         Text("Local").tag(ConnectionMode.local.rawValue)
         Text("Smartlink").tag(ConnectionMode.smartlink.rawValue)
         Text("Both").tag(ConnectionMode.both.rawValue)
@@ -38,9 +38,9 @@ public struct TopButtonsView: View {
       .frame(width: 200)
       
       Spacer()
-      Toggle("Force Smartlink Login", isOn: $model.forceWanLogin)
-        .disabled(model.connectionMode == ConnectionMode.local.rawValue || model.connectionMode == ConnectionMode.none.rawValue)
-      Toggle("Use Default", isOn: $model.useDefault)
+      Toggle("Force Smartlink Login", isOn: $apiModel.forceWanLogin)
+        .disabled(apiModel.connectionMode == ConnectionMode.local.rawValue || apiModel.connectionMode == ConnectionMode.none.rawValue)
+      Toggle("Use Default", isOn: $apiModel.useDefault)
     }
   }
 }
@@ -50,7 +50,7 @@ public struct TopButtonsView: View {
 
 struct TopButtonsView_Previews: PreviewProvider {
   static var previews: some View {
-    TopButtonsView(model: ApiModel())
+    TopButtonsView(apiModel: ApiModel())
       .frame(minWidth: 975)
       .padding()
   }

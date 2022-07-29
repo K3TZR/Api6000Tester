@@ -34,7 +34,7 @@ struct Api6000TesterXApp: App {
   var body: some Scene {
 
     WindowGroup("Api6000TesterX  (v" + Version().string + ")") {
-      ApiView(model: ApiModel())
+      ApiView(apiModel: ApiModel())
         .toolbar {
           Button("Log View") { OpenWindows.LogView.open() }
           Button("Close") { NSApplication.shared.keyWindow?.close()  }
