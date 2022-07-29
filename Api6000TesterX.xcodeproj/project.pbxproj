@@ -25,6 +25,7 @@
 		9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3A28332543000E8145 /* ApiModel.swift */; };
 		9F5F4F3F28332543000E8145 /* ApiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3B28332543000E8145 /* ApiView.swift */; };
 		9F5F4F5928334322000E8145 /* TopButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F5828334322000E8145 /* TopButtonsView.swift */; };
+		9F98C64B2894267300FDD37C /* BandSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C64A2894267300FDD37C /* BandSettingsView.swift */; };
 		9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */; };
 		9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC752887A6A900563DF5 /* MessagesView.swift */; };
 		9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7A288857D000563DF5 /* SendView.swift */; };
@@ -50,6 +51,7 @@
 		9F5F4F3B28332543000E8145 /* ApiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiView.swift; sourceTree = "<group>"; };
 		9F5F4F5828334322000E8145 /* TopButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopButtonsView.swift; sourceTree = "<group>"; };
 		9F5F4F8928334695000E8145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9F98C64A2894267300FDD37C /* BandSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BandSettingsView.swift; sourceTree = "<group>"; };
 		9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomButtonsView.swift; sourceTree = "<group>"; };
 		9FF2CC752887A6A900563DF5 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		9FF2CC772888416A00563DF5 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		9FF2CC882892EE0D00563DF5 /* ObjectsViewSubViews */ = {
 			isa = PBXGroup;
 			children = (
+				9F98C64A2894267300FDD37C /* BandSettingsView.swift */,
 				9FF2CC8F2893151300563DF5 /* TnfView.swift */,
 				9FF2CC8D2892F00C00563DF5 /* MeterView.swift */,
 				9FF2CC8B2892EF8400563DF5 /* SliceView.swift */,
@@ -268,6 +271,7 @@
 				9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */,
 				9FF2CC852892E9C900563DF5 /* StreamView.swift in Sources */,
 				9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */,
+				9F98C64B2894267300FDD37C /* BandSettingsView.swift in Sources */,
 				9FF2CC8A2892EE7900563DF5 /* WaterfallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

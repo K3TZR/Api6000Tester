@@ -28,7 +28,7 @@ struct MeterView: View {
     
       VStack(alignment: .leading) {
         ForEach(model.meters ) { meter in
-          if sliceId == nil || sliceId != nil && meter.source == "slc" && UInt16(meter.group) == sliceId {
+          if sliceId == nil || sliceId != nil && meter.source == "slc" && UInt32(meter.group) == sliceId {
             HStack(spacing: 0) {
               Text("Meter").padding(.leading, sliceId == nil ? 20: 60)
               Text(String(format: "% 3d", meter.id)).frame(width: 50, alignment: .leading)
@@ -47,8 +47,6 @@ struct MeterView: View {
         }
       }
       .foregroundColor(.secondary)
-//      .onAppear() { viewStore.send(.startMetersSubscription) }
-//      .onDisappear() { viewStore.send(.stopMetersSubscription) }
     }
   }
 }

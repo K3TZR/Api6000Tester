@@ -15,12 +15,13 @@ import Shared
 
 struct StreamView: View {
   @ObservedObject var model: Model
+  let handle: Handle
   
   var body: some View {
     
     VStack(alignment: .leading) {
       ForEach(model.remoteRxAudioStreams) { stream in
-        if model.radio!.connectionHandle == stream.clientHandle {
+        if handle == stream.clientHandle {
           HStack(spacing: 20) {
             Text("RemoteRxAudioStream")
             Text(stream.id.hex)
@@ -103,7 +104,7 @@ import Shared
 
 struct StreamView_Previews: PreviewProvider {
   static var previews: some View {
-    StreamView(model: Model.shared )
+    StreamView(model: Model.shared, handle: 1 )
     .frame(minWidth: 975)
     .padding()
   }

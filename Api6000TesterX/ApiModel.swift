@@ -739,7 +739,7 @@ public class ApiModel: ObservableObject {
   @MainActor private func subscribeToMeters() {
     // subscribe to the publisher of meter value updates
     meterSubscription = Meter.meterPublisher
-//      .receive(on: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
       // limit updates to 1 per second
       .throttle(for: 1.0, scheduler: RunLoop.main, latest: true)
       // convert to an ApiAction

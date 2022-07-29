@@ -47,24 +47,24 @@ struct GuiClientSubView: View {
       switch apiModel.objectFilter {
 
       case ObjectFilter.core.rawValue:
-        StreamView(model: model)
+        StreamView(model: model, handle: handle)
         TnfView(model: model)
         PanadapterView(model: model, handle: handle, showMeters: true)
 
       case ObjectFilter.coreNoMeters.rawValue:
-        StreamView(model: model)
+        StreamView(model: model, handle: handle)
         PanadapterView(model: model, handle: handle, showMeters: false)
 
-//      case .amplifiers:       AmplifierView(store: store)
-//      case .bandSettings:     BandSettingsView(store: store)
-//      case .interlock:        InterlockView(store: store)
-//      case .memories:         MemoriesView(store: store)
-//      case .meters:           MeterView(store: store, sliceId: nil)
-//      case .streams:          StreamView(store: store)
-//      case .transmit:         TransmitView(store: store)
-      case ObjectFilter.tnfs.rawValue:    TnfView(model: model)
-//      case .waveforms:        WaveformView(store: store)
-//      case .xvtrs:            XvtrView(store: store)
+//      case ObjectFilter.amplifiers.rawValue:       AmplifierView(model: model)
+      case ObjectFilter.bandSettings.rawValue:     BandSettingsView(model: model)
+//      case ObjectFilter.interlock.rawValue:        InterlockView(model: model)
+//      case ObjectFilter.memories.rawValue:         MemoriesView(model: model)
+      case ObjectFilter.meters.rawValue:          MeterView(model: model, sliceId: nil)
+      case ObjectFilter.streams.rawValue:          StreamView(model: model, handle: handle)
+//      case ObjectFilter.transmit.rawValue:         TransmitView(model: model)
+      case ObjectFilter.tnfs.rawValue:            TnfView(model: model)
+//      case ObjectFilter.waveforms.rawValue:        WaveformView(model: model)
+//      case ObjectFilter.xvtrs.rawValue:            XvtrView(model: model)
       default:    EmptyView()
       }
     }
