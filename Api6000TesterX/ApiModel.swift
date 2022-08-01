@@ -338,8 +338,10 @@ public final class ApiModel: ObservableObject {
         let newValue =  DefaultValue(packet.serial, packet.source, selection.station)
         if nonGuiDefault == newValue {
           nonGuiDefault = nil
+          pickerModel?.defaultId = nil
         } else {
           nonGuiDefault = newValue
+          pickerModel?.defaultId = selection.packetId
         }
       }
     }

@@ -31,8 +31,6 @@ struct Api6000TesterXApp: App {
   @NSApplicationDelegateAdaptor(AppDelegate.self)
   var appDelegate
 
-//  @StateObject var model = Model.shared
-  
   var body: some Scene {
 
     WindowGroup("Api6000TesterX  (v" + Version().string + ")") {
@@ -42,7 +40,6 @@ struct Api6000TesterXApp: App {
           Button("Close") { NSApplication.shared.keyWindow?.close()  }
           Button("Close All") { NSApplication.shared.terminate(self)  }
         }
-//        .environmentObject(model)
         .frame(minWidth: 975, minHeight: 400)
         .padding()
     }

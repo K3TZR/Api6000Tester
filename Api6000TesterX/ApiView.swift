@@ -12,13 +12,14 @@ import ClientView
 import PickerView
 import LogView
 import Shared
+import Api6000
 
 // ----------------------------------------------------------------------------
 // MARK: - View
 
 public struct ApiView: View {
   @ObservedObject var apiModel: ApiModel
-  
+    
   public var body: some View {
     
     VStack(alignment: .leading) {
