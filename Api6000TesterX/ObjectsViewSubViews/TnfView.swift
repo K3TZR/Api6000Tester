@@ -13,17 +13,29 @@ import Api6000
 // MARK: - View
 
 struct TnfView: View {
-  @ObservedObject var model: Model
+  @EnvironmentObject var model: Model
   
   var body: some View {
     ForEach(Array(model.tnfs)) { tnf in
       HStack(spacing: 20) {
         Text("Tnf").frame(width: 100, alignment: .trailing)
-        Text(String(format: "%d", tnf.id))
-        Text("Frequency \(tnf.frequency)")
-        Text("Width \(tnf.width)")
-        Text("Depth \(tnf.depth)")
-        Text("Permanent \(tnf.permanent ? "Y" : "N")")
+        Text(String(format: "%d", tnf.id)).foregroundColor(.green)
+        HStack(spacing: 5) {
+          Text("Frequency")
+          Text("\(tnf.frequency)").foregroundColor(.secondary)
+        }
+        HStack(spacing: 5) {
+          Text("Width")
+          Text("\(tnf.width)").foregroundColor(.secondary)
+        }
+        HStack(spacing: 5) {
+          Text("Depth")
+          Text("\(tnf.depth)").foregroundColor(.secondary)
+        }
+        HStack(spacing: 5) {
+          Text("Permanent")
+          Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
+        }
       }
     }
   }
@@ -34,7 +46,7 @@ struct TnfView: View {
 
 struct TnfView_Previews: PreviewProvider {
   static var previews: some View {
-    TnfView(model: Model.shared)
+    TnfView()
     .frame(minWidth: 975)
     .padding()
   }

@@ -14,7 +14,7 @@ import Shared
 // MARK: - View
 
 struct GuiClientsView: View {
-  @ObservedObject var model: Model = Model.shared
+  @EnvironmentObject var model: Model
   let apiModel: ApiModel
   
   var body: some View {
@@ -25,12 +25,22 @@ struct GuiClientsView: View {
         Divider().background(Color(.red))
         HStack(spacing: 20) {
           Text("GUI CLIENT -> ").frame(width: 140, alignment: .leading)
-          Text("\(guiClient.program) / \(guiClient.station)").frame(width: 220, alignment: .leading)
-          Text("Handle \(guiClient.handle.hex)")
-          Text("ClientId \(guiClient.clientId ?? "Unknown")")
-          Text("LocalPtt \(guiClient.isLocalPtt ? "Y" : "N")")
+          Text("\(guiClient.station)     \(guiClient.program)").frame(width: 220, alignment: .leading)
+          HStack(spacing: 5) {
+            Text("Handle")
+            Text(guiClient.handle.hex).foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("ClientId")
+            Text(guiClient.clientId ?? "Unknown").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("LocalPtt")
+            Text(guiClient.isLocalPtt ? "Y" : "N")
+              .foregroundColor(guiClient.isLocalPtt ? .green : .red)
+          }
         }
-        GuiClientSubView(model: model, handle: guiClient.handle, apiModel: apiModel)
+        GuiClientSubView(handle: guiClient.handle, apiModel: apiModel)
       }
       .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -38,36 +48,36 @@ struct GuiClientsView: View {
 }
 
 struct GuiClientSubView: View {
-  @ObservedObject var model: Model
+  @EnvironmentObject var model: Model
   let handle: Handle
   let apiModel: ApiModel
-
+  
   var body: some View {
-
-      switch apiModel.objectFilter {
-
-      case ObjectFilter.core.rawValue:
-        StreamView(model: model, handle: handle)
-        TnfView(model: model)
-        PanadapterView(model: model, handle: handle, showMeters: true)
-
-      case ObjectFilter.coreNoMeters.rawValue:
-        StreamView(model: model, handle: handle)
-        PanadapterView(model: model, handle: handle, showMeters: false)
-
-//      case ObjectFilter.amplifiers.rawValue:       AmplifierView(model: model)
-      case ObjectFilter.bandSettings.rawValue:     BandSettingsView(model: model)
-//      case ObjectFilter.interlock.rawValue:        InterlockView(model: model)
-//      case ObjectFilter.memories.rawValue:         MemoriesView(model: model)
-      case ObjectFilter.meters.rawValue:          MeterView(model: model, sliceId: nil)
-      case ObjectFilter.streams.rawValue:          StreamView(model: model, handle: handle)
-//      case ObjectFilter.transmit.rawValue:         TransmitView(model: model)
-      case ObjectFilter.tnfs.rawValue:            TnfView(model: model)
-//      case ObjectFilter.waveforms.rawValue:        WaveformView(model: model)
-//      case ObjectFilter.xvtrs.rawValue:            XvtrView(model: model)
-      default:    EmptyView()
-      }
+    
+    switch apiModel.objectFilter {
+      
+    case ObjectFilter.core.rawValue:
+      StreamView(handle: handle).environmentObject(model)
+      TnfView()
+      PanadapterView(handle: handle, showMeters: true)
+      
+    case ObjectFilter.coreNoMeters.rawValue:
+      StreamView(handle: handle)
+      PanadapterView(handle: handle, showMeters: false)
+      
+      //      case ObjectFilter.amplifiers.rawValue:       AmplifierView()
+    case ObjectFilter.bandSettings.rawValue:     BandSettingsView()
+      //      case ObjectFilter.interlock.rawValue:        InterlockView()
+      //      case ObjectFilter.memories.rawValue:         MemoriesView()
+    case ObjectFilter.meters.rawValue:          MeterView(sliceId: nil)
+    case ObjectFilter.streams.rawValue:          StreamView(handle: handle)
+      //      case ObjectFilter.transmit.rawValue:         TransmitView()
+    case ObjectFilter.tnfs.rawValue:            TnfView()
+      //      case ObjectFilter.waveforms.rawValue:        WaveformView()
+      //      case ObjectFilter.xvtrs.rawValue:            XvtrView()
+    default:    EmptyView()
     }
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -75,8 +85,8 @@ struct GuiClientSubView: View {
 
 struct GuiClientsView_Previews: PreviewProvider {
   static var previews: some View {
-    GuiClientsView( model: Model.shared , apiModel: ApiModel() )
-    .frame(minWidth: 975)
-    .padding()
+    GuiClientsView( apiModel: ApiModel() )
+      .frame(minWidth: 975)
+      .padding()
   }
 }

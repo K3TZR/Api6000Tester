@@ -26,31 +26,26 @@ public struct ApiView: View {
       SendView(apiModel: apiModel)
       FiltersView(apiModel: apiModel)
       
-      Divider().background(Color(.red))
+      Divider().background(.gray)
       VSplitView {
         ObjectsView(apiModel: apiModel)
-        Divider().background(Color(.green))
+        Divider().background(.cyan)
         MessagesView(apiModel: apiModel)
       }
       Spacer()
-      Divider().background(Color(.red))
+      Divider().background(.gray)
       BottomButtonsView(apiModel: apiModel)
     }
-    .onAppear(perform: { apiModel.onAppear() } )
     // initialize on first appearance
+    .onAppear(perform: { apiModel.onAppear() } )
     
-    // alert dialogs
-    //    .alert(
-    //      self.store.scope(state: \.alert),
-    //      dismiss: .alertDismissed
-    //    )
-    
-    .sheet(isPresented: $apiModel.showProgress ) {
-      ProgressView("Stopping")
+     // alert dialogs
+    .sheet( isPresented: $apiModel.showAlert ) {
+      AlertView(model: apiModel.alertModel!)
     }
     
     // Picker sheet
-    .sheet( isPresented: $apiModel.showPicker ) {
+    .sheet( isPresented: $apiModel.showPicker) {
       PickerView(model: apiModel.pickerModel!)
     }
       

@@ -38,7 +38,7 @@ public struct TopButtonsView: View {
       .frame(width: 200)
       
       Spacer()
-      Toggle("Force Smartlink Login", isOn: $apiModel.forceWanLogin)
+      Toggle("Force Smartlink Login", isOn: $apiModel.forceSmartlinkLogin)
         .disabled(apiModel.connectionMode == ConnectionMode.local.rawValue || apiModel.connectionMode == ConnectionMode.none.rawValue)
       Toggle("Use Default", isOn: $apiModel.useDefault)
     }

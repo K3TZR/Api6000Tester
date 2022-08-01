@@ -14,7 +14,7 @@ import Shared
 // MARK: - View
 
 struct SliceView: View {
-  @ObservedObject var model: Model
+  @EnvironmentObject var model: Model
   let panadapterId: PanadapterId
   let showMeters: Bool
   
@@ -28,18 +28,44 @@ struct SliceView: View {
     ForEach(model.slices) { slice in
       if slice.panadapterId == panadapterId {
         HStack(spacing: 20) {
-          Text("Slice").frame(width: 100, alignment: .trailing)
-          Text(String(format: "% 3d", slice.id))
-          Text("\(slice.frequency)")
-          Text("\(slice.mode)")
-          Text("FilterLow \(slice.filterLow)")
-          Text("FilterHigh \(slice.filterHigh)")
-          Text("Active \(slice.active ? "Y" : "N")")
-          Text("Locked \(slice.locked ? "Y" : "N")")
-          Text("DAX channel \(slice.daxChannel)")
-          Text("DAX clients \(slice.daxClients)")
+          HStack(spacing: 5) {
+            Text("Slice").frame(width: 100, alignment: .trailing)
+            Text(String(format: "% 3d", slice.id)).foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("Frequency")
+            Text("\(slice.frequency)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("Mode")
+            Text("\(slice.mode)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("FilterLow")
+            Text("\(slice.filterLow)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("FilterHigh")
+            Text("\(slice.filterHigh)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("Active")
+            Text(slice.active ? "Y" : "N").foregroundColor(slice.active ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Locked")
+            Text(slice.locked ? "Y" : "N").foregroundColor(slice.locked ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("DAX channel")
+            Text("\(slice.daxChannel)").foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("DAX clients")
+            Text("\(slice.daxClients)").foregroundColor(.green)
+          }
         }
-        if showMeters { MeterView(model: model, sliceId: slice.id) }
+        if showMeters { MeterView(sliceId: slice.id) }
       }
     }
   }
@@ -51,7 +77,6 @@ struct SliceView: View {
 struct SliceView_Previews: PreviewProvider {
   static var previews: some View {
     SliceView(
-      model: Model.shared,
       panadapterId: 1,
       showMeters: true
     )

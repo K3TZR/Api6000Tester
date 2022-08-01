@@ -14,7 +14,7 @@ import Shared
 // MARK: - View
 
 struct PanadapterView: View {
-  @ObservedObject var model: Model
+  @EnvironmentObject var model: Model
   let handle: Handle
   let showMeters: Bool
   
@@ -23,12 +23,21 @@ struct PanadapterView: View {
       if panadapter.clientHandle == handle {
         HStack(spacing: 20) {
           Text("Panadapter").frame(width: 100, alignment: .trailing)
-          Text(panadapter.id.hex)
-          Text("Center \(panadapter.center)")
-          Text("Bandwidth \(panadapter.bandwidth)")
+          
+          Text(panadapter.id.hex).foregroundColor(.secondary)
+          
+          HStack(spacing: 5) {
+            Text("Center")
+            Text("\(panadapter.center)").foregroundColor(.secondary)
+          }
+          
+          HStack(spacing: 5) {
+            Text("Bandwidth")
+            Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
+          }
         }
-        WaterfallView(model: model, panadapterId: panadapter.id)
-        SliceView(model: model, panadapterId: panadapter.id, showMeters: showMeters)
+        WaterfallView(panadapterId: panadapter.id)
+        SliceView(panadapterId: panadapter.id, showMeters: showMeters)
       }
     }
   }
@@ -40,7 +49,6 @@ struct PanadapterView: View {
 struct PanadapterView_Previews: PreviewProvider {
   static var previews: some View {
     PanadapterView(
-      model: Model.shared,
       handle: 1,
       showMeters: true
     )

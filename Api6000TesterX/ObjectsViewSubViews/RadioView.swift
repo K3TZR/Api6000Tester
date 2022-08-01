@@ -7,66 +7,78 @@
 
 import SwiftUI
 
+import Api6000
+import Shared
+
 // ----------------------------------------------------------------------------
 // MARK: - View
 
 struct RadioView: View {
-  @ObservedObject var model: Model = Model.shared
+  @EnvironmentObject var model: Model
   
   var body: some View {
-    VStack(alignment: .leading) {
-      if model.activePacketId == nil {
-        EmptyView()
-      } else {
+    if model.activePacketId != nil {
+      VStack(alignment: .leading) {
         HStack(spacing: 20) {
-          Text(model.packets[id: model.activePacketId!]!.nickname).frame(width: 120, alignment: .leading)
+          Text("RADIO      ->")
           Text(model.packets[id: model.activePacketId!]!.source.rawValue)
-          Text(model.packets[id: model.activePacketId!]!.publicIp)
-          Text(model.packets[id: model.activePacketId!]!.version)
-          Text(model.packets[id: model.activePacketId!]!.model)
-          Text(model.packets[id: model.activePacketId!]!.serial)
-          Text(model.packets[id: model.activePacketId!]!.guiClientStations)
+            .foregroundColor(model.packets[id: model.activePacketId!]!.source == .local ? .green : .red)
           Group {
-            Text("Atu \(model.radio!.atuPresent ? "Y" : "N")")
-            Text("Gps \(model.radio!.gpsPresent ? "Y" : "N")")
-            Text("Scu \(model.radio!.numberOfScus)")
+            HStack(spacing: 5) {
+              Text("Name")
+              Text(model.packets[id: model.activePacketId!]!.nickname)
+                .foregroundColor(.secondary)
+                .frame(width: 120, alignment: .leading)
+            }
+            HStack(spacing: 5) {
+              Text("Ip")
+              Text(model.packets[id: model.activePacketId!]!.publicIp).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("FW Version")
+              Text(model.packets[id: model.activePacketId!]!.version).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Model")
+              Text(model.packets[id: model.activePacketId!]!.model).foregroundColor(.secondary)
+            }
           }
-          Spacer()
-        }.border(.red)
-
-        //        if model.radio!.atuPresent {  AtuView(store: store) }
-        //        if model.radio!.gpsPresent {  GpsView(store: store) }
-        .foregroundColor( model.packets[id: model.activePacketId!]!.source == .local ? Color(.systemGreen) : Color(.systemRed))
+          Group {
+            HStack(spacing: 5) {
+              Text("Serial")
+              Text(model.packets[id: model.activePacketId!]!.serial).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Stations")
+              Text(model.packets[id: model.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Atu")
+              Text(model.radio!.atuPresent ? "Y" : "N").foregroundColor(model.radio!.atuPresent ? .green : .red)
+            }
+            HStack(spacing: 5) {
+              Text("Gps")
+              Text(model.radio!.gpsPresent ? "Y" : "N").foregroundColor(model.radio!.gpsPresent ? .green : .red)
+            }
+            HStack(spacing: 5) {
+              Text("Scu")
+              Text("\(model.radio!.numberOfScus)").foregroundColor(.green)
+            }
+          }
+        }
+        AtuView(model: model)
+        GpsView(model: model)
       }
     }
-//    .frame(maxWidth: .infinity, alignment: .leading)
   }
 }
 
 // ----------------------------------------------------------------------------
 // MARK: - Preview
 
-import Api6000
-
-
-import Shared
-
 struct RadioView_Previews: PreviewProvider {
   static var previews: some View {
     RadioView()
       .frame(minWidth: 975)
   }
-}
-
-var testPacket: Packet {
-  
-  var packet = Packet()
-  packet.nickname = "Dougs Flex"
-  packet.model = "Flex-6500"
-  packet.status = "Available"
-  packet.source = .local
-  packet.publicIp = "10.0.1.200"
-  packet.serial = "1234-5678-9012-3456"
-  packet.version = "3.2.5.1234"
-  return packet
 }

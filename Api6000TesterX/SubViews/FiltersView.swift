@@ -31,7 +31,6 @@ struct FilterObjectsView: View {
       }
       .pickerStyle(MenuPickerStyle())
     }
-//    .disabled(apiModel.isConnected == false)
     .frame(width: 300)
   }
 }
@@ -48,18 +47,16 @@ struct FilterMessagesView: View {
         }
       }
       .pickerStyle(MenuPickerStyle())
+      .frame(width: 300)
+      
+      Image(systemName: "x.circle").foregroundColor(apiModel.isConnected == false ? .gray : nil)
+        .disabled(apiModel.isConnected == false)
+        .onTapGesture {
+          apiModel.messageFilterText = ""
+        }
+      
+      TextField("message filter text", text: $apiModel.messageFilterText )
     }
-//    .disabled(apiModel.isConnected == false)
-    .frame(width: 300)
-    
-    Image(systemName: "x.circle").foregroundColor(apiModel.isConnected == false ? .gray : nil)
-      .disabled(apiModel.isConnected == false)
-      .onTapGesture {
-        apiModel.messageFilterText = ""
-      }
-    
-    TextField("", text: apiModel.$messageFilterText )
-      .disabled(apiModel.isConnected == false)
   }
 }
 

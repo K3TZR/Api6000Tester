@@ -90,7 +90,8 @@ public enum MessageFilter: String, CaseIterable {
   case S0
 }
 
-public class ApiModel: ObservableObject {
+@MainActor
+public final class ApiModel: ObservableObject {
   // ----------------------------------------------------------------------------
   // MARK: - Properties held in User Defaults
 
@@ -99,49 +100,53 @@ public class ApiModel: ObservableObject {
   @AppStorage("clearOnStop") var clearOnStop: Bool = false
   @AppStorage("clearOnSend") var clearOnSend: Bool = false
   @AppStorage("connectionMode") var connectionMode: String = ConnectionMode.local.rawValue {
-    didSet { Task { await finishInitialization() }}}
+    didSet { finishInitialization() }}
   @AppStorage("fontSize") var fontSize: Double = 12
+  @AppStorage("forceSmartlinkLogin") public var forceSmartlinkLogin = false
   @AppStorage("messagesFilter") var messageFilter: String = MessageFilter.all.rawValue {
-    didSet { Task { await filterMessages() }}}
+    didSet { filterMessages() }}
   @AppStorage("messageFilterText") var messageFilterText: String = "" {
-    didSet { Task { await filterMessages() }}}
+    didSet { filterMessages() }}
   @AppStorage("objectFilter") var objectFilter: String = ObjectFilter.core.rawValue
   @AppStorage("smartlinkEmail") var smartlinkEmail: String = ""
   @AppStorage("showPings") var showPings: Bool = false
   @AppStorage("showTimes") var showTimes: Bool = false
   @AppStorage("useDefault") var useDefault: Bool = false
-  public var guiDefault: DefaultValue? { didSet { setDefaultValue(.gui, guiDefault) } }
-  public var nonGuiDefault: DefaultValue? { didSet { setDefaultValue(.nonGui, nonGuiDefault) } }
+  public var guiDefault: DefaultValue?
+  {
+    set { setDefaultValue(.gui, newValue) }
+    get { getDefaultValue(.gui) }}
+  public var nonGuiDefault: DefaultValue?
+  {
+    set { setDefaultValue(.nonGui, newValue) }
+    get { getDefaultValue(.nonGui) }}
 
   // ----------------------------------------------------------------------------
   // MARK: - Published properties
 
-  @Published public var alertState: AlertState? = nil
+  @Published public var alertModel: AlertModel?
   @Published public var clearNow = false
   @Published public var clientModel: ClientModel?
   @Published public var commandToSend = ""
   @Published public var isConnected = false
   @Published public var filteredMessages = IdentifiedArrayOf<TcpMessage>()
-  @Published public var forceWanLogin = false
-  @Published public var loginModel: LoginModel? = nil
+  @Published public var loginModel: LoginModel?
   @Published public var messages = IdentifiedArrayOf<TcpMessage>()
-  @Published public var pendingWan: (packet: Packet, station: String?)? = nil
+  @Published public var pendingWan: (packet: Packet, station: String?)?
   @Published public var pickerModel: PickerModel? = nil
+  @Published public var showAlert = false
   @Published public var showClient = false
   @Published public var showLogin = false
   @Published public var showPicker = false
-  @Published public var showProgress = false
   @Published public var gotoTop = false
-
-  @Published public var forceUpdate = false
 
   // ----------------------------------------------------------------------------
   // MARK: - Private properties
 
-  private var initialized = false
-  private var lanListener: LanListener? = nil
-  private var station: String? = nil
-  private var wanListener: WanListener? = nil
+  private var _initialized = false
+  private var _lanListener: LanListener? { didSet { print("DidSet: _lanListener = \(String(describing: _lanListener))") } }
+  private var _station: String?
+  private var _wanListener: WanListener?
 
   private var clientSubscription: AnyCancellable?
   private var logAlertSubscription: AnyCancellable?
@@ -155,20 +160,18 @@ public class ApiModel: ObservableObject {
   // ----------------------------------------------------------------------------
   // MARK: - Initialization
 
-  public init()
-  {
-    self.guiDefault = getDefaultValue(.gui)
-    self.nonGuiDefault = getDefaultValue(.nonGui)
+  public init(isConnected: Bool = false) {
+    self.isConnected = isConnected
   }
 
   // ----------------------------------------------------------------------------
   // MARK: - Internal methods
   
   /// Initialization
-  @MainActor func onAppear() {
+  func onAppear() {
     // if the first time, start various effects
-    if initialized == false {
-      initialized = true
+    if _initialized == false {
+      _initialized = true
       gotoTop = false
       // instantiate the Logger,
       _ = XCGWrapper(logLevel: .debug)
@@ -184,41 +187,50 @@ public class ApiModel: ObservableObject {
   }
   
   /// Secondary initialization / re-initialization
-  @MainActor func finishInitialization() {
+  func finishInitialization() {
     // needed when coming from other than .onAppear
-    lanListener?.stop()
-    lanListener = nil
-    wanListener?.stop()
-    wanListener = nil
+//    _lanListener?.stop()
+//    _lanListener = nil
+//    _wanListener?.stop()
+//    _wanListener = nil
     
     // start / stop listeners as appropriate for the Mode
     switch connectionMode {
     case ConnectionMode.local.rawValue:
       Model.shared.removePackets(condition: {$0.source == .smartlink} )
-      lanListener = LanListener()
-      lanListener!.start()
+      _lanListener = LanListener()
+      _lanListener!.start()
+      print("-----> LOCAL:", "_lanListener = \(String(describing: _lanListener))")
+    
     case ConnectionMode.smartlink.rawValue:
       Model.shared.removePackets(condition: {$0.source == .local} )
-      wanListener = WanListener()
-      if forceWanLogin || wanListener!.start(smartlinkEmail) == false {
+      _wanListener = WanListener()
+      if forceSmartlinkLogin || _wanListener!.start(smartlinkEmail) == false {
         loginModel = LoginModel(heading: "Smartlink Login required",
                                 cancelAction: { self.loginCancel() },
                                 loginAction: {user, pwd in self.loginLogin(user, pwd)})
         showLogin = true
       }
+      print("-----> SMARTLINK:", "_wanListener = \(String(describing: _wanListener))")
+
     case ConnectionMode.both.rawValue:
-      lanListener = LanListener()
-      lanListener!.start()
-      wanListener = WanListener()
-      if forceWanLogin || wanListener!.start(smartlinkEmail) == false {
+      _lanListener = LanListener()
+      _lanListener!.start()
+      _wanListener = WanListener()
+      if forceSmartlinkLogin || _wanListener!.start(smartlinkEmail) == false {
         loginModel = LoginModel(heading: "Smartlink Login required",
                                 cancelAction: { self.loginCancel() },
                                 loginAction: {user, pwd in self.loginLogin(user, pwd)})
         showLogin = true
       }
+      print("-----> BOTH:", "_lanListener = \(String(describing: _lanListener))", "_wanListener = \(String(describing: _wanListener))")
+
     case ConnectionMode.none.rawValue:
       Model.shared.removePackets(condition: {$0.source == .local} )
       Model.shared.removePackets(condition: {$0.source == .smartlink} )
+      print("-----> NONE:", "_lanListener = \(String(describing: _lanListener))", "_wanListener = \(String(describing: _wanListener))")
+      _lanListener?.stop()
+      
     default:
       fatalError("Invalid connectionMode")
     }
@@ -229,7 +241,7 @@ public class ApiModel: ObservableObject {
   }
     
   // ----- Buttons -----
-  @MainActor func startStopButton() {
+  func startStopButton() {
     // current state?
     if isConnected == false {
       // NOT connected
@@ -240,11 +252,12 @@ public class ApiModel: ObservableObject {
       // check for a default
       let (packet, station) = getDefault(isGui)
       if useDefault && packet != nil {
+        _station = station
         // YES, is it Wan?
         if packet!.source == .smartlink {
           // YES, reply will generate a wanStatus action
           pendingWan = (packet!, station)
-          wanListener?.sendWanConnectMessage(for: packet!.serial, holePunchPort: packet!.negotiatedHolePunchPort)
+          _wanListener?.sendWanConnectMessage(for: packet!.serial, holePunchPort: packet!.negotiatedHolePunchPort)
           
         } else {
           // NO, check for other connections
@@ -254,12 +267,13 @@ public class ApiModel: ObservableObject {
       } else {
         // not using default OR no default OR failed to find a match, open the Picker
         pickerModel = PickerModel(
-          pickables: getPickables(isGui, nil, nil),
+          pickables: getPickables(isGui, guiDefault, nonGuiDefault),
+          isGui: isGui,
           defaultId: packet?.id,
           cancelAction: { self.pickerCancel() },
-          connectAction: { id in self.pickerConnect(id) },
-          defaultAction: { id in self.pickerDefault(id) },
-          testAction: { id in self.pickerTest(id) }
+          connectAction: { selection in self.pickerConnect(selection) },
+          defaultAction: { selection in self.pickerDefault(selection) },
+          testAction: { selection in self.pickerTest(selection) }
         )
         showPicker = true
       }
@@ -268,6 +282,7 @@ public class ApiModel: ObservableObject {
       // CONNECTED, disconnect
       Model.shared.disconnect()
       isConnected = false
+      
       if clearOnStop {
         messages.removeAll()
         filteredMessages.removeAll()
@@ -285,28 +300,6 @@ public class ApiModel: ObservableObject {
     if clearOnSend { commandToSend = "" }
   }
 
-  // ----- Pickers -----
-  @MainActor func connectionModePicker(_ mode: ConnectionMode) {
-    connectionMode = mode.rawValue
-    finishInitialization()
-  }
-  
-  @MainActor func messagesPicker(_ filter: MessageFilter) {
-    messageFilter = filter.rawValue
-    // re-filter
-    filterMessages()
-  }
-
-  @MainActor func objectsPicker(_ newFilter: String) {
-    switch (objectFilter, newFilter) {
-    case ("core", "meters"), ("meters", "core"):  break
-    case ("core", _), ("meters", _):              meterSubscription = nil
-    case (_, "core"), (_, "meters"):              subscribeToMeters()
-    default:                                      break
-    }
-    objectFilter = newFilter
-  }
-
   // ----- Steppers -----
   func fontSizeStepper(_ size: CGFloat) {
     fontSize = size
@@ -317,54 +310,52 @@ public class ApiModel: ObservableObject {
   
   // subview/sheet/alert related
   func alertDismissed() {
-    alertState = nil
+    alertModel = nil
   }
   
   // ----------------------------------------------------------------------------
   // MARK: - Picker Action methods
   
-  @MainActor func pickerCancel() {
+  func pickerCancel() {
     showPicker = false
     pickerModel = nil
   }
   
-  @MainActor func pickerDefault(_ id: UUID) {
-    if let packetId = pickerModel?.pickables[id: id]?.packetId {
-      if let packet = Model.shared.packets[id: packetId] {
-        if isGui {
-          // YES, gui
-          let newValue = DefaultValue(packet.serial, packet.source, nil)
-          if guiDefault == newValue {
-            guiDefault = nil
-            pickerModel?.defaultId = nil
-          } else {
-            guiDefault = newValue
-            pickerModel?.defaultId = id
-          }
+  func pickerDefault(_ selection: PickableSelection ) {
+    if let packet = Model.shared.packets[id: selection.packetId] {
+      if isGui {
+        // YES, gui
+        let newValue = DefaultValue(packet.serial, packet.source, nil)
+        if guiDefault == newValue {
+          guiDefault = nil
+          pickerModel?.defaultId = nil
         } else {
-          // NO, nonGui
-          let newValue =  DefaultValue(packet.serial, packet.source, pickerModel!.pickables[id: id]!.station)
-          if nonGuiDefault == newValue {
-            nonGuiDefault = nil
-          } else {
-            nonGuiDefault = newValue
-          }
+          guiDefault = newValue
+          pickerModel?.defaultId = selection.packetId
+        }
+      } else {
+        // NO, nonGui
+        let newValue =  DefaultValue(packet.serial, packet.source, selection.station)
+        if nonGuiDefault == newValue {
+          nonGuiDefault = nil
+        } else {
+          nonGuiDefault = newValue
         }
       }
     }
   }
 
-  @MainActor func pickerConnect(_ id: UUID, station: String? = nil) {
+  func pickerConnect(_ selection: PickableSelection ) {
     showPicker = false
     pickerModel = nil
-    if let packet = Model.shared.packets[id: id] {
+    if let packet = Model.shared.packets[id: selection.packetId] {
       // CONNECT, close the Picker sheet
-      self.station = station
+      _station = selection.2
       // is it Smartlink?
-      if packet.source == .smartlink {
+      if selection.isLocal == false {
         // YES, send the Wan Connect message
-        pendingWan = (packet, station)
-        wanListener!.sendWanConnectMessage(for: packet.serial, holePunchPort: packet.negotiatedHolePunchPort)
+        pendingWan = (packet, _station)
+        _wanListener!.sendWanConnectMessage(for: packet.serial, holePunchPort: packet.negotiatedHolePunchPort)
         // the reply to this will generate a wanStatus action
         
       } else {
@@ -374,27 +365,25 @@ public class ApiModel: ObservableObject {
     }
   }
   
-  @MainActor func pickerTest(_ id: UUID) {
-    if let packetId = pickerModel?.pickables[id: id]?.packetId {
-      if let packet = Model.shared.packets[id: packetId] {
-        // TEST BUTTON, send a Test request
-        wanListener!.sendSmartlinkTest(packet.serial)
-        // reply will generate a testResult action
-        subscribeToTest()
-      }
+  func pickerTest(_ selection: PickableSelection ) {
+    if let packet = Model.shared.packets[id: selection.packetId] {
+      // TEST BUTTON, send a Test request
+      _wanListener!.sendSmartlinkTest(packet.serial)
+      // reply will generate a testResult action
+      subscribeToTest()
     }
   }
 
   // ----------------------------------------------------------------------------
   // MARK: - Client Action methods
   
-  @MainActor func clientCancel() {
+  func clientCancel() {
     // CANCEL
     showClient = false
     clientModel = nil
   }
   
-  @MainActor func clientConnect(_ id: UUID, _ handle: Handle?) {
+  func clientConnect(_ id: UUID, _ handle: Handle?) {
     // CONNECT
     showClient = false
     clientModel = nil
@@ -420,10 +409,10 @@ public class ApiModel: ObservableObject {
     _ = secureStore.set(account: "pwd", data: pwd)
     smartlinkEmail = user
     // try a Smartlink login
-    if wanListener!.start(user: user, pwd: pwd) {
-      forceWanLogin = false
+    if _wanListener!.start(user: user, pwd: pwd) {
+      forceSmartlinkLogin = false
     } else {
-      alertState = AlertState(title: "Smartlink", message: "Login failed")
+      alertModel = AlertModel(title: "Smartlink", message: "Login failed")
     }
   }
   
@@ -434,7 +423,7 @@ public class ApiModel: ObservableObject {
   /// Produce an IdentifiedArray of items that can be picked
   /// - Parameter state:  ApiCore state
   /// - Returns:          an array of items that can be picked
-  @MainActor func getPickables(_ isGui: Bool, _ guiDefault: DefaultValue?, _ nonGuiDefault: DefaultValue?) -> IdentifiedArrayOf<Pickable> {
+  func getPickables(_ isGui: Bool, _ guiDefault: DefaultValue?, _ nonGuiDefault: DefaultValue?) -> IdentifiedArrayOf<Pickable> {
     var pickables = IdentifiedArrayOf<Pickable>()
     if isGui {
       // GUI
@@ -485,12 +474,12 @@ public class ApiModel: ObservableObject {
     loginModel = nil
     showLogin = false
     // alert the user
-    alertState = AlertState(title: "\(entry.level == .warning ? "A Warning" : "An Error") was logged:",
+    alertModel = AlertModel(title: "\(entry.level == .warning ? "A Warning" : "An Error") was logged:",
                             message: entry.msg)
     
   }
   
-  @MainActor func messageSent(_ message: TcpMessage) {
+  func messageSent(_ message: TcpMessage) {
     // ignore sent "ping" messages unless showPings is true
     if message.text.contains("ping") && showPings == false { return }
     // add the message to the collection
@@ -499,7 +488,7 @@ public class ApiModel: ObservableObject {
     filterMessages()
   }
   
-  @MainActor func messageReceived(_ message: TcpMessage) {
+  func messageReceived(_ message: TcpMessage) {
     // add the message to the collection
     messages.append( message )
     // re-filter
@@ -508,50 +497,34 @@ public class ApiModel: ObservableObject {
   
   func meterReceived(_ meter: Meter) {
     // an updated meter value has been received
-    forceUpdate.toggle()
+//    forceUpdate.toggle()
   }
   
   func clientReceived(_ update: ClientNotification) {
     // a guiClient change has been observed
     switch update.action {
     case .added:
-//      if isConnected && isGui == false {
-//        // YES, is there a clientId for our connected Station?
-//        if update.client.clientId != nil && update.client.station == station {
-//          // YES, bind to it
-//          Task {
-//            await Model.shared.radio?.bindToGuiClient(update.client.clientId)
-//          }
-//        }
-//      }
-    break
+      break
     
     case .completed:
       if isConnected && isGui == false {
         // YES, is there a clientId for our connected Station?
-        if update.client.clientId != nil && update.client.station == station {
+        if update.client.clientId != nil && update.client.station == _station {
           // YES, bind to it
-          Task {
-            await Model.shared.radio?.bindToGuiClient(update.client.clientId)
-          }
+          Model.shared.radio?.bindToGuiClient(update.client.clientId)
+          Model.shared.activeStation = _station
         }
       }
     case .deleted:
-      forceUpdate.toggle()
+      break
     }
   }
   
-  @MainActor func packetReceived(_ update: PacketNotification) {
-//    switch update.action {
-//    case .added:
-//    case .updated:
-//    case .deleted:
-//    }
+  func packetReceived(_ update: PacketNotification) {
     // a packet change has been observed
     if pickerModel != nil {
       pickerModel!.pickables = getPickables(isGui, guiDefault, nonGuiDefault)
     }
-    forceUpdate.toggle()
   }
   
   func testResultReceived(_ result: TestNotification) {
@@ -565,14 +538,14 @@ public class ApiModel: ObservableObject {
       // YES, set the wan handle
       pendingWan!.packet.wanHandle = status.wanHandle!
       // check for other connections
-      Task { await checkConnectionStatus(pendingWan!.packet) }
+      checkConnectionStatus(pendingWan!.packet)
     }
   }
 
   // ----------------------------------------------------------------------------
   // MARK: - Private methods
   
-  @MainActor private func checkConnectionStatus(_ packet: Packet) {
+  private func checkConnectionStatus(_ packet: Packet) {
     // making a Gui connection and other Gui connections exist?
     if isGui && packet.guiClients.count > 0 {
       // YES, may need a disconnect, let the user choose
@@ -600,17 +573,15 @@ public class ApiModel: ObservableObject {
 
   private func openSelection(_ packet: Packet, _ disconnectHandle: Handle?) {
     isConnected = true
-    Task {
       // instantiate a Radio object and attempt to connect
-      if await Model.shared.createRadio(packet: packet, isGui: isGui, disconnectHandle: disconnectHandle, station: "Mac", program: "Api6000Tester", testerMode: true) {
+      if Model.shared.createRadio(packet: packet, isGui: isGui, disconnectHandle: disconnectHandle, station: "Mac", program: "Api6000Tester", testerMode: true) {
         // connected
-        await filterMessages()
+        filterMessages()
       } else {
         // failed
         isConnected = false
-        alertState = AlertState(title: "Connection", message: "Failed to connect to \(packet.nickname)")
+        alertModel = AlertModel(title: "Connection", message: "Failed to connect to \(packet.nickname)")
       }
-    }
   }
 
   /// FIlter the Messages array
@@ -619,16 +590,20 @@ public class ApiModel: ObservableObject {
   ///   - filterBy:      the selected filter choice
   ///   - filterText:    the current filter text
   /// - Returns:         a filtered array
-  @MainActor private func filterMessages() {    
+  private func filterMessages() {
     // re-filter messages
     switch (messageFilter, messageFilterText) {
       
     case (MessageFilter.all.rawValue, _):        filteredMessages = messages
     case (MessageFilter.prefix.rawValue, ""):    filteredMessages = messages
     case (MessageFilter.prefix.rawValue, _):     filteredMessages = messages.filter { $0.text.localizedCaseInsensitiveContains("|" + messageFilterText) }
-    case (MessageFilter.includes.rawValue, _):   filteredMessages = messages.filter { $0.text.localizedCaseInsensitiveContains(messageFilterText) }
+    
+    case (MessageFilter.includes.rawValue, messageFilterText):   filteredMessages = messages.filter { $0.text.localizedCaseInsensitiveContains(messageFilterText) }
+    
     case (MessageFilter.excludes.rawValue, ""):  filteredMessages = messages
-    case (MessageFilter.excludes.rawValue, _):   filteredMessages = messages.filter { !$0.text.localizedCaseInsensitiveContains(messageFilterText) }
+    
+    case (MessageFilter.excludes.rawValue, messageFilterText):   filteredMessages = messages.filter { !$0.text.localizedCaseInsensitiveContains(messageFilterText) }
+    
     case (MessageFilter.command.rawValue, _):    filteredMessages = messages.filter { $0.text.prefix(1) == "C" }
     case (MessageFilter.S0.rawValue, _):         filteredMessages = messages.filter { $0.text.prefix(3) == "S0|" }
     case (MessageFilter.status.rawValue, _):     filteredMessages = messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
@@ -647,11 +622,14 @@ public class ApiModel: ObservableObject {
     if let defaultData = UserDefaults.standard.object(forKey: key) as? Data {
       let decoder = JSONDecoder()
       if let defaultValue = try? decoder.decode(DefaultValue.self, from: defaultData) {
+        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default found", .debug, #function, #file, #line))
         return defaultValue
       } else {
+        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default failed to decode", .debug, #function, #file, #line))
         return nil
       }
     }
+    NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: No default found", .debug, #function, #file, #line))
     return nil
   }
   
@@ -664,20 +642,22 @@ public class ApiModel: ObservableObject {
     
     if value == nil {
       UserDefaults.standard.removeObject(forKey: key)
+      NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default removed", .debug, #function, #file, #line))
     } else {
       let encoder = JSONEncoder()
       if let encoded = try? encoder.encode(value) {
         UserDefaults.standard.set(encoded, forKey: key)
+        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default save", .debug, #function, #file , #line))
       } else {
         UserDefaults.standard.removeObject(forKey: key)
-      }
+        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default save failed", .debug, #function, #file, #line))      }
     }
   }
   
   /// Determine if there is default radio connection
   /// - Parameter state:  ApiCore state
   /// - Returns:          a tuple of the Packet and an optional Station
-  @MainActor private func getDefault(_ isGui: Bool) -> (Packet?, String?) {
+  private func getDefault(_ isGui: Bool) -> (Packet?, String?) {
     if isGui {
       if let defaultValue = guiDefault {
         for packet in Model.shared.packets where defaultValue.source == packet.source.rawValue && defaultValue.serial == packet.serial {
@@ -700,17 +680,17 @@ public class ApiModel: ObservableObject {
   // ----------------------------------------------------------------------------
   // MARK: - Private subscription setup methods
   
-  @MainActor private func subscribeToPackets() {
+  private func subscribeToPackets() {
     // subscribe to the publisher of packet changes
     packetSubscription = NotificationCenter.default.publisher(for: packetNotification, object: nil)
-//      .receive(on: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
       .sink { [self] note in
         packetReceived( note.object as! PacketNotification )
       }
     
     // subscribe to the publisher of guiClient changes
     clientSubscription = NotificationCenter.default.publisher(for: clientNotification, object: nil)
-//      .receive(on: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
       .sink { [self] note in
         clientReceived( note.object as! ClientNotification )
       }
@@ -719,9 +699,9 @@ public class ApiModel: ObservableObject {
   private func subscribeToSent(_ tcp: Tcp) {
     // subscribe to the publisher of sent TcpMessages
     sentSubscription = tcp.sentPublisher
-//      .receive(on: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
       .sink { [self] message in
-        Task { await messageSent( message ) }
+        messageSent( message )
       }
   }
   
@@ -730,13 +710,13 @@ public class ApiModel: ObservableObject {
     receivedSubscription = tcp.receivedPublisher
       // eliminate replies unless they have errors or data
       .filter { self.allowToPass($0.text) }
-//      .receive(on: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
       .sink { [self] message in
-        Task { await messageReceived( message ) }
+        messageReceived( message )
       }
   }
 
-  @MainActor private func subscribeToMeters() {
+  private func subscribeToMeters() {
     // subscribe to the publisher of meter value updates
     meterSubscription = Meter.meterPublisher
       .receive(on: DispatchQueue.main)

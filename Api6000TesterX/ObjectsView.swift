@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ComposableArchitecture
+import Api6000
 
 // ----------------------------------------------------------------------------
 // MARK: - View
@@ -14,32 +14,33 @@ import ComposableArchitecture
 struct ObjectsView: View {
   @ObservedObject var apiModel: ApiModel
   
-  @State var update: Bool = false
+  @StateObject var model = Model.shared
   
   var body: some View {
-      ScrollView([.horizontal, .vertical]) {
-        VStack(alignment: .leading) {
-          if apiModel.isConnected == false {
-            HStack {
-              Text("Radio objects will be displayed here")
-            }
+    ScrollView([.horizontal, .vertical]) {
+      VStack(alignment: .leading) {
+        if apiModel.isConnected == false {
+          HStack {
+            Text("Radio objects will be displayed here")
+          }
+          .padding(.trailing, 1400)
+        }
+        else {
+          RadioView()
+            .environmentObject(model)
             .padding(.trailing, 1400)
-//            .border(.red)
+          if apiModel.isGui == false {
+            NonGuiClientView()
+            .environmentObject(model)
           }
-          else {
-            RadioView()
-              .padding(.trailing, 1400)
-//              .border(.red)
-            GuiClientsView(apiModel: apiModel)
-//            if model.isGui == false { NonGuiClientView(model: model) }
-          }
+          GuiClientsView(apiModel: apiModel)
+            .environmentObject(model)
         }
       }
-      .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
-      .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
-//      .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
     }
-//  }
+    .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
+    .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -48,13 +49,13 @@ struct ObjectsView: View {
 import Api6000
 
 struct ObjectsView_Previews: PreviewProvider {
-
+  
   static var previews: some View {
     ObjectsView(apiModel: ApiModel() )
       .frame(minWidth: 975)
       .padding()
       .previewDisplayName("----- Non Gui -----")
-
+    
     ObjectsView(apiModel: ApiModel())
       .frame(minWidth: 975)
       .padding()

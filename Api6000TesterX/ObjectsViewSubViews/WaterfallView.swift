@@ -14,7 +14,7 @@ import Shared
 // MARK: - View
 
 struct WaterfallView: View {
-  @ObservedObject var model: Model
+  @EnvironmentObject var model: Model
   let panadapterId: PanadapterId
   
   var body: some View {
@@ -23,11 +23,23 @@ struct WaterfallView: View {
       if waterfall.panadapterId == panadapterId {
         HStack(spacing: 20) {
           Text("Waterfall").frame(width: 100, alignment: .trailing)
-          Text(waterfall.id.hex)
-          Text("AutoBlack \(waterfall.autoBlackEnabled ? "Y" : "N")")
-          Text("ColorGain \(waterfall.colorGain)")
-          Text("BlackLevel \(waterfall.blackLevel)")
-          Text("Duration \(waterfall.lineDuration)")
+          Text(waterfall.id.hex).foregroundColor(.secondary)
+          HStack(spacing: 5) {
+            Text("AutoBlack")
+            Text(waterfall.autoBlackEnabled ? "Y" : "N").foregroundColor(waterfall.autoBlackEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("ColorGain")
+            Text("\(waterfall.colorGain)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("BlackLevel")
+            Text("\(waterfall.blackLevel)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("Duration")
+            Text("\(waterfall.lineDuration)").foregroundColor(.secondary)
+          }
         }
       }
     }
@@ -39,11 +51,8 @@ struct WaterfallView: View {
 
 struct WaterfallView_Previews: PreviewProvider {
   static var previews: some View {
-    WaterfallView(
-      model: Model.shared,
-      panadapterId: 1
-    )
-    .frame(minWidth: 975)
-    .padding()
+    WaterfallView(panadapterId: 1)
+      .frame(minWidth: 975)
+      .padding()
   }
 }
