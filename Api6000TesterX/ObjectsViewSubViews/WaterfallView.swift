@@ -14,31 +14,37 @@ import Shared
 // MARK: - View
 
 struct WaterfallView: View {
-  @EnvironmentObject var model: Model
+  @ObservedObject var api6000: Model
   let panadapterId: PanadapterId
   
   var body: some View {
     
-    ForEach(Array(model.waterfalls)) { waterfall in
-      if waterfall.panadapterId == panadapterId {
-        HStack(spacing: 20) {
-          Text("Waterfall").frame(width: 100, alignment: .trailing)
-          Text(waterfall.id.hex).foregroundColor(.secondary)
-          HStack(spacing: 5) {
-            Text("AutoBlack")
-            Text(waterfall.autoBlackEnabled ? "Y" : "N").foregroundColor(waterfall.autoBlackEnabled ? .green : .red)
-          }
-          HStack(spacing: 5) {
-            Text("ColorGain")
-            Text("\(waterfall.colorGain)").foregroundColor(.secondary)
-          }
-          HStack(spacing: 5) {
-            Text("BlackLevel")
-            Text("\(waterfall.blackLevel)").foregroundColor(.secondary)
-          }
-          HStack(spacing: 5) {
-            Text("Duration")
-            Text("\(waterfall.lineDuration)").foregroundColor(.secondary)
+    if api6000.waterfalls.count == 0 {
+      Text("         WATERFALLS -> None present").foregroundColor(.red)
+    } else {
+      ForEach(Array(api6000.waterfalls)) { waterfall in
+        if waterfall.panadapterId == panadapterId {
+          HStack(spacing: 20) {
+            HStack(spacing: 5) {
+              Text("         WATERFALL ")
+              Text(waterfall.id.hex).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("AutoBlack")
+              Text(waterfall.autoBlackEnabled ? "Y" : "N").foregroundColor(waterfall.autoBlackEnabled ? .green : .red)
+            }
+            HStack(spacing: 5) {
+              Text("ColorGain")
+              Text("\(waterfall.colorGain)").foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("BlackLevel")
+              Text("\(waterfall.blackLevel)").foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Duration")
+              Text("\(waterfall.lineDuration)").foregroundColor(.secondary)
+            }
           }
         }
       }
@@ -51,8 +57,8 @@ struct WaterfallView: View {
 
 struct WaterfallView_Previews: PreviewProvider {
   static var previews: some View {
-    WaterfallView(panadapterId: 1)
-      .frame(minWidth: 975)
+    WaterfallView(api6000: Model.shared, panadapterId: 1)
+      .frame(minWidth: 1000)
       .padding()
   }
 }

@@ -34,13 +34,13 @@ struct Api6000TesterXApp: App {
   var body: some Scene {
 
     WindowGroup("Api6000TesterX  (v" + Version().string + ")") {
-      ApiView(apiModel: ApiModel())
+      ApiView(apiModel: ApiModel(), api6000: Model.shared)
         .toolbar {
           Button("Log View") { OpenWindows.LogView.open() }
           Button("Close") { NSApplication.shared.keyWindow?.close()  }
           Button("Close All") { NSApplication.shared.terminate(self)  }
         }
-        .frame(minWidth: 975, minHeight: 400)
+        .frame(minWidth: 975)
         .padding()
     }
     
@@ -50,7 +50,7 @@ struct Api6000TesterXApp: App {
         Button("Close") { NSApplication.shared.keyWindow?.close()  }
         Button("Close All") { NSApplication.shared.terminate(self)  }
       }
-      .frame(minWidth: 975, minHeight: 400)
+      .frame(minWidth: 975)
       .padding()
     }.handlesExternalEvents(matching: Set(arrayLiteral: "LogView"))
     

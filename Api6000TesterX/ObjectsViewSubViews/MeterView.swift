@@ -15,7 +15,7 @@ import Shared
 // MARK: - View
 
 struct MeterView: View {
-  @EnvironmentObject var model: Model
+  @ObservedObject var api6000: Model
   let sliceId: UInt32?
   
   func valueColor(_ value: Float, _ low: Float, _ high: Float) -> Color {
@@ -27,27 +27,23 @@ struct MeterView: View {
   var body: some View {
     
       VStack(alignment: .leading) {
-        ForEach(model.meters ) { meter in
+        ForEach(api6000.meters ) { meter in
           if sliceId == nil || sliceId != nil && meter.source == "slc" && UInt32(meter.group) == sliceId {
-            HStack(spacing: 0) {
+            HStack(spacing: 10) {
               Group {
-                Text("Meter").padding(.leading, sliceId == nil ? 20: 60)
-                Text(String(format: "% 3d", meter.id)).frame(width: 50, alignment: .leading)
-                Text(meter.group).frame(width: 30, alignment: .trailing).padding(.trailing)
+                Text("Meter").padding(.leading, sliceId == nil ? 0: 60)
+                Text(String(format: "% 3d", meter.id)).frame(width: 40, alignment: .leading)
+                Text(meter.group).frame(width: 30, alignment: .trailing)
                 Text(meter.name).frame(width: 110, alignment: .leading)
-                Text(String(format: "%-4.2f", meter.low)).frame(width: 75, alignment: .trailing)
               }
               Group {
                 Text(String(format: "%-4.2f", meter.value))
+                  .help("        range: \(String(format: "%-4.2f", meter.low)) to \(String(format: "%-4.2f", meter.high))")
                   .foregroundColor(valueColor(meter.value, meter.low, meter.high))
                   .frame(width: 75, alignment: .trailing)
-                Text(String(format: "%-4.2f", meter.high)).frame(width: 75, alignment: .trailing)
-                Text("    ")
                 Text(meter.units).frame(width: 50, alignment: .leading)
-                Text(String(format: "%02d", meter.fps) + " fps").frame(width: 75, alignment: .leading).padding(.trailing)
-                Text(meter.desc)
-                  .foregroundColor(.primary)
-                  .frame(width: 1000, alignment: .leading)
+                Text(String(format: "% 2d", meter.fps) + " fps").frame(width: 70, alignment: .leading)
+                Text(meter.desc).foregroundColor(.primary)
               }
             }
         }
@@ -62,8 +58,8 @@ struct MeterView: View {
 
 struct MeterView_Previews: PreviewProvider {
   static var previews: some View {
-    MeterView(sliceId: 1)
-    .frame(minWidth: 975)
+    MeterView(api6000: Model.shared, sliceId: 1)
+    .frame(minWidth: 1000)
     .padding()
   }
 }

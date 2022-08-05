@@ -144,7 +144,7 @@ public final class ApiModel: ObservableObject {
   // MARK: - Private properties
 
   private var _initialized = false
-  private var _lanListener: LanListener? { didSet { print("DidSet: _lanListener = \(String(describing: _lanListener))") } }
+  private var _lanListener: LanListener?
   private var _station: String?
   private var _wanListener: WanListener?
 
@@ -189,10 +189,10 @@ public final class ApiModel: ObservableObject {
   /// Secondary initialization / re-initialization
   func finishInitialization() {
     // needed when coming from other than .onAppear
-//    _lanListener?.stop()
-//    _lanListener = nil
-//    _wanListener?.stop()
-//    _wanListener = nil
+    _lanListener?.stop()
+    _lanListener = nil
+    _wanListener?.stop()
+    _wanListener = nil
     
     // start / stop listeners as appropriate for the Mode
     switch connectionMode {
@@ -200,7 +200,6 @@ public final class ApiModel: ObservableObject {
       Model.shared.removePackets(condition: {$0.source == .smartlink} )
       _lanListener = LanListener()
       _lanListener!.start()
-      print("-----> LOCAL:", "_lanListener = \(String(describing: _lanListener))")
     
     case ConnectionMode.smartlink.rawValue:
       Model.shared.removePackets(condition: {$0.source == .local} )
@@ -211,7 +210,6 @@ public final class ApiModel: ObservableObject {
                                 loginAction: {user, pwd in self.loginLogin(user, pwd)})
         showLogin = true
       }
-      print("-----> SMARTLINK:", "_wanListener = \(String(describing: _wanListener))")
 
     case ConnectionMode.both.rawValue:
       _lanListener = LanListener()
@@ -223,13 +221,10 @@ public final class ApiModel: ObservableObject {
                                 loginAction: {user, pwd in self.loginLogin(user, pwd)})
         showLogin = true
       }
-      print("-----> BOTH:", "_lanListener = \(String(describing: _lanListener))", "_wanListener = \(String(describing: _wanListener))")
 
     case ConnectionMode.none.rawValue:
       Model.shared.removePackets(condition: {$0.source == .local} )
       Model.shared.removePackets(condition: {$0.source == .smartlink} )
-      print("-----> NONE:", "_lanListener = \(String(describing: _lanListener))", "_wanListener = \(String(describing: _wanListener))")
-      _lanListener?.stop()
       
     default:
       fatalError("Invalid connectionMode")
@@ -624,14 +619,14 @@ public final class ApiModel: ObservableObject {
     if let defaultData = UserDefaults.standard.object(forKey: key) as? Data {
       let decoder = JSONDecoder()
       if let defaultValue = try? decoder.decode(DefaultValue.self, from: defaultData) {
-        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default found", .debug, #function, #file, #line))
+        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: \(key) found, \(defaultValue.serial)", .debug, #function, #file, #line))
         return defaultValue
       } else {
-        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: Default failed to decode", .debug, #function, #file, #line))
+        NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: \(key) failed to decode", .debug, #function, #file, #line))
         return nil
       }
     }
-    NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: No default found", .debug, #function, #file, #line))
+    NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("ApiModel: No \(key) found", .debug, #function, #file, #line))
     return nil
   }
   

@@ -19,24 +19,32 @@ import Api6000
 
 public struct ApiView: View {
   @ObservedObject var apiModel: ApiModel
-    
+  @ObservedObject var api6000: Model
+
   public var body: some View {
+    
     
     VStack(alignment: .leading) {
       TopButtonsView(apiModel: apiModel)
       SendView(apiModel: apiModel)
       FiltersView(apiModel: apiModel)
-      
       Divider().background(.gray)
-      VSplitView {
-        ObjectsView(apiModel: apiModel)
-        Divider().background(.cyan)
-        MessagesView(apiModel: apiModel)
-      }
+
+        VSplitView {
+          ObjectsView(apiModel: apiModel, api6000: api6000)
+            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+          
+          Divider().background(.cyan)
+          MessagesView(apiModel: apiModel, api6000: api6000)
+            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+          
+        }
       Spacer()
       Divider().background(.gray)
       BottomButtonsView(apiModel: apiModel)
     }
+    .frame(minWidth: 900, maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    
     // initialize on first appearance
     .onAppear(perform: { apiModel.onAppear() } )
     
@@ -67,8 +75,8 @@ public struct ApiView: View {
 
 struct ApiView_Previews: PreviewProvider {
   static var previews: some View {
-    ApiView(apiModel: ApiModel())
-      .frame(minWidth: 975, minHeight: 400)
-      .padding()
+    ApiView(apiModel: ApiModel(), api6000: Model.shared)
+      .frame(minWidth: 900)
+      .padding(.horizontal)
   }
 }

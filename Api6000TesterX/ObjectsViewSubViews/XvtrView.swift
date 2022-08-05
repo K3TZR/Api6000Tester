@@ -1,8 +1,8 @@
 //
-//  GpsView.swift
-//  Api6000Components/ApiViewer/Subviews/ObjectsSubViews
+//  XvtrView.swift
+//  Api6000TesterX
 //
-//  Created by Douglas Adams on 1/23/22.
+//  Created by Douglas Adams on 8/5/22.
 //
 
 import SwiftUI
@@ -12,17 +12,17 @@ import Api6000
 // ----------------------------------------------------------------------------
 // MARK: - View
 
-struct GpsView: View {
+struct XvtrView: View {
   @ObservedObject var api6000: Model
   
   var body: some View {
     
-    HStack(spacing: 10) {
-      Text("         GPS ")
-      if api6000.radio!.gpsPresent {
+    if api6000.xvtrs.count == 0 {
+      Text("         XVTR -> None present").foregroundColor(.red)
+    } else {
+      HStack(spacing: 10) {
+        Text("         XVTR -> ")
         Text("NOT IMPLEMENTED").foregroundColor(.red)
-      } else {
-        Text("NOT Installed").foregroundColor(.red)
       }
     }
   }
@@ -31,9 +31,9 @@ struct GpsView: View {
 // ----------------------------------------------------------------------------
 // MARK: - Preview
 
-struct GpsView_Previews: PreviewProvider {
+struct XvtrView_Previews: PreviewProvider {
   static var previews: some View {
-    GpsView(api6000: Model.shared)
+    XvtrView(api6000: Model.shared)
     .frame(minWidth: 1000)
     .padding()
   }

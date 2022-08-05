@@ -6,13 +6,15 @@
 //
 
 import SwiftUI
+import Api6000
 
 // ----------------------------------------------------------------------------
 // MARK: - View
 
 struct MessagesView: View {
   @ObservedObject var apiModel: ApiModel
-  
+  @ObservedObject var api6000: Model
+
   
   func chooseColor(_ text: String) -> Color {
     if text.prefix(1) == "C" { return Color(.systemGreen) }                         // Commands
@@ -28,7 +30,7 @@ struct MessagesView: View {
     ScrollViewReader { proxy in
       ScrollView([.horizontal, .vertical]) {
         
-        VStack(alignment: .leading) {
+        VStack {
           
           if apiModel.filteredMessages.count == 0 {
             Text("TCP messages will be displayed here")
@@ -42,6 +44,8 @@ struct MessagesView: View {
               .tag(message.id)
               .foregroundColor( chooseColor(message.text) )
             }
+            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+
             .onChange(of: apiModel.gotoTop, perform: { _ in
               let id = apiModel.gotoTop ? apiModel.filteredMessages.first!.id : apiModel.filteredMessages.last!.id
               proxy.scrollTo(id, anchor: .topLeading)
@@ -52,8 +56,8 @@ struct MessagesView: View {
             })
           }
         }
+        .frame(minWidth: 900, maxWidth: .infinity)
         .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
-        .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
       }
     }
   }
@@ -64,7 +68,7 @@ struct MessagesView: View {
 
 struct MessagesView_Previews: PreviewProvider {
   static var previews: some View {
-    MessagesView(apiModel: ApiModel() )
+    MessagesView(apiModel: ApiModel(), api6000: Model.shared )
       .frame(minWidth: 975)
       .padding()
   }

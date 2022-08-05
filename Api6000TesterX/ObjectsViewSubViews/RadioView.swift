@@ -14,60 +14,60 @@ import Shared
 // MARK: - View
 
 struct RadioView: View {
-  @EnvironmentObject var model: Model
+  @ObservedObject var api6000: Model
   
   var body: some View {
-    if model.activePacketId != nil {
+    if api6000.activePacketId != nil {
       VStack(alignment: .leading) {
-        HStack(spacing: 20) {
-          Text("RADIO      ->")
-          Text(model.packets[id: model.activePacketId!]!.source.rawValue)
-            .foregroundColor(model.packets[id: model.activePacketId!]!.source == .local ? .green : .red)
+        HStack(spacing: 10) {
+          Text("RADIO ->")
+          Text(api6000.packets[id: api6000.activePacketId!]!.source.rawValue)
+            .foregroundColor(api6000.packets[id: api6000.activePacketId!]!.source == .local ? .green : .red)
           Group {
             HStack(spacing: 5) {
               Text("Name")
-              Text(model.packets[id: model.activePacketId!]!.nickname)
+              Text(api6000.packets[id: api6000.activePacketId!]!.nickname)
                 .foregroundColor(.secondary)
-                .frame(width: 120, alignment: .leading)
             }
             HStack(spacing: 5) {
               Text("Ip")
-              Text(model.packets[id: model.activePacketId!]!.publicIp).foregroundColor(.secondary)
+              Text(api6000.packets[id: api6000.activePacketId!]!.publicIp).foregroundColor(.secondary)
             }
             HStack(spacing: 5) {
-              Text("FW Version")
-              Text(model.packets[id: model.activePacketId!]!.version).foregroundColor(.secondary)
+              Text("FW")
+              Text(api6000.packets[id: api6000.activePacketId!]!.version).foregroundColor(.secondary)
             }
             HStack(spacing: 5) {
               Text("Model")
-              Text(model.packets[id: model.activePacketId!]!.model).foregroundColor(.secondary)
+              Text(api6000.packets[id: api6000.activePacketId!]!.model).foregroundColor(.secondary)
             }
           }
           Group {
             HStack(spacing: 5) {
               Text("Serial")
-              Text(model.packets[id: model.activePacketId!]!.serial).foregroundColor(.secondary)
+              Text(api6000.packets[id: api6000.activePacketId!]!.serial).foregroundColor(.secondary)
             }
             HStack(spacing: 5) {
               Text("Stations")
-              Text(model.packets[id: model.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
-            }
+             Text(api6000.packets[id: api6000.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
+            }.frame(width: 150, alignment: .leading)
+            
             HStack(spacing: 5) {
               Text("Atu")
-              Text(model.radio!.atuPresent ? "Y" : "N").foregroundColor(model.radio!.atuPresent ? .green : .red)
+              Text(api6000.radio!.atuPresent ? "Y" : "N").foregroundColor(api6000.radio!.atuPresent ? .green : .red)
             }
             HStack(spacing: 5) {
               Text("Gps")
-              Text(model.radio!.gpsPresent ? "Y" : "N").foregroundColor(model.radio!.gpsPresent ? .green : .red)
+              Text(api6000.radio!.gpsPresent ? "Y" : "N").foregroundColor(api6000.radio!.gpsPresent ? .green : .red)
             }
             HStack(spacing: 5) {
               Text("Scu")
-              Text("\(model.radio!.numberOfScus)").foregroundColor(.green)
+              Text("\(api6000.radio!.numberOfScus)").foregroundColor(.green)
             }
           }
         }
-        AtuView(model: model)
-        GpsView(model: model)
+        AtuView(api6000: api6000)
+        GpsView(api6000: api6000)
       }
     }
   }
@@ -78,7 +78,7 @@ struct RadioView: View {
 
 struct RadioView_Previews: PreviewProvider {
   static var previews: some View {
-    RadioView()
-      .frame(minWidth: 975)
+    RadioView(api6000: Model.shared)
+      .frame(minWidth: 1000)
   }
 }

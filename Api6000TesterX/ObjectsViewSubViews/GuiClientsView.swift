@@ -14,67 +14,75 @@ import Shared
 // MARK: - View
 
 struct GuiClientsView: View {
-  @EnvironmentObject var model: Model
-  let apiModel: ApiModel
-  
+  @ObservedObject var api6000: Model
+  @ObservedObject var apiModel: ApiModel
+
   var body: some View {
-    if model.activePacketId == nil {
+    if api6000.activePacketId == nil {
       EmptyView()
     } else {
-      ForEach(model.guiClients, id: \.id) { guiClient in
-        Divider().background(Color(.red))
-        HStack(spacing: 20) {
-          Text("GUI CLIENT -> ").frame(width: 140, alignment: .leading)
-          Text("\(guiClient.station)     \(guiClient.program)").frame(width: 220, alignment: .leading)
-          HStack(spacing: 5) {
-            Text("Handle")
-            Text(guiClient.handle.hex).foregroundColor(.secondary)
+      VStack(alignment: .leading) {
+        ForEach(api6000.guiClients, id: \.id) { guiClient in
+          Divider().background(Color(.red))
+          HStack(spacing: 10) {
+            Text("GUI   ->")
+            HStack(spacing: 5) {
+              Text("Station")
+              Text("\(guiClient.station)").foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Program")
+              Text("\(guiClient.program)").foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Handle")
+              Text(guiClient.handle.hex).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("ClientId")
+              Text(guiClient.clientId ?? "Unknown").foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("LocalPtt")
+              Text(guiClient.isLocalPtt ? "Y" : "N").foregroundColor(guiClient.isLocalPtt ? .green : .red)
+            }
           }
-          HStack(spacing: 5) {
-            Text("ClientId")
-            Text(guiClient.clientId ?? "Unknown").foregroundColor(.secondary)
-          }
-          HStack(spacing: 5) {
-            Text("LocalPtt")
-            Text(guiClient.isLocalPtt ? "Y" : "N")
-              .foregroundColor(guiClient.isLocalPtt ? .green : .red)
-          }
+          GuiClientSubView(handle: guiClient.handle, apiModel: apiModel, api6000: api6000)
         }
-        GuiClientSubView(handle: guiClient.handle, apiModel: apiModel)
       }
-      .frame(maxWidth: .infinity, alignment: .leading)
     }
   }
 }
 
 struct GuiClientSubView: View {
-  @EnvironmentObject var model: Model
   let handle: Handle
-  let apiModel: ApiModel
-  
+  @ObservedObject var apiModel: ApiModel
+  @ObservedObject var api6000: Model
+
   var body: some View {
     
     switch apiModel.objectFilter {
       
     case ObjectFilter.core.rawValue:
-      StreamView(handle: handle).environmentObject(model)
-      TnfView()
-      PanadapterView(handle: handle, showMeters: true)
+      StreamView(api6000: api6000, handle: handle)
+//      TnfView(api6000: api6000)
+      PanadapterView(api6000: api6000, handle: handle, showMeters: true)
       
     case ObjectFilter.coreNoMeters.rawValue:
-      StreamView(handle: handle)
-      PanadapterView(handle: handle, showMeters: false)
+      StreamView(api6000: api6000, handle: handle)
+//      TnfView(api6000: api6000)
+      PanadapterView(api6000: api6000, handle: handle, showMeters: false)
       
-      //      case ObjectFilter.amplifiers.rawValue:       AmplifierView()
-    case ObjectFilter.bandSettings.rawValue:      BandSettingsView().environmentObject(model)
-    case ObjectFilter.interlock.rawValue:         InterlockView().environmentObject(model)
-      //      case ObjectFilter.memories.rawValue:         MemoriesView()
-    case ObjectFilter.meters.rawValue:            MeterView(sliceId: nil)
-    case ObjectFilter.streams.rawValue:           StreamView(handle: handle)
-    case ObjectFilter.transmit.rawValue:          TransmitView().environmentObject(model)
-    case ObjectFilter.tnfs.rawValue:              TnfView().environmentObject(model)
-      //      case ObjectFilter.waveforms.rawValue:        WaveformView()
-      //      case ObjectFilter.xvtrs.rawValue:            XvtrView()
+    case ObjectFilter.amplifiers.rawValue:        AmplifierView(api6000: api6000)
+    case ObjectFilter.bandSettings.rawValue:      BandSettingsView(api6000: api6000)
+    case ObjectFilter.interlock.rawValue:         InterlockView(api6000: api6000)
+    case ObjectFilter.memories.rawValue:          MemoriesView(api6000: api6000)
+    case ObjectFilter.meters.rawValue:            MeterView(api6000: api6000, sliceId: nil)
+    case ObjectFilter.streams.rawValue:           StreamView(api6000: api6000, handle: handle)
+    case ObjectFilter.transmit.rawValue:          TransmitView(api6000: api6000)
+    case ObjectFilter.tnfs.rawValue:              TnfView(api6000: api6000)
+    case ObjectFilter.waveforms.rawValue:         WaveformView(api6000: api6000)
+    case ObjectFilter.xvtrs.rawValue:             XvtrView(api6000: api6000)
     default:    EmptyView()
     }
   }
@@ -85,8 +93,8 @@ struct GuiClientSubView: View {
 
 struct GuiClientsView_Previews: PreviewProvider {
   static var previews: some View {
-    GuiClientsView( apiModel: ApiModel() )
-      .frame(minWidth: 975)
+    GuiClientsView( api6000: Model.shared, apiModel: ApiModel() )
+      .frame(minWidth: 1000)
       .padding()
   }
 }

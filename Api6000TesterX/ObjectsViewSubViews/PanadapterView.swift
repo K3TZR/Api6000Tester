@@ -14,30 +14,36 @@ import Shared
 // MARK: - View
 
 struct PanadapterView: View {
-  @EnvironmentObject var model: Model
+  @ObservedObject var api6000: Model
   let handle: Handle
   let showMeters: Bool
   
   var body: some View {
-    ForEach(model.panadapters) { panadapter in
-      if panadapter.clientHandle == handle {
-        HStack(spacing: 20) {
-          Text("Panadapter").frame(width: 100, alignment: .trailing)
-          
-          Text(panadapter.id.hex).foregroundColor(.secondary)
-          
-          HStack(spacing: 5) {
-            Text("Center")
-            Text("\(panadapter.center)").foregroundColor(.secondary)
+    
+    if api6000.panadapters.count == 0 {
+      Text("         PANADAPTERS -> None present").foregroundColor(.red)
+    } else {
+      ForEach(api6000.panadapters) { panadapter in
+        if panadapter.clientHandle == handle {
+          HStack(spacing: 20) {
+            HStack(spacing: 5) {
+              Text("         PANADAPTER")
+              Text(panadapter.id.hex).foregroundColor(.secondary)
+            }
+            
+            HStack(spacing: 5) {
+              Text("Center")
+              Text("\(panadapter.center)").foregroundColor(.secondary)
+            }
+            
+            HStack(spacing: 5) {
+              Text("Bandwidth")
+              Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
+            }
           }
-          
-          HStack(spacing: 5) {
-            Text("Bandwidth")
-            Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
-          }
+          WaterfallView(api6000: api6000, panadapterId: panadapter.id)
+          SliceView(api6000: api6000, panadapterId: panadapter.id, showMeters: showMeters)
         }
-        WaterfallView(panadapterId: panadapter.id)
-        SliceView(panadapterId: panadapter.id, showMeters: showMeters)
       }
     }
   }
@@ -49,10 +55,11 @@ struct PanadapterView: View {
 struct PanadapterView_Previews: PreviewProvider {
   static var previews: some View {
     PanadapterView(
+      api6000: Model.shared,
       handle: 1,
       showMeters: true
     )
-    .frame(minWidth: 975)
+    .frame(minWidth: 1000)
     .padding()
   }
 }

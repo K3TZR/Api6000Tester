@@ -33,6 +33,10 @@
 		9F98C65528969C8400FDD37C /* GpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C65328969C8400FDD37C /* GpsView.swift */; };
 		9F98C657289851B000FDD37C /* TransmitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C656289851B000FDD37C /* TransmitView.swift */; };
 		9F98C659289855FA00FDD37C /* InterlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C658289855FA00FDD37C /* InterlockView.swift */; };
+		9F98C691289CBD1C00FDD37C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C690289CBD1C00FDD37C /* WaveformView.swift */; };
+		9F98C693289D6CFE00FDD37C /* MemoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C692289D6CFE00FDD37C /* MemoriesView.swift */; };
+		9F98C695289D6DD200FDD37C /* XvtrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C694289D6DD200FDD37C /* XvtrView.swift */; };
+		9F98C697289D6E5B00FDD37C /* AmplifierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C696289D6E5B00FDD37C /* AmplifierView.swift */; };
 		9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */; };
 		9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC752887A6A900563DF5 /* MessagesView.swift */; };
 		9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7A288857D000563DF5 /* SendView.swift */; };
@@ -66,6 +70,10 @@
 		9F98C65328969C8400FDD37C /* GpsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GpsView.swift; sourceTree = "<group>"; };
 		9F98C656289851B000FDD37C /* TransmitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransmitView.swift; sourceTree = "<group>"; };
 		9F98C658289855FA00FDD37C /* InterlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterlockView.swift; sourceTree = "<group>"; };
+		9F98C690289CBD1C00FDD37C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
+		9F98C692289D6CFE00FDD37C /* MemoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoriesView.swift; sourceTree = "<group>"; };
+		9F98C694289D6DD200FDD37C /* XvtrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XvtrView.swift; sourceTree = "<group>"; };
+		9F98C696289D6E5B00FDD37C /* AmplifierView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmplifierView.swift; sourceTree = "<group>"; };
 		9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomButtonsView.swift; sourceTree = "<group>"; };
 		9FF2CC752887A6A900563DF5 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		9FF2CC772888416A00563DF5 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
@@ -168,11 +176,13 @@
 		9FF2CC882892EE0D00563DF5 /* ObjectsViewSubViews */ = {
 			isa = PBXGroup;
 			children = (
-				9F98C656289851B000FDD37C /* TransmitView.swift */,
+				9F98C696289D6E5B00FDD37C /* AmplifierView.swift */,
+				9F98C692289D6CFE00FDD37C /* MemoriesView.swift */,
 				9F98C65228969C8400FDD37C /* AtuView.swift */,
 				9F98C64A2894267300FDD37C /* BandSettingsView.swift */,
 				9F98C65328969C8400FDD37C /* GpsView.swift */,
 				9FF2CC82288E45C400563DF5 /* GuiClientsView.swift */,
+				9F98C658289855FA00FDD37C /* InterlockView.swift */,
 				9FF2CC8D2892F00C00563DF5 /* MeterView.swift */,
 				9F98C64C2895607500FDD37C /* NonGuiClientView.swift */,
 				9FF2CC862892EA9400563DF5 /* PanadapterView.swift */,
@@ -180,8 +190,10 @@
 				9FF2CC8B2892EF8400563DF5 /* SliceView.swift */,
 				9FF2CC842892E9C900563DF5 /* StreamView.swift */,
 				9FF2CC8F2893151300563DF5 /* TnfView.swift */,
+				9F98C656289851B000FDD37C /* TransmitView.swift */,
 				9FF2CC892892EE7900563DF5 /* WaterfallView.swift */,
-				9F98C658289855FA00FDD37C /* InterlockView.swift */,
+				9F98C690289CBD1C00FDD37C /* WaveformView.swift */,
+				9F98C694289D6DD200FDD37C /* XvtrView.swift */,
 			);
 			path = ObjectsViewSubViews;
 			sourceTree = "<group>";
@@ -284,7 +296,9 @@
 				9F5F4F02283321C5000E8145 /* Api6000TesterXApp.swift in Sources */,
 				9F98C6512895B37900FDD37C /* AlertModel.swift in Sources */,
 				9FF2CC7D2888599900563DF5 /* FiltersView.swift in Sources */,
+				9F98C695289D6DD200FDD37C /* XvtrView.swift in Sources */,
 				9F98C64F2895B27A00FDD37C /* AlertView.swift in Sources */,
+				9F98C691289CBD1C00FDD37C /* WaveformView.swift in Sources */,
 				9F98C65428969C8400FDD37C /* AtuView.swift in Sources */,
 				9FF2CC81288E38D400563DF5 /* RadioView.swift in Sources */,
 				9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */,
@@ -293,11 +307,13 @@
 				9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */,
 				9F98C659289855FA00FDD37C /* InterlockView.swift in Sources */,
 				9FF2CC8C2892EF8400563DF5 /* SliceView.swift in Sources */,
+				9F98C697289D6E5B00FDD37C /* AmplifierView.swift in Sources */,
 				9FF2CC902893151300563DF5 /* TnfView.swift in Sources */,
 				9F98C64D2895607500FDD37C /* NonGuiClientView.swift in Sources */,
 				9FF2CC83288E45C400563DF5 /* GuiClientsView.swift in Sources */,
 				9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */,
 				9FF2CC852892E9C900563DF5 /* StreamView.swift in Sources */,
+				9F98C693289D6CFE00FDD37C /* MemoriesView.swift in Sources */,
 				9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */,
 				9F98C64B2894267300FDD37C /* BandSettingsView.swift in Sources */,
 				9FF2CC8A2892EE7900563DF5 /* WaterfallView.swift in Sources */,
@@ -442,7 +458,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000TesterX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -472,7 +488,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000TesterX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

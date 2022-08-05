@@ -13,13 +13,13 @@ import Api6000
 // MARK: - View
 
 struct AtuView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var api6000: Model
   
   var body: some View {
-    if model.radio!.atuPresent {
-      let atu = model.atu
-      HStack(spacing: 20) {
-        Text("ATU        ->")
+    HStack(spacing: 10) {
+      Text("         ATU ")
+      if api6000.radio!.atuPresent {
+        let atu = api6000.atu
         
         HStack(spacing: 5) {
           Text("Enabled")
@@ -42,13 +42,8 @@ struct AtuView: View {
           Text(atu.usingMemory ? "Y" : "N")
             .foregroundColor(atu.usingMemory ? .green : .red)
         }
-      }
-      .frame(minWidth: 1000, maxWidth: .infinity, alignment: .leading)
-
-    } else {
-      HStack(spacing: 20) {
-        Text("ATU        ->")
-        Text("NOT INSTALLED").foregroundColor(.red)
+      } else {
+        Text("NOT Installed").foregroundColor(.red)
       }
     }
   }
@@ -61,8 +56,8 @@ struct AtuView_Previews: PreviewProvider {
   
   static var previews: some View {
     
-    AtuView(model: Model.shared)
-      .frame(minWidth: 975)
+    AtuView(api6000: Model.shared)
+      .frame(minWidth: 1000)
       .padding()
   }
 }
