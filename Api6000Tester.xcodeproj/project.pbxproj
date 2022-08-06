@@ -19,7 +19,7 @@
 		9F2E6F232885FD2900A754C0 /* Vita in Frameworks */ = {isa = PBXBuildFile; productRef = 9F2E6F222885FD2900A754C0 /* Vita */; };
 		9F2E6F252885FD2900A754C0 /* XCGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 9F2E6F242885FD2900A754C0 /* XCGWrapper */; };
 		9F2E6F2828874E7600A754C0 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 9F2E6F2728874E7600A754C0 /* IdentifiedCollections */; };
-		9F5F4F02283321C5000E8145 /* Api6000TesterXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterXApp.swift */; };
+		9F5F4F02283321C5000E8145 /* Api6000TesterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterApp.swift */; };
 		9F5F4F06283321C5000E8145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F05283321C5000E8145 /* Assets.xcassets */; };
 		9F5F4F09283321C5000E8145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */; };
 		9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3A28332543000E8145 /* ApiModel.swift */; };
@@ -53,11 +53,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9F5F4EFE283321C5000E8145 /* Api6000TesterX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Api6000TesterX.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F5F4F01283321C5000E8145 /* Api6000TesterXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api6000TesterXApp.swift; sourceTree = "<group>"; };
+		9F5F4EFE283321C5000E8145 /* Api6000Tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Api6000Tester.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F5F4F01283321C5000E8145 /* Api6000TesterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api6000TesterApp.swift; sourceTree = "<group>"; };
 		9F5F4F05283321C5000E8145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		9F5F4F0A283321C5000E8145 /* Api6000TesterX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Api6000TesterX.entitlements; sourceTree = "<group>"; };
+		9F5F4F0A283321C5000E8145 /* Api6000Tester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Api6000Tester.entitlements; sourceTree = "<group>"; };
 		9F5F4F3A28332543000E8145 /* ApiModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiModel.swift; sourceTree = "<group>"; };
 		9F5F4F3B28332543000E8145 /* ApiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiView.swift; sourceTree = "<group>"; };
 		9F5F4F5828334322000E8145 /* TopButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopButtonsView.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 				9FF2CC792888508400563DF5 /* UtilityComponents */,
 				9FF2CC7828884D4700563DF5 /* ViewComponents */,
 				9FF2CC772888416A00563DF5 /* ApiComponents */,
-				9F5F4F00283321C5000E8145 /* Api6000TesterX */,
+				9F5F4F00283321C5000E8145 /* Api6000Tester */,
 				9F5F4EFF283321C5000E8145 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -129,12 +129,12 @@
 		9F5F4EFF283321C5000E8145 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9F5F4EFE283321C5000E8145 /* Api6000TesterX.app */,
+				9F5F4EFE283321C5000E8145 /* Api6000Tester.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9F5F4F00283321C5000E8145 /* Api6000TesterX */ = {
+		9F5F4F00283321C5000E8145 /* Api6000Tester */ = {
 			isa = PBXGroup;
 			children = (
 				9FF2CC882892EE0D00563DF5 /* ObjectsViewSubViews */,
@@ -144,14 +144,14 @@
 				9FF2CC7E288CDE3C00563DF5 /* ObjectsView.swift */,
 				9FF2CC752887A6A900563DF5 /* MessagesView.swift */,
 				9F5F4F8A28334778000E8145 /* SubViews */,
-				9F5F4F01283321C5000E8145 /* Api6000TesterXApp.swift */,
+				9F5F4F01283321C5000E8145 /* Api6000TesterApp.swift */,
 				9F5F4F05283321C5000E8145 /* Assets.xcassets */,
-				9F5F4F0A283321C5000E8145 /* Api6000TesterX.entitlements */,
+				9F5F4F0A283321C5000E8145 /* Api6000Tester.entitlements */,
 				9F5F4F07283321C5000E8145 /* Preview Content */,
 				9F98C64E2895B27A00FDD37C /* AlertView.swift */,
 				9F98C6502895B37900FDD37C /* AlertModel.swift */,
 			);
-			path = Api6000TesterX;
+			path = Api6000Tester;
 			sourceTree = "<group>";
 		};
 		9F5F4F07283321C5000E8145 /* Preview Content */ = {
@@ -201,9 +201,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9F5F4EFD283321C5000E8145 /* Api6000TesterX */ = {
+		9F5F4EFD283321C5000E8145 /* Api6000Tester */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9F5F4F0D283321C5000E8145 /* Build configuration list for PBXNativeTarget "Api6000TesterX" */;
+			buildConfigurationList = 9F5F4F0D283321C5000E8145 /* Build configuration list for PBXNativeTarget "Api6000Tester" */;
 			buildPhases = (
 				9F5F4EFA283321C5000E8145 /* Sources */,
 				9F5F4EFB283321C5000E8145 /* Frameworks */,
@@ -213,7 +213,7 @@
 			);
 			dependencies = (
 			);
-			name = Api6000TesterX;
+			name = Api6000Tester;
 			packageProductDependencies = (
 				9F2E6F0E2885FCFF00A754C0 /* Api6000 */,
 				9F2E6F112885FD1800A754C0 /* ClientView */,
@@ -229,7 +229,7 @@
 				9F2E6F2728874E7600A754C0 /* IdentifiedCollections */,
 			);
 			productName = Api6000Tester;
-			productReference = 9F5F4EFE283321C5000E8145 /* Api6000TesterX.app */;
+			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -247,7 +247,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9F5F4EF9283321C5000E8145 /* Build configuration list for PBXProject "Api6000TesterX" */;
+			buildConfigurationList = 9F5F4EF9283321C5000E8145 /* Build configuration list for PBXProject "Api6000Tester" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -266,7 +266,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9F5F4EFD283321C5000E8145 /* Api6000TesterX */,
+				9F5F4EFD283321C5000E8145 /* Api6000Tester */,
 			);
 		};
 /* End PBXProject section */
@@ -293,7 +293,7 @@
 				9F98C657289851B000FDD37C /* TransmitView.swift in Sources */,
 				9F5F4F3F28332543000E8145 /* ApiView.swift in Sources */,
 				9FF2CC8E2892F00C00563DF5 /* MeterView.swift in Sources */,
-				9F5F4F02283321C5000E8145 /* Api6000TesterXApp.swift in Sources */,
+				9F5F4F02283321C5000E8145 /* Api6000TesterApp.swift in Sources */,
 				9F98C6512895B37900FDD37C /* AlertModel.swift in Sources */,
 				9FF2CC7D2888599900563DF5 /* FiltersView.swift in Sources */,
 				9F98C695289D6DD200FDD37C /* XvtrView.swift in Sources */,
@@ -441,17 +441,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Api6000TesterX/Api6000TesterX.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Api6000Tester/Api6000Tester.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Api6000TesterX/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Api6000Tester/Preview Content\"";
 				DEVELOPMENT_TEAM = EE5B8TYXGA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Api6000TesterX/Info.plist;
+				INFOPLIST_FILE = Api6000Tester/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -459,7 +459,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000TesterX;
+				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000Tester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -471,17 +471,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Api6000TesterX/Api6000TesterX.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Api6000Tester/Api6000Tester.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Api6000TesterX/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Api6000Tester/Preview Content\"";
 				DEVELOPMENT_TEAM = EE5B8TYXGA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Api6000TesterX/Info.plist;
+				INFOPLIST_FILE = Api6000Tester/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -489,7 +489,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000TesterX;
+				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000Tester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -499,7 +499,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9F5F4EF9283321C5000E8145 /* Build configuration list for PBXProject "Api6000TesterX" */ = {
+		9F5F4EF9283321C5000E8145 /* Build configuration list for PBXProject "Api6000Tester" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9F5F4F0B283321C5000E8145 /* Debug */,
@@ -508,7 +508,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9F5F4F0D283321C5000E8145 /* Build configuration list for PBXNativeTarget "Api6000TesterX" */ = {
+		9F5F4F0D283321C5000E8145 /* Build configuration list for PBXNativeTarget "Api6000Tester" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9F5F4F0E283321C5000E8145 /* Debug */,

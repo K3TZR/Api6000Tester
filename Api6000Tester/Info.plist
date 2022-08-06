@@ -11,7 +11,7 @@
 			<string>net.k3tzr</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>Api6000TesterX</string>
+				<string>Api6000Tester</string>
 			</array>
 		</dict>
 	</array>

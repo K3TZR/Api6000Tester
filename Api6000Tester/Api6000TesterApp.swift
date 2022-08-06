@@ -18,7 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func applicationWillTerminate(_ notification: Notification) {
-    NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("Api6000TesterX: application terminated", .debug, #function, #file, #line))
+    NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("Api6000Tester: application terminated", .debug, #function, #file, #line))
   }
   
   func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -33,7 +33,7 @@ struct Api6000TesterXApp: App {
 
   var body: some Scene {
 
-    WindowGroup("Api6000TesterX  (v" + Version().string + ")") {
+    WindowGroup("Api6000Tester  (v" + Version().string + ")") {
       ApiView(apiModel: ApiModel(), api6000: Model.shared)
         .toolbar {
           Button("Log View") { OpenWindows.LogView.open() }
@@ -44,7 +44,7 @@ struct Api6000TesterXApp: App {
         .padding()
     }
     
-    WindowGroup("Api6000TesterX  (Log View)") {
+    WindowGroup("Api6000Tester  (Log View)") {
       LogView(model: LogModel() )
       .toolbar {
         Button("Close") { NSApplication.shared.keyWindow?.close()  }
@@ -65,7 +65,7 @@ enum OpenWindows: String, CaseIterable {
   case LogView = "LogView"
   
   func open() {
-    if let url = URL(string: "Api6000TesterX://\(self.rawValue)") {
+    if let url = URL(string: "Api6000Tester://\(self.rawValue)") {
       NSWorkspace.shared.open(url)
     }
   }
