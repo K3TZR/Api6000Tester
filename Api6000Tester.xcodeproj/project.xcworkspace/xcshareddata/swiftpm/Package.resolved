@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "apicomponents",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/K3TZR/ApiComponents.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "74150e7cf635126052a515d7fb7b6f2618347038"
-      }
-    },
-    {
       "identity" : "cocoaasyncsocket",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/robbiehanson/CocoaAsyncSocket",
@@ -59,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "488fdc2d59ac55f5db9e01645910820021e67fc7"
+        "revision" : "0a38f2c860a64a005afeb8a6fe186eb2818c9a3f",
+        "version" : "0.38.3"
       }
     },
     {
@@ -79,24 +70,6 @@
       "state" : {
         "revision" : "2d6b7ffcc67afd9077fac5e5a29bcd6d39b71076",
         "version" : "0.4.0"
-      }
-    },
-    {
-      "identity" : "utilitycomponents",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/K3TZR/UtilityComponents.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "0533d8b7edc0d79e38d51c2b2765aa21bf0ec7a1"
-      }
-    },
-    {
-      "identity" : "viewcomponents",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/K3TZR/ViewComponents.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "05ba7efb28772e1494544c66300f18b251ae3733"
       }
     },
     {
