@@ -17,6 +17,8 @@ import Shared
 struct MeterView: View {
   @ObservedObject var api6000: Model
   let sliceId: UInt32?
+  let sliceClientHandle: UInt32?
+  let handle: Handle
   
   func valueColor(_ value: Float, _ low: Float, _ high: Float) -> Color {
     if value > high { return .red }
@@ -24,11 +26,20 @@ struct MeterView: View {
     return .green
   }
 
+  func showMeter(_ id: UInt32?, _ clientHandle: UInt32?, _ source: String, _ group: String) -> Bool {
+    if id == nil { return true }
+    if clientHandle != handle { return false }
+    if source != "slc" { return false }
+    if UInt32(group) != id { return false }
+    return true
+  }
+  
   var body: some View {
     
       VStack(alignment: .leading) {
         ForEach(api6000.meters ) { meter in
-          if sliceId == nil || sliceId != nil && meter.source == "slc" && UInt32(meter.group) == sliceId {
+          
+          if showMeter(sliceId, sliceClientHandle, meter.source, meter.group) {
             HStack(spacing: 10) {
               Group {
                 Text("Meter").padding(.leading, sliceId == nil ? 0: 60)
@@ -58,7 +69,7 @@ struct MeterView: View {
 
 struct MeterView_Previews: PreviewProvider {
   static var previews: some View {
-    MeterView(api6000: Model.shared, sliceId: 1)
+    MeterView(api6000: Model.shared, sliceId: 1, sliceClientHandle: nil, handle: 1)
     .frame(minWidth: 1000)
     .padding()
   }

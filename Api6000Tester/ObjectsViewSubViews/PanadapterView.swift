@@ -32,6 +32,11 @@ struct PanadapterView: View {
             }
             
             HStack(spacing: 5) {
+              Text("Streaming")
+              Text(panadapter.isStreaming ? "Y" : "N").foregroundColor(panadapter.isStreaming ? .green : .red)
+            }
+
+            HStack(spacing: 5) {
               Text("Center")
               Text("\(panadapter.center)").foregroundColor(.secondary)
             }
@@ -42,7 +47,7 @@ struct PanadapterView: View {
             }
           }
           WaterfallView(api6000: api6000, panadapterId: panadapter.id)
-          SliceView(api6000: api6000, panadapterId: panadapter.id, showMeters: showMeters)
+          SliceView(api6000: api6000, panadapterId: panadapter.id, handle: handle, showMeters: showMeters)
         }
       }
     }

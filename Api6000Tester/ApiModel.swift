@@ -752,8 +752,6 @@ public final class ApiModel: ObservableObject {
       .sink { [self] note in
         logAlertReceived( note.object as! LogEntry )
       }
-    #else
-      .none
     #endif
   }
 

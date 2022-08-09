@@ -64,12 +64,12 @@ struct GuiClientSubView: View {
     switch apiModel.objectFilter {
       
     case ObjectFilter.core.rawValue:
-      StreamView(api6000: api6000, handle: handle)
+//      StreamView(api6000: api6000, handle: handle)
 //      TnfView(api6000: api6000)
       PanadapterView(api6000: api6000, handle: handle, showMeters: true)
       
     case ObjectFilter.coreNoMeters.rawValue:
-      StreamView(api6000: api6000, handle: handle)
+//      StreamView(api6000: api6000, handle: handle)
 //      TnfView(api6000: api6000)
       PanadapterView(api6000: api6000, handle: handle, showMeters: false)
       
@@ -77,7 +77,7 @@ struct GuiClientSubView: View {
     case ObjectFilter.bandSettings.rawValue:      BandSettingsView(api6000: api6000)
     case ObjectFilter.interlock.rawValue:         InterlockView(api6000: api6000)
     case ObjectFilter.memories.rawValue:          MemoriesView(api6000: api6000)
-    case ObjectFilter.meters.rawValue:            MeterView(api6000: api6000, sliceId: nil)
+    case ObjectFilter.meters.rawValue:            MeterView(api6000: api6000, sliceId: nil, sliceClientHandle: nil, handle: handle)
     case ObjectFilter.streams.rawValue:           StreamView(api6000: api6000, handle: handle)
     case ObjectFilter.transmit.rawValue:          TransmitView(api6000: api6000)
     case ObjectFilter.tnfs.rawValue:              TnfView(api6000: api6000)

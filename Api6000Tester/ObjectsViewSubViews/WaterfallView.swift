@@ -30,17 +30,25 @@ struct WaterfallView: View {
               Text(waterfall.id.hex).foregroundColor(.secondary)
             }
             HStack(spacing: 5) {
+              Text("Streaming")
+              Text(waterfall.isStreaming ? "Y" : "N").foregroundColor(waterfall.isStreaming ? .green : .red)
+            }
+
+            HStack(spacing: 5) {
               Text("AutoBlack")
               Text(waterfall.autoBlackEnabled ? "Y" : "N").foregroundColor(waterfall.autoBlackEnabled ? .green : .red)
             }
+            
             HStack(spacing: 5) {
               Text("ColorGain")
               Text("\(waterfall.colorGain)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("BlackLevel")
               Text("\(waterfall.blackLevel)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Duration")
               Text("\(waterfall.lineDuration)").foregroundColor(.secondary)

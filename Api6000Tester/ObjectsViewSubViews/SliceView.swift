@@ -16,6 +16,7 @@ import Shared
 struct SliceView: View {
   @ObservedObject var api6000: Model
   let panadapterId: PanadapterId
+  let handle: Handle
   let showMeters: Bool
   
   func valueColor(_ value: Float, _ low: Float, _ high: Float) -> Color {
@@ -70,7 +71,7 @@ struct SliceView: View {
                 Text("\(slice.daxClients)").foregroundColor(.green)
               }
             }
-            if showMeters { MeterView(api6000: api6000, sliceId: slice.id) }
+            if showMeters { MeterView(api6000: api6000, sliceId: slice.id, sliceClientHandle: slice.clientHandle, handle: handle) }
           }
         }
       }
@@ -86,6 +87,7 @@ struct SliceView_Previews: PreviewProvider {
     SliceView(
       api6000: Model.shared,
       panadapterId: 1,
+      handle: 1,
       showMeters: true
     )
     .frame(minWidth: 1000)
