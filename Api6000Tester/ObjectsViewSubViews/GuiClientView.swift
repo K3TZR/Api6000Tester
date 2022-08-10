@@ -13,7 +13,7 @@ import Shared
 // ----------------------------------------------------------------------------
 // MARK: - View
 
-struct GuiClientsView: View {
+struct GuiClientView: View {
   @ObservedObject var api6000: Model
   @ObservedObject var apiModel: ApiModel
 
@@ -50,6 +50,7 @@ struct GuiClientsView: View {
           GuiClientSubView(handle: guiClient.handle, apiModel: apiModel, api6000: api6000)
         }
       }
+      .padding(.bottom, 10)
     }
   }
 }
@@ -74,10 +75,12 @@ struct GuiClientSubView: View {
       PanadapterView(api6000: api6000, handle: handle, showMeters: false)
       
     case ObjectFilter.amplifiers.rawValue:        AmplifierView(api6000: api6000)
-    case ObjectFilter.bandSettings.rawValue:      BandSettingsView(api6000: api6000)
+    case ObjectFilter.bandSettings.rawValue:      BandSettingView(api6000: api6000)
+    case ObjectFilter.equalizers.rawValue:        EqualizerView(api6000: api6000)
     case ObjectFilter.interlock.rawValue:         InterlockView(api6000: api6000)
-    case ObjectFilter.memories.rawValue:          MemoriesView(api6000: api6000)
+    case ObjectFilter.memories.rawValue:          MemoryView(api6000: api6000)
     case ObjectFilter.meters.rawValue:            MeterView(api6000: api6000, sliceId: nil, sliceClientHandle: nil, handle: handle)
+    case ObjectFilter.profiles.rawValue:          ProfileView(api6000: api6000)
     case ObjectFilter.streams.rawValue:           StreamView(api6000: api6000, handle: handle)
     case ObjectFilter.transmit.rawValue:          TransmitView(api6000: api6000)
     case ObjectFilter.tnfs.rawValue:              TnfView(api6000: api6000)
@@ -91,9 +94,9 @@ struct GuiClientSubView: View {
 // ----------------------------------------------------------------------------
 // MARK: - Preview
 
-struct GuiClientsView_Previews: PreviewProvider {
+struct GuiClientView_Previews: PreviewProvider {
   static var previews: some View {
-    GuiClientsView( api6000: Model.shared, apiModel: ApiModel() )
+    GuiClientView( api6000: Model.shared, apiModel: ApiModel() )
       .frame(minWidth: 1000)
       .padding()
   }

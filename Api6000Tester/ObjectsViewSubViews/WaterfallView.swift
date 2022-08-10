@@ -35,17 +35,17 @@ struct WaterfallView: View {
             }
 
             HStack(spacing: 5) {
-              Text("AutoBlack")
+              Text("Auto_Black")
               Text(waterfall.autoBlackEnabled ? "Y" : "N").foregroundColor(waterfall.autoBlackEnabled ? .green : .red)
             }
             
             HStack(spacing: 5) {
-              Text("ColorGain")
+              Text("Color_Gain")
               Text("\(waterfall.colorGain)").foregroundColor(.secondary)
             }
             
             HStack(spacing: 5) {
-              Text("BlackLevel")
+              Text("Black_Level")
               Text("\(waterfall.blackLevel)").foregroundColor(.secondary)
             }
             

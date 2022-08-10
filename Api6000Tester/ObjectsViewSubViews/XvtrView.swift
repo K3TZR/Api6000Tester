@@ -18,7 +18,7 @@ struct XvtrView: View {
   var body: some View {
     
     if api6000.xvtrs.count == 0 {
-      Text("         XVTR -> None present").foregroundColor(.red)
+      Text("         XVTRs -> None present").foregroundColor(.red)
     } else {
       HStack(spacing: 10) {
         Text("         XVTR -> ")

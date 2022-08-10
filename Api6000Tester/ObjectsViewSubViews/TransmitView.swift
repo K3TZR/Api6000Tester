@@ -19,14 +19,14 @@ struct TransmitView: View {
     
     VStack(alignment: .leading) {
       HStack(spacing: 10) {
-        Text("         TRANSMIT -> ")
+        Text("         TRANSMIT")
         Group {
           HStack(spacing: 5) {
-            Text("RF Power")
+            Text("RF_Power")
             Text("\(api6000.transmit.rfPower)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
-            Text("Tune Power")
+            Text("Tune_Power")
             Text("\(api6000.transmit.tunePower)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
@@ -34,11 +34,11 @@ struct TransmitView: View {
             Text("\(api6000.transmit.frequency)").foregroundColor(.secondary)
           }
           HStack(spacing: 5) {
-            Text("Mon Level")
+            Text("Mon_Level")
             Text("\(api6000.transmit.txMonitorGainSb)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
-            Text("Comp Level")
+            Text("Comp_Level")
             Text("\(api6000.transmit.companderLevel)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
@@ -46,14 +46,14 @@ struct TransmitView: View {
             Text("\(api6000.transmit.micSelection)").foregroundColor(.secondary)
           }
           HStack(spacing: 5) {
-            Text("Mic Level")
+            Text("Mic_Level")
             Text("\(api6000.transmit.micLevel)").foregroundColor(.green)
           }
         }
       }
       HStack(spacing: 10) {
         Group {
-          Text("                     ")
+          Text("                 ")
           HStack(spacing: 5) {
             Text("Proc")
             Text(api6000.transmit.speechProcessorEnabled ? "ON" : "OFF")
@@ -85,11 +85,11 @@ struct TransmitView: View {
               .foregroundColor(api6000.transmit.voxEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
-            Text("Vox Delay")
+            Text("Vox_Delay")
             Text("\(api6000.transmit.voxDelay)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
-            Text("Vox Level")
+            Text("Vox_Level")
             Text("\(api6000.transmit.voxLevel)").foregroundColor(.green)
           }
         }

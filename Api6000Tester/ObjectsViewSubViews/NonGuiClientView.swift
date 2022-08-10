@@ -26,11 +26,11 @@ struct NonGuiClientView: View {
             Text(api6000.radio!.connectionHandle?.hex ?? "").foregroundColor(.secondary)
           }
           HStack(spacing: 5) {
-            Text("Bound to Station:")
+            Text("Bound_to_Station:")
             Text("\(api6000.activeStation ?? "none")").foregroundColor(.secondary)
           }
           HStack(spacing: 5) {
-            Text("Client Id")
+            Text("Client_Id")
             Text("\(api6000.radio!.boundClientId ?? "none")").foregroundColor(.secondary)
           }
         }

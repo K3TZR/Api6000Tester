@@ -25,7 +25,7 @@
 		9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3A28332543000E8145 /* ApiModel.swift */; };
 		9F5F4F3F28332543000E8145 /* ApiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3B28332543000E8145 /* ApiView.swift */; };
 		9F5F4F5928334322000E8145 /* TopButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F5828334322000E8145 /* TopButtonsView.swift */; };
-		9F98C64B2894267300FDD37C /* BandSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C64A2894267300FDD37C /* BandSettingsView.swift */; };
+		9F98C64B2894267300FDD37C /* BandSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C64A2894267300FDD37C /* BandSettingView.swift */; };
 		9F98C64D2895607500FDD37C /* NonGuiClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C64C2895607500FDD37C /* NonGuiClientView.swift */; };
 		9F98C64F2895B27A00FDD37C /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C64E2895B27A00FDD37C /* AlertView.swift */; };
 		9F98C6512895B37900FDD37C /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C6502895B37900FDD37C /* AlertModel.swift */; };
@@ -34,16 +34,18 @@
 		9F98C657289851B000FDD37C /* TransmitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C656289851B000FDD37C /* TransmitView.swift */; };
 		9F98C659289855FA00FDD37C /* InterlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C658289855FA00FDD37C /* InterlockView.swift */; };
 		9F98C691289CBD1C00FDD37C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C690289CBD1C00FDD37C /* WaveformView.swift */; };
-		9F98C693289D6CFE00FDD37C /* MemoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C692289D6CFE00FDD37C /* MemoriesView.swift */; };
+		9F98C693289D6CFE00FDD37C /* MemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C692289D6CFE00FDD37C /* MemoryView.swift */; };
 		9F98C695289D6DD200FDD37C /* XvtrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C694289D6DD200FDD37C /* XvtrView.swift */; };
 		9F98C697289D6E5B00FDD37C /* AmplifierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C696289D6E5B00FDD37C /* AmplifierView.swift */; };
+		9F98C69A28A1FDF800FDD37C /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C69928A1FDF800FDD37C /* EqualizerView.swift */; };
+		9F98C69C28A27F9800FDD37C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C69B28A27F9800FDD37C /* ProfileView.swift */; };
 		9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */; };
 		9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC752887A6A900563DF5 /* MessagesView.swift */; };
 		9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7A288857D000563DF5 /* SendView.swift */; };
 		9FF2CC7D2888599900563DF5 /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7C2888599900563DF5 /* FiltersView.swift */; };
 		9FF2CC7F288CDE3C00563DF5 /* ObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7E288CDE3C00563DF5 /* ObjectsView.swift */; };
 		9FF2CC81288E38D400563DF5 /* RadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC80288E38D400563DF5 /* RadioView.swift */; };
-		9FF2CC83288E45C400563DF5 /* GuiClientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC82288E45C400563DF5 /* GuiClientsView.swift */; };
+		9FF2CC83288E45C400563DF5 /* GuiClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC82288E45C400563DF5 /* GuiClientView.swift */; };
 		9FF2CC852892E9C900563DF5 /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC842892E9C900563DF5 /* StreamView.swift */; };
 		9FF2CC872892EA9400563DF5 /* PanadapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC862892EA9400563DF5 /* PanadapterView.swift */; };
 		9FF2CC8A2892EE7900563DF5 /* WaterfallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC892892EE7900563DF5 /* WaterfallView.swift */; };
@@ -62,7 +64,7 @@
 		9F5F4F3B28332543000E8145 /* ApiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiView.swift; sourceTree = "<group>"; };
 		9F5F4F5828334322000E8145 /* TopButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopButtonsView.swift; sourceTree = "<group>"; };
 		9F5F4F8928334695000E8145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		9F98C64A2894267300FDD37C /* BandSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BandSettingsView.swift; sourceTree = "<group>"; };
+		9F98C64A2894267300FDD37C /* BandSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BandSettingView.swift; sourceTree = "<group>"; };
 		9F98C64C2895607500FDD37C /* NonGuiClientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonGuiClientView.swift; sourceTree = "<group>"; };
 		9F98C64E2895B27A00FDD37C /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		9F98C6502895B37900FDD37C /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
@@ -71,10 +73,12 @@
 		9F98C656289851B000FDD37C /* TransmitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransmitView.swift; sourceTree = "<group>"; };
 		9F98C658289855FA00FDD37C /* InterlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterlockView.swift; sourceTree = "<group>"; };
 		9F98C690289CBD1C00FDD37C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
-		9F98C692289D6CFE00FDD37C /* MemoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoriesView.swift; sourceTree = "<group>"; };
+		9F98C692289D6CFE00FDD37C /* MemoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryView.swift; sourceTree = "<group>"; };
 		9F98C694289D6DD200FDD37C /* XvtrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XvtrView.swift; sourceTree = "<group>"; };
 		9F98C696289D6E5B00FDD37C /* AmplifierView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmplifierView.swift; sourceTree = "<group>"; };
 		9F98C698289DF7DF00FDD37C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9F98C69928A1FDF800FDD37C /* EqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
+		9F98C69B28A27F9800FDD37C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomButtonsView.swift; sourceTree = "<group>"; };
 		9FF2CC752887A6A900563DF5 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		9FF2CC772888416A00563DF5 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
@@ -84,7 +88,7 @@
 		9FF2CC7C2888599900563DF5 /* FiltersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersView.swift; sourceTree = "<group>"; };
 		9FF2CC7E288CDE3C00563DF5 /* ObjectsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectsView.swift; sourceTree = "<group>"; };
 		9FF2CC80288E38D400563DF5 /* RadioView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioView.swift; sourceTree = "<group>"; };
-		9FF2CC82288E45C400563DF5 /* GuiClientsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuiClientsView.swift; sourceTree = "<group>"; };
+		9FF2CC82288E45C400563DF5 /* GuiClientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuiClientView.swift; sourceTree = "<group>"; };
 		9FF2CC842892E9C900563DF5 /* StreamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamView.swift; sourceTree = "<group>"; };
 		9FF2CC862892EA9400563DF5 /* PanadapterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanadapterView.swift; sourceTree = "<group>"; };
 		9FF2CC892892EE7900563DF5 /* WaterfallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterfallView.swift; sourceTree = "<group>"; };
@@ -179,15 +183,17 @@
 			isa = PBXGroup;
 			children = (
 				9F98C696289D6E5B00FDD37C /* AmplifierView.swift */,
-				9F98C692289D6CFE00FDD37C /* MemoriesView.swift */,
 				9F98C65228969C8400FDD37C /* AtuView.swift */,
-				9F98C64A2894267300FDD37C /* BandSettingsView.swift */,
+				9F98C64A2894267300FDD37C /* BandSettingView.swift */,
+				9F98C69928A1FDF800FDD37C /* EqualizerView.swift */,
 				9F98C65328969C8400FDD37C /* GpsView.swift */,
-				9FF2CC82288E45C400563DF5 /* GuiClientsView.swift */,
+				9FF2CC82288E45C400563DF5 /* GuiClientView.swift */,
 				9F98C658289855FA00FDD37C /* InterlockView.swift */,
+				9F98C692289D6CFE00FDD37C /* MemoryView.swift */,
 				9FF2CC8D2892F00C00563DF5 /* MeterView.swift */,
 				9F98C64C2895607500FDD37C /* NonGuiClientView.swift */,
 				9FF2CC862892EA9400563DF5 /* PanadapterView.swift */,
+				9F98C69B28A27F9800FDD37C /* ProfileView.swift */,
 				9FF2CC80288E38D400563DF5 /* RadioView.swift */,
 				9FF2CC8B2892EF8400563DF5 /* SliceView.swift */,
 				9FF2CC842892E9C900563DF5 /* StreamView.swift */,
@@ -308,16 +314,18 @@
 				9FF2CC7F288CDE3C00563DF5 /* ObjectsView.swift in Sources */,
 				9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */,
 				9F98C659289855FA00FDD37C /* InterlockView.swift in Sources */,
+				9F98C69C28A27F9800FDD37C /* ProfileView.swift in Sources */,
 				9FF2CC8C2892EF8400563DF5 /* SliceView.swift in Sources */,
 				9F98C697289D6E5B00FDD37C /* AmplifierView.swift in Sources */,
 				9FF2CC902893151300563DF5 /* TnfView.swift in Sources */,
 				9F98C64D2895607500FDD37C /* NonGuiClientView.swift in Sources */,
-				9FF2CC83288E45C400563DF5 /* GuiClientsView.swift in Sources */,
+				9FF2CC83288E45C400563DF5 /* GuiClientView.swift in Sources */,
 				9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */,
 				9FF2CC852892E9C900563DF5 /* StreamView.swift in Sources */,
-				9F98C693289D6CFE00FDD37C /* MemoriesView.swift in Sources */,
+				9F98C693289D6CFE00FDD37C /* MemoryView.swift in Sources */,
 				9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */,
-				9F98C64B2894267300FDD37C /* BandSettingsView.swift in Sources */,
+				9F98C69A28A1FDF800FDD37C /* EqualizerView.swift in Sources */,
+				9F98C64B2894267300FDD37C /* BandSettingView.swift in Sources */,
 				9FF2CC8A2892EE7900563DF5 /* WaterfallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,7 +468,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000Tester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -490,7 +498,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000Tester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

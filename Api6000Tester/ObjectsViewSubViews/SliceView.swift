@@ -47,11 +47,11 @@ struct SliceView: View {
                 Text("\(slice.mode)").foregroundColor(.secondary)
               }
               HStack(spacing: 5) {
-                Text("FilterLow")
+                Text("Filter_Low")
                 Text("\(slice.filterLow)").foregroundColor(.secondary)
               }
               HStack(spacing: 5) {
-                Text("FilterHigh")
+                Text("Filter_High")
                 Text("\(slice.filterHigh)").foregroundColor(.secondary)
               }
               HStack(spacing: 5) {
@@ -63,11 +63,11 @@ struct SliceView: View {
                 Text(slice.locked ? "Y" : "N").foregroundColor(slice.locked ? .green : .red)
               }
               HStack(spacing: 5) {
-                Text("DAX channel")
+                Text("DAX_channel")
                 Text("\(slice.daxChannel)").foregroundColor(.green)
               }
               HStack(spacing: 5) {
-                Text("DAX clients")
+                Text("DAX_clients")
                 Text("\(slice.daxClients)").foregroundColor(.green)
               }
             }

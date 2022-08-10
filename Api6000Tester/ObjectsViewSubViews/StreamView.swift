@@ -219,7 +219,7 @@ struct StreamView: View {
             }
             
             HStack(spacing: 5) {
-              Text("ClientHandle")
+              Text("Client_Handle")
               Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
             }
             

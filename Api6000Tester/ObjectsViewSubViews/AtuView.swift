@@ -33,12 +33,12 @@ struct AtuView: View {
         }
         
         HStack(spacing: 5) {
-          Text("Memories enabled")
+          Text("Memories_enabled")
           Text(atu.memoriesEnabled ? "Y" : "N")
             .foregroundColor(atu.memoriesEnabled ? .green : .red)
         }
         HStack(spacing: 5) {
-          Text("Using memories")
+          Text("Using_memories")
           Text(atu.usingMemory ? "Y" : "N")
             .foregroundColor(atu.usingMemory ? .green : .red)
         }

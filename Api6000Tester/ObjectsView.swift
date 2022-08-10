@@ -28,18 +28,13 @@ struct ObjectsView: View {
       .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
     }
     else {
-//      ScrollViewReader { proxy in
-//        ScrollView([.horizontal, .vertical]) {
       VStack(alignment: .leading) {
-            RadioView(api6000: api6000)
+        RadioView(api6000: api6000)
         if apiModel.isGui == false { NonGuiClientView(api6000: api6000) }
-            GuiClientsView(api6000: api6000, apiModel: apiModel)
-//            Spacer()
-          }
-          .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
-          .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
-//        }
-//      }
+        GuiClientView(api6000: api6000, apiModel: apiModel)
+      }
+      .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+      .font(.system(size: apiModel.fontSize, weight: .regular, design: .monospaced))
       .frame(minWidth: 900)
     }
   }

@@ -12,7 +12,7 @@ import Api6000
 // ----------------------------------------------------------------------------
 // MARK: - View
 
-struct BandSettingsView: View {
+struct BandSettingView: View {
   @ObservedObject var api6000: Model
   
   var body: some View {
@@ -32,7 +32,7 @@ struct BandSettingsView: View {
                   .foregroundColor(.green)
               }
               HStack(spacing: 5) {
-                Text("Rf Power")
+                Text("Rf_Power")
                 Text("\(setting.rfPower)")
                   .frame(maxWidth: .infinity, alignment: .trailing)
                   .frame(width: 40)
@@ -40,7 +40,7 @@ struct BandSettingsView: View {
               }
               
               HStack(spacing: 5) {
-                Text("Tune Power")
+                Text("Tune_Power")
                 Text("\(setting.tunePower)")
                   .frame(maxWidth: .infinity, alignment: .trailing)
                   .frame(width: 40)
@@ -62,19 +62,19 @@ struct BandSettingsView: View {
                   Text(setting.tx3Enabled ? "Y" : "N").foregroundColor(setting.tx3Enabled  ? .green : .red)
                 }
                 HStack(spacing: 5) {
-                  Text("Acc Tx")
+                  Text("Acc_Tx")
                   Text(setting.accTxEnabled ? "Y" : "N").foregroundColor(setting.accTxEnabled  ? .green : .red)
                 }
                 HStack(spacing: 5) {
-                  Text("Acc Tx Req")
+                  Text("Acc_Tx_Req")
                   Text(setting.accTxReqEnabled ? "Y" : "N").foregroundColor(setting.accTxReqEnabled ? .green : .red)
                 }
                 HStack(spacing: 5) {
-                  Text("Rca Tx Req")
+                  Text("Rca_Tx_Req")
                   Text(setting.rcaTxReqEnabled ? "Y" : "N").foregroundColor(setting.rcaTxReqEnabled ? .green : .red)
                 }
                 HStack(spacing: 5) {
-                  Text("HW Alc")
+                  Text("HW_Alc")
                   Text(setting.hwAlcEnabled ? "Y" : "N").foregroundColor(setting.hwAlcEnabled ? .green : .red)
                 }
                 HStack(spacing: 5) {
@@ -93,9 +93,9 @@ struct BandSettingsView: View {
 // ----------------------------------------------------------------------------
 // MARK: - Preview
 
-struct BandSettingsView_Previews: PreviewProvider {
+struct BandSettingView_Previews: PreviewProvider {
   static var previews: some View {
-    BandSettingsView(api6000: Model.shared)
+    BandSettingView(api6000: Model.shared)
       .frame(minWidth: 1000)
       .padding()
   }
