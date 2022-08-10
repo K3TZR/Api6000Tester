@@ -76,6 +76,7 @@ struct GuiClientSubView: View {
       
     case ObjectFilter.amplifiers.rawValue:        AmplifierView(api6000: api6000)
     case ObjectFilter.bandSettings.rawValue:      BandSettingView(api6000: api6000)
+    case ObjectFilter.cwx.rawValue:               CwxView(api6000: api6000)
     case ObjectFilter.equalizers.rawValue:        EqualizerView(api6000: api6000)
     case ObjectFilter.interlock.rawValue:         InterlockView(api6000: api6000)
     case ObjectFilter.memories.rawValue:          MemoryView(api6000: api6000)
@@ -84,6 +85,8 @@ struct GuiClientSubView: View {
     case ObjectFilter.streams.rawValue:           StreamView(api6000: api6000, handle: handle)
     case ObjectFilter.transmit.rawValue:          TransmitView(api6000: api6000)
     case ObjectFilter.tnfs.rawValue:              TnfView(api6000: api6000)
+    case ObjectFilter.usbCable.rawValue:          UsbCableView(api6000: api6000)
+    case ObjectFilter.wan.rawValue:               WanView(api6000: api6000)
     case ObjectFilter.waveforms.rawValue:         WaveformView(api6000: api6000)
     case ObjectFilter.xvtrs.rawValue:             XvtrView(api6000: api6000)
     default:    EmptyView()

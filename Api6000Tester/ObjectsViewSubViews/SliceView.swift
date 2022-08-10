@@ -28,7 +28,11 @@ struct SliceView: View {
   var body: some View {
     
     if api6000.slices.count == 0 {
-      Text("         SLICE -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("         SLICEs")
+        Text("None present").foregroundColor(.red)
+      }
+    
     } else {
       ForEach(api6000.slices) { slice in
         if slice.panadapterId == panadapterId {

@@ -14,7 +14,11 @@ struct WaveformView: View {
   var body: some View {
     
     if api6000.waveform.waveformList.isEmpty {
-      Text("         WAVEFORMS -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("         WAVEFORMs")
+        Text("None present").foregroundColor(.red)
+      }
+      
     } else {
       HStack(spacing: 10) {
         Text("         WAVEFORMS -> ")

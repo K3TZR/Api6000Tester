@@ -21,7 +21,11 @@ struct PanadapterView: View {
   var body: some View {
     
     if api6000.panadapters.count == 0 {
-      Text("         PANADAPTERS -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("         PANADAPTERs")
+        Text("None present").foregroundColor(.red)
+      }
+      
     } else {
       ForEach(api6000.panadapters) { panadapter in
         if panadapter.clientHandle == handle {

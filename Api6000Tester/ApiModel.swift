@@ -69,6 +69,7 @@ public enum ObjectFilter: String, CaseIterable {
   case coreNoMeters = "core w/o meters"
   case amplifiers
   case bandSettings = "band settings"
+  case cwx
   case equalizers
   case interlock
   case memories
@@ -77,6 +78,8 @@ public enum ObjectFilter: String, CaseIterable {
   case streams
   case transmit
   case tnfs
+  case usbCable
+  case wan
   case waveforms
   case xvtrs
 }

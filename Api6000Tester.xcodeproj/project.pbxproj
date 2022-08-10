@@ -39,6 +39,9 @@
 		9F98C697289D6E5B00FDD37C /* AmplifierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C696289D6E5B00FDD37C /* AmplifierView.swift */; };
 		9F98C69A28A1FDF800FDD37C /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C69928A1FDF800FDD37C /* EqualizerView.swift */; };
 		9F98C69C28A27F9800FDD37C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C69B28A27F9800FDD37C /* ProfileView.swift */; };
+		9F98C69E28A3FEA700FDD37C /* UsbCableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C69D28A3FEA700FDD37C /* UsbCableView.swift */; };
+		9F98C6A028A3FEB300FDD37C /* WanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C69F28A3FEB300FDD37C /* WanView.swift */; };
+		9F98C6A228A3FEC400FDD37C /* CwxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F98C6A128A3FEC400FDD37C /* CwxView.swift */; };
 		9FF2CC742887A3E800563DF5 /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */; };
 		9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC752887A6A900563DF5 /* MessagesView.swift */; };
 		9FF2CC7B288857D000563DF5 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF2CC7A288857D000563DF5 /* SendView.swift */; };
@@ -79,6 +82,9 @@
 		9F98C698289DF7DF00FDD37C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9F98C69928A1FDF800FDD37C /* EqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
 		9F98C69B28A27F9800FDD37C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		9F98C69D28A3FEA700FDD37C /* UsbCableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsbCableView.swift; sourceTree = "<group>"; };
+		9F98C69F28A3FEB300FDD37C /* WanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
+		9F98C6A128A3FEC400FDD37C /* CwxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CwxView.swift; sourceTree = "<group>"; };
 		9FF2CC732887A3E800563DF5 /* BottomButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomButtonsView.swift; sourceTree = "<group>"; };
 		9FF2CC752887A6A900563DF5 /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		9FF2CC772888416A00563DF5 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
@@ -202,6 +208,9 @@
 				9FF2CC892892EE7900563DF5 /* WaterfallView.swift */,
 				9F98C690289CBD1C00FDD37C /* WaveformView.swift */,
 				9F98C694289D6DD200FDD37C /* XvtrView.swift */,
+				9F98C69D28A3FEA700FDD37C /* UsbCableView.swift */,
+				9F98C69F28A3FEB300FDD37C /* WanView.swift */,
+				9F98C6A128A3FEC400FDD37C /* CwxView.swift */,
 			);
 			path = ObjectsViewSubViews;
 			sourceTree = "<group>";
@@ -305,11 +314,14 @@
 				9F98C6512895B37900FDD37C /* AlertModel.swift in Sources */,
 				9FF2CC7D2888599900563DF5 /* FiltersView.swift in Sources */,
 				9F98C695289D6DD200FDD37C /* XvtrView.swift in Sources */,
+				9F98C6A228A3FEC400FDD37C /* CwxView.swift in Sources */,
+				9F98C69E28A3FEA700FDD37C /* UsbCableView.swift in Sources */,
 				9F98C64F2895B27A00FDD37C /* AlertView.swift in Sources */,
 				9F98C691289CBD1C00FDD37C /* WaveformView.swift in Sources */,
 				9F98C65428969C8400FDD37C /* AtuView.swift in Sources */,
 				9FF2CC81288E38D400563DF5 /* RadioView.swift in Sources */,
 				9FF2CC762887A6A900563DF5 /* MessagesView.swift in Sources */,
+				9F98C6A028A3FEB300FDD37C /* WanView.swift in Sources */,
 				9FF2CC872892EA9400563DF5 /* PanadapterView.swift in Sources */,
 				9FF2CC7F288CDE3C00563DF5 /* ObjectsView.swift in Sources */,
 				9F5F4F3E28332543000E8145 /* ApiModel.swift in Sources */,
@@ -468,7 +480,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000Tester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -498,7 +510,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.Api6000Tester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

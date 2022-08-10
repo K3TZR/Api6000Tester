@@ -18,7 +18,11 @@ struct BandSettingView: View {
   var body: some View {
     
     if api6000.bandSettings.count == 0 {
-      Text("         BANDSETTINGS -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("         BANDSETTINGs")
+        Text("None present").foregroundColor(.red)
+      }
+      
     } else {
       ForEach(api6000.bandSettings) { setting in
         VStack(alignment: .leading) {

@@ -17,7 +17,11 @@ struct AmplifierView: View {
   
   var body: some View {
     if api6000.amplifiers.count == 0 {
-      Text("         AMPLIFIER -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("         AMPLIFIERs")
+        Text("None present").foregroundColor(.red)
+      }
+      
     } else {
       ForEach(api6000.amplifiers) { amplifier in
         VStack (alignment: .leading) {

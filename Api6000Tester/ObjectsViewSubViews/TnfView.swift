@@ -17,12 +17,15 @@ struct TnfView: View {
   
   var body: some View {
     if api6000.tnfs.count == 0 {
-      Text("         TNFS -> None present").foregroundColor(.red)
-    } else {
+      HStack(spacing: 5) {
+        Text("         TNFs")
+        Text("None present").foregroundColor(.red)
+      }
       
+    } else {
       ForEach(api6000.tnfs) { tnf in
         VStack (alignment: .leading) {
-          HStack(spacing: 20) {
+          HStack(spacing: 10) {
             Text("         TNF")
             Text(String(format: "%d", tnf.id)).foregroundColor(.green)
             HStack(spacing: 5) {

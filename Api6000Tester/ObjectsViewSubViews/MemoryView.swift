@@ -21,7 +21,11 @@ struct MemoryView: View {
   var body: some View {
     
     if api6000.memories.count == 0 {
-      Text("         MEMORIES -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("         MEMORYs")
+        Text("None present").foregroundColor(.red)
+      }
+    
     } else {
       ForEach(api6000.memories) { memory in
         VStack(alignment: .leading) {
