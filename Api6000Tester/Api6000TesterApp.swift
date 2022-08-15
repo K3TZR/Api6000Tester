@@ -18,7 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   func applicationWillTerminate(_ notification: Notification) {
-    NotificationCenter.default.post(name: logEntryNotification, object: LogEntry("Api6000Tester: application terminated", .debug, #function, #file, #line))
+    log("Api6000Tester: application terminated", .debug, #function, #file, #line)
   }
   
   func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

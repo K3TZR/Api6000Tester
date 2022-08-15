@@ -12,15 +12,18 @@ public struct AlertModel {
   public init(
     title: String,
     message: String? = nil,
-    buttonText: String? = nil
+    text: String? = nil,
+    action: @escaping () -> Void
   )
   {
     self.title = title
     self.message = message
-    self.buttonText = buttonText
+    self.text = text
+    self.action = action
 
   }
   public var title: String
   public var message: String?
-  public var buttonText: String?
+  public var text: String?
+  public var action: () -> Void
 }

@@ -9,20 +9,24 @@ import SwiftUI
 
 struct AlertView: View {
   let model: AlertModel
-    
+  
   var body: some View {
-      VStack {
-        Text(model.title)
-        if model.message != nil { Text(model.message! ) }
-        if let text = model.buttonText {
-          Button(text) { print("-----> Alert Button clicked")}
-        }
-      }
+    VStack(alignment: .center) {
+      Text(model.title).font(.title).foregroundColor(.red)
+      Divider()
+      Spacer()
+      if model.message != nil { Text(model.message! ) }
+      Spacer()
+      Divider()
+      Button(model.text == nil ? "Ok" : model.text!) { model.action() }
     }
+    .frame(height: 150)
+    .padding()
+  }
 }
 
 struct AlertView_Previews: PreviewProvider {
-    static var previews: some View {
-      AlertView(model: AlertModel(title: "Test") )
-    }
+  static var previews: some View {
+    AlertView(model: AlertModel(title: "Test", message: "An ERROR was logged", action: {} ))
+  }
 }
