@@ -167,26 +167,25 @@ public final class ApiModel: ObservableObject {
   @Published public var commandToSend = ""
   @Published public var isConnected = false
   @Published public var filteredMessages = IdentifiedArrayOf<TcpMessage>()
+  @Published public var gotoTop = false
   @Published public var loginModel: LoginModel?
   @Published public var messages = IdentifiedArrayOf<TcpMessage>()
   @Published public var pendingWan: (packet: Packet, station: String?)?
   @Published public var pickerModel: PickerModel? { didSet { showPicker = pickerModel != nil}}
-  
   @Published public var showAlert = false
   @Published public var showClient = false
   @Published public var showLogin = false
   @Published public var showPicker = false
-  @Published public var gotoTop = false
 
   // ----------------------------------------------------------------------------
   // MARK: - Private properties
 
   private var _initialized = false
   private var _lanListener: LanListener?
-  private var _tcpReceivedTask: Task<(), Never>?
-  private var _tcpSentTask: Task<(), Never>?
   private var _startTime: Date?
   private var _station: String?
+  private var _tcpReceivedTask: Task<(), Never>?
+  private var _tcpSentTask: Task<(), Never>?
   private var _wanListener: WanListener?
 
   private var testSubscription: AnyCancellable?
@@ -246,7 +245,6 @@ public final class ApiModel: ObservableObject {
         loginModel = LoginModel(heading: "Smartlink Login required",
                                 cancelAction: { self.loginCancel() },
                                 loginAction: {user, pwd in self.loginLogin(user, pwd)})
-//        showLogin = true
       }
 
     case ConnectionMode.both.rawValue:
@@ -257,7 +255,6 @@ public final class ApiModel: ObservableObject {
         loginModel = LoginModel(heading: "Smartlink Login required",
                                 cancelAction: { self.loginCancel() },
                                 loginAction: {user, pwd in self.loginLogin(user, pwd)})
-//        showLogin = true
       }
 
     case ConnectionMode.none.rawValue:
@@ -305,7 +302,6 @@ public final class ApiModel: ObservableObject {
           defaultAction: { selection in self.pickerDefault(selection) },
           testAction: { selection in self.pickerTest(selection) }
         )
-//        showPicker = true
       }
       
     } else {
@@ -347,7 +343,6 @@ public final class ApiModel: ObservableObject {
   // MARK: - PickerView Action methods
   
   func pickerCancel() {
-//    showPicker = false
     pickerModel = nil
   }
   
@@ -378,7 +373,6 @@ public final class ApiModel: ObservableObject {
   }
 
   func pickerConnect(_ selection: PickableSelection ) {
-//    showPicker = false
     pickerModel = nil
     if let packet = Model.shared.packets[id: selection.packetId] {
       // CONNECT, close the Picker sheet
@@ -411,13 +405,11 @@ public final class ApiModel: ObservableObject {
   
   func clientCancel() {
     // CANCEL
-//    showClient = false
     clientModel = nil
   }
   
   func clientConnect(_ id: UUID, _ handle: Handle?) {
     // CONNECT
-//    showClient = false
     clientModel = nil
     if let packet = Model.shared.packets[id: id] {
       openSelection(packet, handle)
@@ -428,12 +420,10 @@ public final class ApiModel: ObservableObject {
   // MARK: - LoginView Action methods
   
   func loginCancel() {
-//    showLogin = false
     loginModel = nil
   }
   
   func loginLogin(_ user: String, _ pwd: String) {
-//    showLogin = false
     loginModel = nil
     // save the credentials
     let secureStore = SecureStore(service: "ApiViewer")
@@ -525,8 +515,6 @@ public final class ApiModel: ObservableObject {
         cancelAction: { self.clientCancel() },
         connectAction: { (id: UUID, handle: UInt32?) in self.clientConnect(id, handle)}
       )
-//      showClient = true
-      
 
     } else {
       // NO, proceed to opening
@@ -648,25 +636,24 @@ public final class ApiModel: ObservableObject {
   
   private func subscribeToPackets() {
     Task {
-      print("----------> subscribeToPackets: STARTED")
+//      print("----------> subscribeToPackets: STARTED")
       for await _ in Model.shared.packetUpdate {
         // a packet change has been observed
         if pickerModel != nil {
           pickerModel!.pickables = getPickables(isGui, guiDefault, nonGuiDefault)
         }
       }
-      print("-----> subscribeToPackets: STOPPED")
+//      print("-----> subscribeToPackets: STOPPED")
     }
   }
   
   private func subscribeToClients() {
     Task {
-      print("----------> subscribeToClients: STARTED")
+//      print("----------> subscribeToClients: STARTED")
       for await update in Model.shared.clientUpdate {
         // a guiClient change has been observed
         switch update.action {
-        case .added, .deleted:
-          break
+        case .added, .deleted:  break
         
         case .completed:
           if isConnected && isGui == false {
@@ -679,46 +666,46 @@ public final class ApiModel: ObservableObject {
           }
         }
       }
-      print("-----> subscribeToClients: STOPPED")
+//      print("-----> subscribeToClients: STOPPED")
     }
   }
   
   private func subscribeToTcpStatus() {
     Task {
-      print("----------> subscribeToTcpStatus: STARTED")
+//      print("----------> subscribeToTcpStatus: STARTED")
       for await status in Tcp.shared.tcpStatus {
         // pass them to the API
         Model.shared.radio?.tcpStatus(status)
       }
-      print("-----> subscribeToTcpStatus: STOPPED")
+//      print("-----> subscribeToTcpStatus: STOPPED")
     }
   }
 
   public func subscribeToUdpStatus() {
     Task {
-      print("----------> subscribeToUdpStatus: STARTED")
+//      print("----------> subscribeToUdpStatus: STARTED")
       for await status in Udp.shared.udpStatus {
         Model.shared.radio?.udpStatus(status)
       }
-      print("-----> subscribeToUdpStatus: STOPPED")
+//      print("-----> subscribeToUdpStatus: STOPPED")
     }
   }
 
   private func subscribeToSent() {
     _tcpSentTask = Task {
-      print("----------> subscribeToSent: STARTED")
+//      print("----------> subscribeToSent: STARTED")
       // process the AsyncStream of Tcp messages sent to the Radio
       for await message in Tcp.shared.tcpOutbound {
+
         // ignore sent "ping" messages unless showPings is true
-        if message.contains("ping") && showPings == false { return }
-        // convert to TcpMessage format
+        if message.contains("ping") && showPings == false { continue }
+
+        // convert to TcpMessage format, add to the collection and refilter
         let tcpMessage = TcpMessage(text: message, direction: .sent, timeInterval: Date().timeIntervalSince( _startTime!))
-        // add the message to the collection
         messages.append( tcpMessage )
-        // re-filter
         filterMessages()
       }
-      print("-----> subscribeToSent: STOPPED")
+//      print("-----> subscribeToSent: STOPPED")
     }
   }
   private func unSubscribeToSent() {
@@ -727,24 +714,22 @@ public final class ApiModel: ObservableObject {
 
   private func subscribeToReceived() {
     _tcpReceivedTask = Task {
-      print("----------> subscribeToReceived: STARTED")
+//      print("----------> subscribeToReceived: STARTED")
       // process the AsyncStream of Tcp messages sent from the Radio
       for await message in Tcp.shared.tcpInbound {
        
         // pass them to the API
         Model.shared.radio?.tcpInbound(message)
         
-        // filter out Replies without error or additional data
-        if allowToPass(message) {
-          // pass them to the ApiTester in TcpMessage format
-          let tcpMessage = TcpMessage(text: message, direction: .received, timeInterval: Date().timeIntervalSince( _startTime!))
-          // add the message to the collection
-          messages.append( tcpMessage )
-          // re-filter
-          filterMessages()
-        }
+        // ignore reply unless it is non-zero or contains additional data
+        if ignoreReply(message) { continue }
+
+        // convert to TcpMessage format, add to the collection and refilter
+        let tcpMessage = TcpMessage(text: message, direction: .received, timeInterval: Date().timeIntervalSince( _startTime!))
+        messages.append( tcpMessage )
+        filterMessages()
       }
-      print("-----> subscribeToReceived: STOPPED")
+//      print("-----> subscribeToReceived: STOPPED")
     }
   }
   private func unSubscribeToReceived() {
@@ -772,20 +757,18 @@ public final class ApiModel: ObservableObject {
   private func subscribeToLogAlerts() {
     #if DEBUG
     Task {
-      print("----------> subscribeToLogAlerts: STARTED")
+//      print("----------> subscribeToLogAlerts: STARTED")
       for await entry in logAlerts {
         // a Warning or Error has been logged.
         // exit any sheet states
         pickerModel = nil
-//        showPicker = false
         loginModel = nil
-//        showLogin = false
         // alert the user
         alertModel = AlertModel(title: "\(entry.level == .warning ? "A Warning" : "An Error") was logged",
                                 message: entry.msg,
                                 action: {self.alertDismissed()} )
       }
-      print("-----> subscribeToLogAlerts: STOPPED")
+//      print("-----> subscribeToLogAlerts: STOPPED")
     }
     #endif
   }
@@ -793,13 +776,13 @@ public final class ApiModel: ObservableObject {
   /// Received data Filter condition
   /// - Parameter text:    the text of a received command
   /// - Returns:           a boolean
-  private func allowToPass(_ text: String) -> Bool {
-    if text.first != "R" { return true }      // pass if not a Reply
+  private func ignoreReply(_ text: String) -> Bool {
+    if text.first != "R" { return false }     // not a Reply
     let parts = text.components(separatedBy: "|")
-    if parts.count < 3 { return true }        // pass if incomplete
-    if parts[1] != kNoError { return true }   // pass if error of some type
-    if parts[2] != "" { return true }         // pass if additional data present
-    return false                              // otherwise, filter out (i.e. don't pass)
+    if parts.count < 3 { return false }       // incomplete
+    if parts[1] != kNoError { return false }  // error of some type
+    if parts[2] != "" { return false }        // additional data present
+    return true                               // otherwise, ignore it
   }
 
 }
