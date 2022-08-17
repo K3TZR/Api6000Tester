@@ -20,15 +20,18 @@ struct NonGuiClientView: View {
       VStack(alignment: .leading) {
         Divider().background(Color(.red))
         HStack(spacing: 10) {
-          Text("nonGUI->")
-          HStack(spacing: 5) {
-            Text("Handle")
+          
+          HStack(spacing: 0) {
+            Text("nonGui    ").foregroundColor(.green)
+            Text("Handle ")
             Text(api6000.radio!.connectionHandle?.hex ?? "").foregroundColor(.secondary)
           }
+
           HStack(spacing: 5) {
             Text("Bound_to_Station:")
             Text("\(api6000.activeStation ?? "none")").foregroundColor(.secondary)
           }
+          
           HStack(spacing: 5) {
             Text("Client_Id")
             Text("\(api6000.radio!.boundClientId ?? "none")").foregroundColor(.secondary)

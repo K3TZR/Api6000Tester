@@ -20,13 +20,17 @@ struct WaterfallView: View {
   var body: some View {
     
     if api6000.waterfalls.count == 0 {
-      Text("         WATERFALLS -> None present").foregroundColor(.red)
+      HStack(spacing: 5) {
+        Text("          WATERFALLs")
+        Text("None present").foregroundColor(.red)
+      }
+
     } else {
       ForEach(Array(api6000.waterfalls)) { waterfall in
         if waterfall.panadapterId == panadapterId {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("         WATERFALL ")
+              Text("          WATERFALL ")
               Text(waterfall.id.hex).foregroundColor(.secondary)
             }
             HStack(spacing: 5) {

@@ -25,23 +25,28 @@ struct GuiClientView: View {
         ForEach(api6000.guiClients, id: \.id) { guiClient in
           Divider().background(Color(.red))
           HStack(spacing: 10) {
-            Text("GUI   ->")
-            HStack(spacing: 5) {
-              Text("Station")
+            
+            HStack(spacing: 0) {
+              Text("Gui       ").foregroundColor(.yellow)
+              Text("Station ")
               Text("\(guiClient.station)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Program")
               Text("\(guiClient.program)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Handle")
               Text(guiClient.handle.hex).foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("ClientId")
               Text(guiClient.clientId ?? "Unknown").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("LocalPtt")
               Text(guiClient.isLocalPtt ? "Y" : "N").foregroundColor(guiClient.isLocalPtt ? .green : .red)
@@ -84,7 +89,6 @@ struct GuiClientSubView: View {
     case ObjectFilter.profiles.rawValue:          ProfileView(api6000: api6000)
     case ObjectFilter.streams.rawValue:           StreamView(api6000: api6000, handle: handle)
     case ObjectFilter.transmit.rawValue:          TransmitView(api6000: api6000)
-    case ObjectFilter.tnfs.rawValue:              TnfView(api6000: api6000)
     case ObjectFilter.usbCable.rawValue:          UsbCableView(api6000: api6000)
     case ObjectFilter.wan.rawValue:               WanView(api6000: api6000)
     case ObjectFilter.waveforms.rawValue:         WaveformView(api6000: api6000)

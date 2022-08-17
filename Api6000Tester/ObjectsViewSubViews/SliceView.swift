@@ -29,47 +29,56 @@ struct SliceView: View {
     
     if api6000.slices.count == 0 {
       HStack(spacing: 5) {
-        Text("         SLICEs")
+        Text("          SLICEs")
         Text("None present").foregroundColor(.red)
       }
     
     } else {
       ForEach(api6000.slices) { slice in
         if slice.panadapterId == panadapterId {
-          VStack {
+          VStack(alignment: .leading) {
             HStack(spacing: 20) {
+              
               HStack(spacing: 5) {
-                Text("         SLICE   ")
+                Text("          SLICE     ")
                 Text(String(format: "% 3d", slice.id)).foregroundColor(.green)
               }
+              
               HStack(spacing: 5) {
                 Text("Frequency")
                 Text("\(slice.frequency)").foregroundColor(.secondary)
               }
+              
               HStack(spacing: 5) {
                 Text("Mode")
                 Text("\(slice.mode)").foregroundColor(.secondary)
               }
+              
               HStack(spacing: 5) {
                 Text("Filter_Low")
                 Text("\(slice.filterLow)").foregroundColor(.secondary)
               }
+              
               HStack(spacing: 5) {
                 Text("Filter_High")
                 Text("\(slice.filterHigh)").foregroundColor(.secondary)
               }
+              
               HStack(spacing: 5) {
                 Text("Active")
                 Text(slice.active ? "Y" : "N").foregroundColor(slice.active ? .green : .red)
               }
+              
               HStack(spacing: 5) {
                 Text("Locked")
                 Text(slice.locked ? "Y" : "N").foregroundColor(slice.locked ? .green : .red)
               }
+              
               HStack(spacing: 5) {
                 Text("DAX_channel")
                 Text("\(slice.daxChannel)").foregroundColor(.green)
               }
+              
               HStack(spacing: 5) {
                 Text("DAX_clients")
                 Text("\(slice.daxClients)").foregroundColor(.green)

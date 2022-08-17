@@ -18,7 +18,7 @@ struct TnfView: View {
   var body: some View {
     if api6000.tnfs.count == 0 {
       HStack(spacing: 5) {
-        Text("         TNFs")
+        Text("         TNFs      ")
         Text("None present").foregroundColor(.red)
       }
       
@@ -26,23 +26,35 @@ struct TnfView: View {
       ForEach(api6000.tnfs) { tnf in
         VStack (alignment: .leading) {
           HStack(spacing: 10) {
-            Text("         TNF")
-            Text(String(format: "%d", tnf.id)).foregroundColor(.green)
+            
+            HStack(spacing: 5) {
+              Text("          TNF       ")
+              Text(String(format: "%d", tnf.id)).foregroundColor(.green)
+            }
+            
             HStack(spacing: 5) {
               Text("Frequency")
               Text("\(tnf.frequency)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Width")
               Text("\(tnf.width)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Depth")
               Text("\(tnf.depth)").foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Permanent")
               Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
+            }
+            
+            HStack(spacing: 5) {
+              Text("TNFs Enabled")
+              Text(api6000.radio!.tnfsEnabled ? "Y" : "N").foregroundColor(api6000.radio!.tnfsEnabled ? .green : .red)
             }
           }
         }

@@ -42,7 +42,7 @@ struct MeterView: View {
           if showMeter(sliceId, sliceClientHandle, meter.source, meter.group) {
             HStack(spacing: 10) {
               Group {
-                Text("Meter").padding(.leading, sliceId == nil ? 0: 60)
+                Text("Meter").padding(.leading, sliceId == nil ? 40 : 100)
                 Text(String(format: "% 3d", meter.id)).frame(width: 40, alignment: .leading)
                 Text(meter.group).frame(width: 30, alignment: .trailing)
                 Text(meter.name).frame(width: 110, alignment: .leading)

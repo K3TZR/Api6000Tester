@@ -17,12 +17,14 @@ struct GpsView: View {
   
   var body: some View {
     
-    HStack(spacing: 10) {
-      Text("         GPS ")
-      if api6000.radio!.gpsPresent {
-        Text("NOT IMPLEMENTED").foregroundColor(.red)
-      } else {
-        Text("NOT Installed").foregroundColor(.red)
+    if let radio = api6000.radio {
+      HStack(spacing: 10) {
+        Text("          GPS ")
+        if radio.gpsPresent {
+          Text("NOT IMPLEMENTED").foregroundColor(.red)
+        } else {
+          Text("NOT Installed").foregroundColor(.red)
+        }
       }
     }
   }

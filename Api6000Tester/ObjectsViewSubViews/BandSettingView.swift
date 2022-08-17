@@ -30,7 +30,7 @@ struct BandSettingView: View {
             Group {
               HStack(spacing: 5) {
                 Text("         BAND")
-                Text("\(setting.bandName)")
+                Text("\(setting.name)")
                   .frame(maxWidth: .infinity, alignment: .trailing)
                   .frame(width: 40)
                   .foregroundColor(.green)

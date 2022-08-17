@@ -96,7 +96,7 @@ struct EqualizerView: View {
 
 struct EqualizerView_Previews: PreviewProvider {
   static var previews: some View {
-    TnfView(api6000: Model.shared)
+    EqualizerView(api6000: Model.shared)
       .frame(minWidth: 1000)
       .padding()
   }

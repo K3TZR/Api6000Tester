@@ -22,7 +22,7 @@ struct PanadapterView: View {
     
     if api6000.panadapters.count == 0 {
       HStack(spacing: 5) {
-        Text("         PANADAPTERs")
+        Text("          PANADAPTERs")
         Text("None present").foregroundColor(.red)
       }
       
@@ -31,7 +31,7 @@ struct PanadapterView: View {
         if panadapter.clientHandle == handle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("         PANADAPTER")
+              Text("          PANADAPTER")
               Text(panadapter.id.hex).foregroundColor(.secondary)
             }
             

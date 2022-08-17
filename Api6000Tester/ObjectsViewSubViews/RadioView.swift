@@ -20,23 +20,30 @@ struct RadioView: View {
     if api6000.activePacketId != nil {
       VStack(alignment: .leading) {
         HStack(spacing: 10) {
-          Text("RADIO ->")
-          Text(api6000.packets[id: api6000.activePacketId!]!.source.rawValue)
-            .foregroundColor(api6000.packets[id: api6000.activePacketId!]!.source == .local ? .green : .red)
           Group {
+            
+            HStack(spacing: 0) {
+              Text("RADIO     ").foregroundColor(.blue)
+              Text(api6000.packets[id: api6000.activePacketId!]!.source.rawValue)
+                .foregroundColor(.secondary)
+            }
+
             HStack(spacing: 5) {
               Text("Name")
               Text(api6000.packets[id: api6000.activePacketId!]!.nickname)
                 .foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Ip")
               Text(api6000.packets[id: api6000.activePacketId!]!.publicIp).foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("FW")
               Text(api6000.packets[id: api6000.activePacketId!]!.version).foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Model")
               Text(api6000.packets[id: api6000.activePacketId!]!.model).foregroundColor(.secondary)
@@ -47,6 +54,7 @@ struct RadioView: View {
               Text("Serial")
               Text(api6000.packets[id: api6000.activePacketId!]!.serial).foregroundColor(.secondary)
             }
+            
             HStack(spacing: 5) {
               Text("Stations")
              Text(api6000.packets[id: api6000.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
@@ -56,10 +64,12 @@ struct RadioView: View {
               Text("Atu")
               Text(api6000.radio!.atuPresent ? "Y" : "N").foregroundColor(api6000.radio!.atuPresent ? .green : .red)
             }
+            
             HStack(spacing: 5) {
               Text("Gps")
               Text(api6000.radio!.gpsPresent ? "Y" : "N").foregroundColor(api6000.radio!.gpsPresent ? .green : .red)
             }
+            
             HStack(spacing: 5) {
               Text("Scu")
               Text("\(api6000.radio!.numberOfScus)").foregroundColor(.green)
@@ -68,6 +78,7 @@ struct RadioView: View {
         }
         AtuView(api6000: api6000)
         GpsView(api6000: api6000)
+        TnfView(api6000: api6000)
       }
     }
   }

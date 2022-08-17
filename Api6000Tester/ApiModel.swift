@@ -109,7 +109,6 @@ public enum ObjectFilter: String, CaseIterable {
   case profiles
   case streams
   case transmit
-  case tnfs
   case usbCable
   case wan
   case waveforms

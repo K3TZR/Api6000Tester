@@ -13,30 +13,38 @@ struct ProfileView: View {
   
   var body: some View {
     
-    ForEach(api6000.profiles) { profile in
-      VStack(spacing: 20) {
-        HStack(spacing: 10) {
-          HStack(spacing: 5) {
-            Text("         PROFILE")
-            Text(profile.id)
-              .frame(width: 50, alignment: .leading)
-              .foregroundColor(.secondary)
-          }
-          .padding(.top, 10)
-
-          HStack(spacing: 5) {
-            Text("Current")
-            Text(profile.current)
-              .frame(width: 100, alignment: .leading)
-              .foregroundColor(.secondary)
-          }
-          .padding(.top, 10)
-
-          HStack(spacing: 5) {
-            Text("List")
-            Text(profile.list.reduce("", { item1, item2 in item1 + item2 + ","}))
-              .fixedSize(horizontal: false, vertical: true)
-              .foregroundColor(.secondary)
+    if api6000.profiles.count == 0 {
+      HStack(spacing: 5) {
+        Text("            PROFILEs")
+        Text("None present").foregroundColor(.red)
+      }
+      
+    } else {
+      ForEach(api6000.profiles) { profile in
+        VStack(spacing: 20) {
+          HStack(spacing: 10) {
+            HStack(spacing: 5) {
+              Text("         PROFILE")
+              Text(profile.id)
+                .frame(width: 50, alignment: .leading)
+                .foregroundColor(.secondary)
+            }
+            .padding(.top, 10)
+            
+            HStack(spacing: 5) {
+              Text("Current")
+              Text(profile.current)
+                .frame(width: 100, alignment: .leading)
+                .foregroundColor(.secondary)
+            }
+            .padding(.top, 10)
+            
+            HStack(spacing: 5) {
+              Text("List")
+              Text(profile.list.reduce("", { item1, item2 in item1 + item2 + ","}))
+                .fixedSize(horizontal: false, vertical: true)
+                .foregroundColor(.secondary)
+            }
           }
         }
       }

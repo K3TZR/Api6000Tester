@@ -16,34 +16,36 @@ struct AtuView: View {
   @ObservedObject var api6000: Model
   
   var body: some View {
-    HStack(spacing: 10) {
-      Text("         ATU ")
-      if api6000.radio!.atuPresent {
-        let atu = api6000.atu
-        
-        HStack(spacing: 5) {
-          Text("Enabled")
-          Text(atu.enabled ? "Y" : "N")
-            .foregroundColor(atu.enabled ? .green : .red)
+    if let radio = api6000.radio {
+      HStack(spacing: 10) {
+        Text("          ATU ")
+        if radio.atuPresent {
+          let atu = api6000.atu
+          
+          HStack(spacing: 5) {
+            Text("Enabled")
+            Text(atu.enabled ? "Y" : "N")
+              .foregroundColor(atu.enabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Status")
+            Text(atu.status == "" ? "none" : atu.status)
+              .foregroundColor(atu.status == "" ? .red : .secondary)
+          }
+          
+          HStack(spacing: 5) {
+            Text("Memories_enabled")
+            Text(atu.memoriesEnabled ? "Y" : "N")
+              .foregroundColor(atu.memoriesEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Using_memories")
+            Text(atu.usingMemory ? "Y" : "N")
+              .foregroundColor(atu.usingMemory ? .green : .red)
+          }
+        } else {
+          Text("NOT Installed").foregroundColor(.red)
         }
-        HStack(spacing: 5) {
-          Text("Status")
-          Text(atu.status == "" ? "none" : atu.status)
-            .foregroundColor(atu.status == "" ? .red : .secondary)
-        }
-        
-        HStack(spacing: 5) {
-          Text("Memories_enabled")
-          Text(atu.memoriesEnabled ? "Y" : "N")
-            .foregroundColor(atu.memoriesEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Using_memories")
-          Text(atu.usingMemory ? "Y" : "N")
-            .foregroundColor(atu.usingMemory ? .green : .red)
-        }
-      } else {
-        Text("NOT Installed").foregroundColor(.red)
       }
     }
   }
