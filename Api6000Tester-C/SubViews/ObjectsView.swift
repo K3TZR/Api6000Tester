@@ -25,9 +25,9 @@ struct ObjectsView: View {
           if model.radio == nil {
             Text("Radio objects will be displayed here")
           } else {
-            RadioView(store: store)
-//            GuiClientsView(store: store)
-//            if viewStore.isGui == false { NonGuiClientView(store: store) }
+            RadioView(store: store, model: model)
+            GuiClientView(store: store, model: model)
+            if viewStore.isGui == false { NonGuiClientView(model: model) }
           }
         }
       }

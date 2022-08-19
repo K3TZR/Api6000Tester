@@ -21,7 +21,7 @@ public struct TopButtonsView: View {
 
     WithViewStore(self.store) { viewStore in
       HStack(spacing: 30) {
-        Button(viewStore.radio == nil ? "Start" : "Stop") {
+        Button(viewStore.isConnected ? "Stop" : "Start") {
           viewStore.send(.startStopButton)
         }
         .keyboardShortcut(viewStore.radio == nil ? .defaultAction : .cancelAction)

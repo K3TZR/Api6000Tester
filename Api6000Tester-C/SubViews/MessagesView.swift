@@ -15,36 +15,50 @@ import simd
 struct MessagesView: View {
   let store: Store<ApiState, ApiAction>
   
+  func chooseColor(_ text: String) -> Color {
+    if text.prefix(1) == "C" { return Color(.systemGreen) }                         // Commands
+    if text.prefix(1) == "R" && text.contains("|0|") { return Color(.systemGray) }  // Replies no error
+    if text.prefix(1) == "R" && !text.contains("|0|") { return Color(.systemRed) }  // Replies w/error
+    if text.prefix(2) == "S0" { return Color(.systemOrange) }                       // S0
+    
+    return Color(.textColor)
+  }
+
   var body: some View {
     
-    WithViewStore(self.store) { viewStore in
-      ScrollView([.horizontal, .vertical]) {
-        
-        VStack(alignment: .leading) {
-          if viewStore.filteredMessages.count == 0 {
-            Text("TCP messages will be displayed here")
-          } else {
-            if viewStore.reverseLog {
-              ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
-                HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval!)") }
-                  Text(message.text)
-                }
-                .foregroundColor( message.color )
-              }
+    WithViewStore(store) { viewStore in
+      ScrollViewReader { proxy in
+        ScrollView([.horizontal, .vertical]) {
+          
+          VStack {
+            
+            if viewStore.filteredMessages.count == 0 {
+              Text("TCP messages will be displayed here")
+              
             } else {
               ForEach(viewStore.filteredMessages, id: \.id) { message in
                 HStack {
                   if viewStore.showTimes { Text("\(message.timeInterval!)") }
                   Text(message.text)
                 }
-                .foregroundColor( message.color )
+                .tag(message.id)
+                .foregroundColor( chooseColor(message.text) )
               }
+              .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+              
+              .onChange(of: viewStore.gotoTop, perform: { _ in
+                let id = viewStore.gotoTop ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
+                proxy.scrollTo(id, anchor: .topLeading)
+              })
+              .onChange(of: viewStore.filteredMessages.count, perform: { _ in
+                let id = viewStore.gotoTop ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
+                proxy.scrollTo(id, anchor: .bottomLeading)
+              })
             }
           }
+          .frame(minWidth: 900, maxWidth: .infinity)
+          .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
         }
-        .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
-        .frame(minWidth: 12000, maxWidth: .infinity, alignment: .leading)
       }
     }
   }

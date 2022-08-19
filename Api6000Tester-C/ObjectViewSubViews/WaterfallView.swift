@@ -1,0 +1,76 @@
+//
+//  WaterfallView.swift
+//  Api6000Components/ApiViewer/Subviews/ObjectsSubViews
+//
+//  Created by Douglas Adams on 1/24/22.
+//
+
+import SwiftUI
+
+import Api6000
+import Shared
+
+// ----------------------------------------------------------------------------
+// MARK: - View
+
+struct WaterfallView: View {
+  @ObservedObject var model: Model
+  let panadapterId: PanadapterId
+  
+  var body: some View {
+    
+    if model.waterfalls.count == 0 {
+      HStack(spacing: 5) {
+        Text("          WATERFALLs")
+        Text("None present").foregroundColor(.red)
+      }
+
+    } else {
+      ForEach(Array(model.waterfalls)) { waterfall in
+        if waterfall.panadapterId == panadapterId {
+          HStack(spacing: 20) {
+            HStack(spacing: 5) {
+              Text("          WATERFALL ")
+              Text(waterfall.id.hex).foregroundColor(.secondary)
+            }
+            HStack(spacing: 5) {
+              Text("Streaming")
+              Text(waterfall.isStreaming ? "Y" : "N").foregroundColor(waterfall.isStreaming ? .green : .red)
+            }
+
+            HStack(spacing: 5) {
+              Text("Auto_Black")
+              Text(waterfall.autoBlackEnabled ? "Y" : "N").foregroundColor(waterfall.autoBlackEnabled ? .green : .red)
+            }
+            
+            HStack(spacing: 5) {
+              Text("Color_Gain")
+              Text("\(waterfall.colorGain)").foregroundColor(.secondary)
+            }
+            
+            HStack(spacing: 5) {
+              Text("Black_Level")
+              Text("\(waterfall.blackLevel)").foregroundColor(.secondary)
+            }
+            
+            HStack(spacing: 5) {
+              Text("Duration")
+              Text("\(waterfall.lineDuration)").foregroundColor(.secondary)
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// MARK: - Preview
+
+struct WaterfallView_Previews: PreviewProvider {
+  static var previews: some View {
+    WaterfallView(model: Model.shared, panadapterId: 1)
+      .frame(minWidth: 1000)
+      .padding()
+  }
+}

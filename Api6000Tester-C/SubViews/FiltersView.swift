@@ -27,9 +27,9 @@ struct FilterObjectsView: View {
     WithViewStore(self.store) { viewStore in
       HStack {
         Picker("Show objects of type", selection: viewStore.binding(
-          get: \.objectsFilterBy,
+          get: \.objectFilter,
           send: { value in .objectsPicker(value) } )) {
-            ForEach(ObjectsFilter.allCases, id: \.self) {
+            ForEach(ObjectFilter.allCases, id: \.self) {
               Text($0.rawValue)
             }
           }
@@ -48,9 +48,9 @@ struct FilterMessagesView: View {
     WithViewStore(self.store) { viewStore in
       HStack {
         Picker("Show messages of type", selection: viewStore.binding(
-          get: \.messagesFilterBy,
+          get: \.messageFilter,
           send: { value in .messagesPicker(value) } )) {
-            ForEach(MessagesFilter.allCases, id: \.self) {
+            ForEach(MessageFilter.allCases, id: \.self) {
               Text($0.rawValue)
             }
           }
@@ -60,7 +60,7 @@ struct FilterMessagesView: View {
             viewStore.send(.messagesFilterTextField(""))
           }
         TextField("", text: viewStore.binding(
-          get: \.messagesFilterByText,
+          get: \.messageFilterText,
           send: { value in ApiAction.messagesFilterTextField(value) }))
       }
     }

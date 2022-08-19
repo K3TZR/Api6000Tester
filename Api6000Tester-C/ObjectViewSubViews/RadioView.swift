@@ -16,75 +16,76 @@ import Shared
 
 struct RadioView: View {
   let store: Store<ApiState, ApiAction>
+  @ObservedObject var model: Model
   
   var body: some View {
     
     WithViewStore(store) { viewStore in
-//      if viewStore.model.activePacketId != nil {
+      if model.activePacketId != nil {
         VStack(alignment: .leading) {
           HStack(spacing: 10) {
             Group {
               
               HStack(spacing: 0) {
                 Text("RADIO     ").foregroundColor(.blue)
-//                Text(api6000.packets[id: api6000.activePacketId!]!.source.rawValue)
-//                  .foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.source.rawValue)
+                  .foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("Name")
-//                Text(api6000.packets[id: api6000.activePacketId!]!.nickname)
-//                  .foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.nickname)
+                  .foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("Ip")
-//                Text(api6000.packets[id: api6000.activePacketId!]!.publicIp).foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.publicIp).foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("FW")
-//                Text(api6000.packets[id: api6000.activePacketId!]!.version).foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.version).foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("Model")
-//                Text(api6000.packets[id: api6000.activePacketId!]!.model).foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.model).foregroundColor(.secondary)
               }
             }
             Group {
               HStack(spacing: 5) {
                 Text("Serial")
-//                Text(api6000.packets[id: api6000.activePacketId!]!.serial).foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.serial).foregroundColor(.secondary)
               }
-              
+
               HStack(spacing: 5) {
                 Text("Stations")
-//                Text(api6000.packets[id: api6000.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
+                Text(model.packets[id: model.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
               }.frame(width: 150, alignment: .leading)
-              
+
               HStack(spacing: 5) {
                 Text("Atu")
-//                Text(api6000.radio!.atuPresent ? "Y" : "N").foregroundColor(api6000.radio!.atuPresent ? .green : .red)
+                Text(model.radio!.atuPresent ? "Y" : "N").foregroundColor(model.radio!.atuPresent ? .green : .red)
               }
-              
+
               HStack(spacing: 5) {
                 Text("Gps")
-//                Text(api6000.radio!.gpsPresent ? "Y" : "N").foregroundColor(api6000.radio!.gpsPresent ? .green : .red)
+                Text(model.radio!.gpsPresent ? "Y" : "N").foregroundColor(model.radio!.gpsPresent ? .green : .red)
               }
-              
+
               HStack(spacing: 5) {
                 Text("Scu")
-//                Text("\(api6000.radio!.numberOfScus)").foregroundColor(.green)
+                Text("\(model.radio!.numberOfScus)").foregroundColor(.green)
               }
             }
           }
         }
-        //        AtuView(api6000: api6000)
-        //        GpsView(api6000: api6000)
-        //        TnfView(api6000: api6000)
+        AtuView(model: model)
+        GpsView(model: model)
+        TnfView(model: model)
       }
-//    }
+    }
   }
 }
 
@@ -96,8 +97,8 @@ struct RadioView_Previews: PreviewProvider {
     RadioView(store: Store(
       initialState: ApiState(),
       reducer: apiReducer,
-      environment: ApiEnvironment())
-    )
+      environment: ApiEnvironment()),
+              model: Model.shared)
     .frame(minWidth: 1000)
   }
 }

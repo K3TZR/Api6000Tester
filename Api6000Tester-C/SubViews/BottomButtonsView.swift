@@ -28,9 +28,18 @@ struct BottomButtonsView: View {
                   send: { value in .fontSizeStepper(value) }),
                 in: 8...14)
         Text(String(format: "%2.0f", viewStore.fontSize)).frame(alignment: .leading)
+        
         Spacer()
-        Button("Reverse") { viewStore.send(.toggle(\.reverseLog))}
+        
+        HStack {
+          Text(viewStore.gotoTop ? "Goto Bottom" : "Goto Top")
+          Image(systemName: viewStore.gotoTop ? "arrow.down.square" : "arrow.up.square").font(.title)
+            .onTapGesture { viewStore.send(.toggle(\.gotoTop)) }
+        }
+        .frame(width: 120, alignment: .trailing)
+
         Spacer()
+        
         HStack(spacing: 40) {
           Toggle("Clear on Start", isOn: viewStore.binding(get: \.clearOnStart, send: .toggle(\.clearOnStart)))
           Toggle("Clear on Stop", isOn: viewStore.binding(get: \.clearOnStop, send: .toggle(\.clearOnStop)))
