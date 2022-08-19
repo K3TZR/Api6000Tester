@@ -22,7 +22,7 @@ struct SendView: View {
     WithViewStore(self.store) { viewStore in
       HStack(spacing: 25) {
         Group {
-          Button("Send") { viewStore.send(.sendButton) }
+          Button("Send") { viewStore.send(.sendButton( viewStore.commandToSend )) }
           .keyboardShortcut(.defaultAction)
 
           HStack(spacing: 0) {

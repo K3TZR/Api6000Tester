@@ -27,7 +27,7 @@ struct MessagesView: View {
             if viewStore.reverseLog {
               ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
                 HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval)") }
+                  if viewStore.showTimes { Text("\(message.timeInterval!)") }
                   Text(message.text)
                 }
                 .foregroundColor( message.color )
@@ -35,7 +35,7 @@ struct MessagesView: View {
             } else {
               ForEach(viewStore.filteredMessages, id: \.id) { message in
                 HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval)") }
+                  if viewStore.showTimes { Text("\(message.timeInterval!)") }
                   Text(message.text)
                 }
                 .foregroundColor( message.color )

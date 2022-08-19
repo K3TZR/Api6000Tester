@@ -33,7 +33,6 @@ struct FilterObjectsView: View {
               Text($0.rawValue)
             }
           }
-          .disabled(viewStore.radio == nil)
           .frame(width: 300)
       }
     }
@@ -55,16 +54,14 @@ struct FilterMessagesView: View {
               Text($0.rawValue)
             }
           }
-          .disabled(viewStore.radio == nil)
           .frame(width: 300)
         Image(systemName: "x.circle").foregroundColor(viewStore.radio == nil ? .gray : nil)
           .onTapGesture {
             viewStore.send(.messagesFilterTextField(""))
-          }.disabled(viewStore.radio == nil)
+          }
         TextField("", text: viewStore.binding(
           get: \.messagesFilterByText,
           send: { value in ApiAction.messagesFilterTextField(value) }))
-          .disabled(viewStore.radio == nil)
       }
     }
     .pickerStyle(MenuPickerStyle())

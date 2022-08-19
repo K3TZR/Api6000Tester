@@ -8,11 +8,11 @@
 import SwiftUI
 import ComposableArchitecture
 
+import Api6000
 import LoginView
 import ClientView
 import PickerView
 import LogView
-import RemoteView
 import Shared
 
 // ----------------------------------------------------------------------------
@@ -25,6 +25,8 @@ public struct ApiView: View {
     self.store = store
   }
   
+  @StateObject var model: Model = Model.shared
+  
   public var body: some View {
     
     WithViewStore(self.store) { viewStore in
@@ -33,65 +35,67 @@ public struct ApiView: View {
         TopButtonsView(store: store)
         SendView(store: store)
         FiltersView(store: store)
-        
-        Divider().background(Color(.red))
-        
+
+        Divider().background(Color(.gray))
+
         VSplitView {
-          ObjectsView(store: store)
-          Divider().background(Color(.green))
+          ObjectsView(store: store, model: model)
+            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+          Divider().background(Color(.cyan))
           MessagesView(store: store)
+            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
         }
         Spacer()
-        Divider().background(Color(.red))
+        Divider().background(Color(.gray))
         BottomButtonsView(store: store)
       }
       // initialize on first appearance
       .onAppear() { viewStore.send(.onAppear) }
-      
+            
       // alert dialogs
-      .alert(
-        self.store.scope(state: \.alert),
-        dismiss: .alertDismissed
-      )
+//      .alert(
+//        self.store.scope(state: \.alert),
+//        dismiss: .alertDismissed
+//      )
       
       // Picker sheet
       .sheet(
         isPresented: viewStore.binding(
           get: { $0.pickerState != nil },
-          send: ApiAction.pickerAction(.cancelButton)),
+          send: ApiAction.picker(.cancelButton)),
         content: {
           IfLetStore(
-            store.scope(state: \.pickerState, action: ApiAction.pickerAction),
+            store.scope(state: \.pickerState, action: ApiAction.picker),
             then: PickerView.init(store:)
           )
         }
       )
       
       // Login sheet
-      .sheet(
-        isPresented: viewStore.binding(
-          get: { $0.loginState != nil },
-          send: ApiAction.loginAction(.cancelButton)),
-        content: {
-          IfLetStore(
-            store.scope(state: \.loginState, action: ApiAction.loginAction),
-            then: LoginView.init(store:)
-          )
-        }
-      )
+//      .sheet(
+//        isPresented: viewStore.binding(
+//          get: { $0.loginState != nil },
+//          send: ApiAction.loginAction(.cancelButton)),
+//        content: {
+//          IfLetStore(
+//            store.scope(state: \.loginState, action: ApiAction.loginAction),
+//            then: LoginView.init(store:)
+//          )
+//        }
+//      )
       
       // Connection sheet
-      .sheet(
-        isPresented: viewStore.binding(
-          get: { $0.clientState != nil },
-          send: ApiAction.clientAction(.cancelButton)),
-        content: {
-          IfLetStore(
-            store.scope(state: \.clientState, action: ApiAction.clientAction),
-            then: ClientView.init(store:)
-          )
-        }
-      )
+//      .sheet(
+//        isPresented: viewStore.binding(
+//          get: { $0.clientState != nil },
+//          send: ApiAction.clientAction(.cancelButton)),
+//        content: {
+//          IfLetStore(
+//            store.scope(state: \.clientState, action: ApiAction.clientAction),
+//            then: ClientView.init(store:)
+//          )
+//        }
+//      )
     }
   }
 }

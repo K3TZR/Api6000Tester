@@ -32,8 +32,8 @@ struct BottomButtonsView: View {
         Button("Reverse") { viewStore.send(.toggle(\.reverseLog))}
         Spacer()
         HStack(spacing: 40) {
-          Toggle("Clear on Connect", isOn: viewStore.binding(get: \.clearOnConnect, send: .toggle(\.clearOnConnect)))
-          Toggle("Clear on Disconnect", isOn: viewStore.binding(get: \.clearOnDisconnect, send: .toggle(\.clearOnDisconnect)))
+          Toggle("Clear on Start", isOn: viewStore.binding(get: \.clearOnStart, send: .toggle(\.clearOnStart)))
+          Toggle("Clear on Stop", isOn: viewStore.binding(get: \.clearOnStop, send: .toggle(\.clearOnStop)))
           Button("Clear Now") { viewStore.send(.clearNowButton)}
         }
       }
