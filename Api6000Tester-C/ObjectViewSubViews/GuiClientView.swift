@@ -27,11 +27,11 @@ struct GuiClientView: View {
           Divider().background(Color(.red))
           HStack(spacing: 10) {
             
-            HStack(spacing: 0) {
-              Text("Gui       ").foregroundColor(.yellow)
-              Text("Station ")
-              Text("\(guiClient.station)").foregroundColor(.secondary)
-            }
+//            HStack(spacing: 0) {
+              Text("\(guiClient.station) Gui").foregroundColor(.yellow).frame(width: 50, alignment: .leading)
+//              Text("Station ")
+//              Text("\(guiClient.station)").foregroundColor(.secondary)
+//            }
             
             HStack(spacing: 5) {
               Text("Program")

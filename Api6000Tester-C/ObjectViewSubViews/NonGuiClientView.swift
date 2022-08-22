@@ -21,14 +21,15 @@ struct NonGuiClientView: View {
         Divider().background(Color(.red))
         HStack(spacing: 10) {
           
-          HStack(spacing: 0) {
-            Text("nonGui    ").foregroundColor(.green)
-            Text("Handle ")
+          Text("Tester    nonGui").foregroundColor(.green).frame(width: 50, alignment: .leading)
+
+          HStack(spacing: 5) {
+            Text("Handle")
             Text(model.radio!.connectionHandle?.hex ?? "").foregroundColor(.secondary)
           }
 
           HStack(spacing: 5) {
-            Text("Bound_to_Station:")
+            Text("Bound_to_Station")
             Text("\(model.activeStation ?? "none")").foregroundColor(.secondary)
           }
           

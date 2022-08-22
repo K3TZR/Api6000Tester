@@ -72,30 +72,30 @@ public struct ApiView: View {
       )
       
       // Login sheet
-//      .sheet(
-//        isPresented: viewStore.binding(
-//          get: { $0.loginState != nil },
-//          send: ApiAction.loginAction(.cancelButton)),
-//        content: {
-//          IfLetStore(
-//            store.scope(state: \.loginState, action: ApiAction.loginAction),
-//            then: LoginView.init(store:)
-//          )
-//        }
-//      )
+      .sheet(
+        isPresented: viewStore.binding(
+          get: { $0.loginState != nil },
+          send: ApiAction.login(.cancelButton)),
+        content: {
+          IfLetStore(
+            store.scope(state: \.loginState, action: ApiAction.login),
+            then: LoginView.init(store:)
+          )
+        }
+      )
       
-      // Connection sheet
-//      .sheet(
-//        isPresented: viewStore.binding(
-//          get: { $0.clientState != nil },
-//          send: ApiAction.clientAction(.cancelButton)),
-//        content: {
-//          IfLetStore(
-//            store.scope(state: \.clientState, action: ApiAction.clientAction),
-//            then: ClientView.init(store:)
-//          )
-//        }
-//      )
+      // Client connection sheet
+      .sheet(
+        isPresented: viewStore.binding(
+          get: { $0.clientState != nil },
+          send: ApiAction.client(.cancelButton)),
+        content: {
+          IfLetStore(
+            store.scope(state: \.clientState, action: ApiAction.client),
+            then: ClientView.init(store:)
+          )
+        }
+      )
     }
   }
 }

@@ -18,7 +18,7 @@ struct AtuView: View {
   var body: some View {
     if let radio = model.radio {
       HStack(spacing: 10) {
-        Text("          ATU ")
+        Text("          ATU  ")
         if radio.atuPresent {
           let atu = model.atu
           

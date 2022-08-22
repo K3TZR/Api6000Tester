@@ -29,13 +29,13 @@ struct SendView: View {
             Image(systemName: "x.circle").foregroundColor(viewStore.radio == nil ? .gray : nil)
               .onTapGesture {
                 viewStore.send(.commandTextField(""))
-              }.disabled(viewStore.radio == nil)
+              }.disabled(viewStore.isConnected == false)
             TextField("Command to send", text: viewStore.binding(
               get: \.commandToSend,
               send: { value in .commandTextField(value) } ))
           }
         }
-        .disabled(viewStore.radio == nil)
+        .disabled(viewStore.isConnected == false)
 
         Spacer()
         Toggle("Clear on Send", isOn: viewStore.binding(get: \.clearOnSend, send: .toggle(\.clearOnSend)))
