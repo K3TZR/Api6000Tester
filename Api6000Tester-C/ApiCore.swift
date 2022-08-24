@@ -54,13 +54,6 @@ public struct TcpMessage: Identifiable, Equatable {
   public var color: Color
 }
 
-public enum ConnectionMode: String {
-  case both
-  case local
-  case none
-  case smartlink
-}
-
 public enum ViewType: Equatable {
   case api
   case log
@@ -121,26 +114,20 @@ public struct ApiState: Equatable {
   public var useDefault: Bool { didSet { UserDefaults.standard.set(useDefault, forKey: "useDefault") } }
   
   // normal state
-  public var alert: AlertState<ApiAction>?
+  public var alertState: AlertState<ApiAction>?
   public var clearNow = false
   public var clientState: ClientState?
   public var commandToSend = ""
   public var gotoTop = false
   public var initialized = false
   public var isConnected = false
-  public var lanListener: LanListener?
-  public var wanListener: WanListener?
   public var filteredMessages = IdentifiedArrayOf<TcpMessage>()
   public var forceWanLogin = false
   public var forceUpdate = false
   public var loginState: LoginState? = nil
   public var messages = IdentifiedArrayOf<TcpMessage>()
-  public var pendingWan: Pickable?
   public var pickerState: PickerState? = nil
-  public var radio: Radio?
-  public var reverseLog = false
   public var station: String? = nil
-  public var tcp = Tcp.shared
   
   public var startTime: Date?
   
@@ -174,7 +161,6 @@ public struct ApiState: Equatable {
     self.messageFilter = messageFilter
     self.messageFilterText = messageFilterText
     self.objectFilter = objectFilter
-    self.radio = radio
     self.showPings = showPings
     self.showTimes = showTimes
     self.smartlinkEmail = smartlinkEmail
@@ -214,10 +200,10 @@ public enum ApiAction: Equatable {
   case openSelection(Pickable, Handle?)
   case radioConnected(Bool)
   case packetEvent(PacketEvent)
-  //  case testResult(SmartlinkTestResult)
+  case smartlinkLoginRequired
+  case testResult(TestNotification)
   case tcpMessage(String, TcpMessageDirection)
-//  case wanStatus(WanStatus)
-//  case pendingWan(Pickable)
+  case loginStatus(Bool, String)
 }
 
 public struct ApiEnvironment {
@@ -226,7 +212,7 @@ public struct ApiEnvironment {
   )
   {
     self.queue = queue
-  }  
+  }
   var queue: () -> AnySchedulerOf<DispatchQueue>
 }
 
@@ -269,48 +255,41 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         // instantiate the Logger,
         _ = XCGWrapper(logLevel: .debug)
         // start subscriptions
-        
         return .merge(
-          subscribeToTcpStatus(),
-          subscribeToUdpStatus(),
           subscribeToPackets(),
           subscribeToClients(),
           subscribeToReceivedMessages(),
           subscribeToSentMessages(),
           subscribeToLogAlerts(),
+          subscribeToSmartlinkTest(),
           .run { send in
             await send(.finishInitialization)
           }
         )
       }
       return .none
-
+      
     case .finishInitialization:
       // start / stop listeners as appropriate for the Mode
-      switch state.connectionMode {
-      case .local:
-        state.lanListener = LanListener()
-        state.lanListener!.start()
-      case .smartlink:
-        state.wanListener = WanListener()
-        if state.forceWanLogin || state.wanListener!.start(state.smartlinkEmail) == false {
-          state.loginState = LoginState(heading: "Smartlink Login required")
+      return .run { [state] send in
+        if await Model.shared.setConnectionMode(state.connectionMode, state.smartlinkEmail) == true {
+          if state.connectionMode == .smartlink || state.connectionMode == .both {
+            if state.forceWanLogin {
+              await send(.smartlinkLoginRequired)
+            }
+          }
+        } else {
+          await send(.smartlinkLoginRequired)
         }
-      case .both:
-        state.lanListener = LanListener()
-        state.lanListener!.start()
-        state.wanListener = WanListener()
-        if state.forceWanLogin || state.wanListener!.start(state.smartlinkEmail) == false {
-          state.loginState = LoginState(heading: "Smartlink Login required")
-        }
-      case .none:
-        break
       }
+      
+    case .smartlinkLoginRequired:
+      state.loginState = LoginState(heading: "Smartlink Login Required")
       return .none
       
       // ----------------------------------------------------------------------------
       // MARK: - Actions: ApiView Buttons
-
+      
     case .toggle(let keyPath):
       // handles all buttons with a Bool state
       state[keyPath: keyPath].toggle()
@@ -339,15 +318,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .connectionModePicker(let mode):
       state.connectionMode = mode
-      // needed when coming from other than .onAppear
-      state.lanListener?.stop()
-      state.lanListener = nil
-      state.wanListener?.stop()
-      state.wanListener = nil
-      return .run { send in
-        await Model.shared.removePackets(condition: { _ in true } )
-        await send(.finishInitialization)
-      }
+      return Effect(value: .finishInitialization)
       
     case .fontSizeStepper(let size):
       state.fontSize = size
@@ -397,9 +368,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           state.messages.removeAll()
           state.filteredMessages.removeAll()
         }
-        
-        // FIXME: doesn't work for Smartlink
-        
         // use the Default?
         return .run { [state] send in
           // get the Pickables
@@ -414,15 +382,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           }
         }
       }
-      
-      
-      
-      
-//    case .pendingWan(let selection):
-//      state.pendingWan = selection
-//      state.wanListener?.sendWanConnectMessage(for: selection.packet.serial, holePunchPort: selection.packet.negotiatedHolePunchPort)
-//      return subscribeToWanStatus(state.wanListener!)
-      
       
       // ----------------------------------------------------------------------------
       // MARK: - Actions: invoked by other actions
@@ -444,7 +403,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         // NO, proceed to opening
         return Effect(value: .openSelection(selection, nil))
       }
-            
+      
     case .clientEvent(let event):
       switch event.action {
       case .added:      break
@@ -461,7 +420,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         }
       }
       return .none
-
+      
     case .logAlert(let logEntry):
       // a Warning or Error has been logged.
       // exit any sheet states
@@ -469,32 +428,15 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.loginState = nil
       state.pickerState = nil
       // alert the user
-      state.alert = .init(title: TextState("\(logEntry.level == .warning ? "A Warning" : "An Error") was logged:"),
-                          message: TextState(logEntry.msg))
+      state.alertState = .init(title: TextState("\(logEntry.level == .warning ? "A Warning" : "An Error") was logged:"),
+                               message: TextState(logEntry.msg))
       return .none
-
-    case .openSelection(let selection, let disconnectHandle):
-      state.isConnected = true
-      state.startTime = Date()
       
+    case .openSelection(let selection, let disconnectHandle):
       return .run { [state] send in
-        if selection.packet.source == .smartlink {
-          state.wanListener?.sendWanConnectMessage(for: selection.packet.serial, holePunchPort: selection.packet.negotiatedHolePunchPort)
-          for await status in state.wanListener!.wanStatus {
-            if status.type == .connect && status.wanHandle != nil {
-              // instantiate a Radio object and attempt to connect
-              let connected = await Model.shared.createRadio(wanHandle: status.wanHandle!, source: selection.packet.source, serial: selection.packet.serial, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester", testerMode: true)
-              await send(.radioConnected(connected))
-            }
-          }
-
         
-        } else {
-          
-          // instantiate a Radio object and attempt to connect
-          let connected = await Model.shared.createRadio(source: selection.packet.source, serial: selection.packet.serial, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester", testerMode: true)
-          await send(.radioConnected(connected))
-        }
+        await Model.shared.createRadio(selection: selection, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester")
+        await send(.radioConnected(Model.shared.radio != nil))
       }
       
     case .packetEvent(_):
@@ -506,6 +448,9 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .radioConnected(let connected):
       if connected {
+        state.isConnected = true
+        state.startTime = Date()
+        
         // connected
         if state.clearOnStart {
           state.messages.removeAll()
@@ -514,7 +459,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       } else {
         // failed
         state.isConnected = false
-        state.alert = AlertState(title: TextState("Failed to connect to Radio"))
+        state.alertState = AlertState(title: TextState("Failed to connect to Radio"))
       }
       return .none
       
@@ -528,7 +473,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         state.pickerState?.pickables = pickables
       }
       return .none
-
+      
     case .tcpMessage(let message, let direction):
       // ignore sent "ping" messages unless showPings is true
       if message.contains("ping") && state.showPings == false { return .none }
@@ -539,46 +484,36 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // re-filter
       state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
       return .none
-
-//    case .wanStatus(let status):
-//
-//      print("-----> WanStatus", status)
-//
-//      // a WanStatus message has been received, was it successful?
-//      if state.pendingWan != nil && status.type == .connect && status.wanHandle != nil {
-//        // YES, try to connect
-//        state.isConnected = true
-//        state.startTime = Date()
-//
-//        return .run { [state] send in
-//          // instantiate a Radio object and attempt to connect
-//          let connected = await Model.shared.createRadio(source: pendingWan.packet.source, serial: pendingWan.packet.serial, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester", testerMode: true)
-//            await send(.radioConnected(connected))
-//          }
-//      }
-//      return .none
-
+      
       // ----------------------------------------------------------------------------
       // MARK: - Login Actions (LoginView -> ApiView)
       
     case .login(.cancelButton):
       // CANCEL
       state.loginState = nil
+      state.forceWanLogin = false
       return .none
       
     case .login(.loginButton(let user, let pwd)):
       // LOGIN
       state.loginState = nil
-      // save the credentials
-      let secureStore = SecureStore(service: "ApiViewer")
-      _ = secureStore.set(account: "user", data: user)
-      _ = secureStore.set(account: "pwd", data: pwd)
-      state.smartlinkEmail = user
       // try a Smartlink login
-      if state.wanListener!.start(user: user, pwd: pwd) {
+      return .run { send in
+        let success = await Model.shared.smartlinkLogin(user, pwd)
+        if success {
+          let secureStore = SecureStore(service: "Api6000Tester-C")
+          _ = secureStore.set(account: "user", data: user)
+          _ = secureStore.set(account: "pwd", data: pwd)
+        }
+        await send(.loginStatus(success, user))
+      }
+      
+    case .loginStatus(let success, let user):
+      if success {
+        state.smartlinkEmail = user
         state.forceWanLogin = false
       } else {
-        state.alert = AlertState(title: TextState("Smartlink login failed"))
+        state.alertState = AlertState(title: TextState("Smartlink login failed for \(user)"))
       }
       return .none
       
@@ -598,18 +533,8 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // CONNECT, close the Picker sheet
       state.pickerState = nil
       state.station = selection.station
-//      // is it Smartlink?
-//      if selection.packet.source == PacketSource.smartlink {
-//        // YES, send the Wan Connect message
-//        state.pendingWan = selection
-//        state.wanListener!.sendWanConnectMessage(for: selection.packet.serial, holePunchPort: selection.packet.negotiatedHolePunchPort)
-//        // the reply to this will generate a wanStatus action
-//        return .none
-//
-//      } else {
-        // check for other connections
-        return Effect(value: .checkConnectionStatus(selection))
-//      }
+      // check for other connections
+      return Effect(value: .checkConnectionStatus(selection))
       
     case .picker(.defaultButton(let selection)):
       // SET / RESET the default
@@ -636,27 +561,27 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
         await send(.returnPickables(pickables, false))
       }
-
+      
     case .picker(.testButton(let selection)):
-      //      // TEST BUTTON, send a Test request
-      //      state.wanListener!.sendSmartlinkTest(state.model.packets[id: packetId]!.serial)
-      //      // reply will generate a testResult action
-      //      return subscribeToTest()
-      return .none
-            
+      // TEST BUTTON, send a Test request
+      state.pickerState?.testResult = false
+      return .run { send in
+        await Model.shared.smartlinkTest(for: selection.packet.serial)
+      }
+      
     case .picker(_):
       // IGNORE ALL OTHER picker actions
       return .none
-
+      
       // ----------------------------------------------------------------------------
       // MARK: - Client Actions (ClientView -> ApiView)
-
+      
     case .client(.cancelButton):
       // CANCEL
       state.clientState = nil
       // additional processing upstream
       return .none
-
+      
     case .client(.connect(let selection, let handle)):
       // CONNECT
       state.clientState = nil
@@ -666,108 +591,106 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // MARK: - Alert Actions: (AlertView -> ApiView)
       
     case .alertDismissed:
+      state.alertState = nil
+      if state.forceWanLogin {
+        return .run { send in
+          await send(.smartlinkLoginRequired)
+        }
+      } else {
+        return .none
+      }
+      
+      // ----------------------------------------------------------------------------
+      // MARK: - Smartlink Test Actions
+      
+    case .testResult(let result):
+      // a test result has been received
+      state.pickerState?.testResult = result.success
       return .none
-    
-
     }
   }
 )
 
-    // ----------------------------------------------------------------------------
-    //      // MARK: - Actions sent by other actions
-    //
-    //    case .clientChangeReceived(let update):
-    //      // a guiClient change has been observed
-    //      // are we connected as a nonGui?
-    //      if state.isGui == false {
-    //        // YES, is there a clientId for our connected Station?
-    //        if update.client.clientId != nil && update.client.station == state.station {
-    //          // YES, bind to it
-    //          state.radio?.bindToGuiClient(update.client.clientId)
-    //        }
-    //      }
-    //      return .none
-    //
-    //
-    //    case .testResult(let result):
-    //      // a test result has been received
-    //      state.pickerState?.testResult = result.success
-    //      return .none
-    //
-    //    }
-    //  }
-    //)
-    //  .debug("APIVIEWER ")
+// ----------------------------------------------------------------------------
+// MARK: - Helper methods
+
+/// FIlter the Messages array
+/// - Parameters:
+///   - state:         the current ApiState
+///   - filterBy:      the selected filter choice
+///   - filterText:    the current filter text
+/// - Returns:         a filtered array
+func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: String) -> IdentifiedArrayOf<TcpMessage> {
+  var filteredMessages = IdentifiedArrayOf<TcpMessage>()
+  
+  // re-filter messages
+  switch (filter, filterText) {
     
-    
-    // ----------------------------------------------------------------------------
-    // MARK: - Helper methods
-    
-    /// FIlter the Messages array
-    /// - Parameters:
-    ///   - state:         the current ApiState
-    ///   - filterBy:      the selected filter choice
-    ///   - filterText:    the current filter text
-    /// - Returns:         a filtered array
-    func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: String) -> IdentifiedArrayOf<TcpMessage> {
-      var filteredMessages = IdentifiedArrayOf<TcpMessage>()
-      
-      // re-filter messages
-      switch (filter, filterText) {
-        
-      case (.all, _):        filteredMessages = state.messages
-      case (.prefix, ""):    filteredMessages = state.messages
-      case (.prefix, _):     filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains("|" + filterText) }
-      case (.includes, _):   filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains(filterText) }
-      case (.excludes, ""):  filteredMessages = state.messages
-      case (.excludes, _):   filteredMessages = state.messages.filter { !$0.text.localizedCaseInsensitiveContains(filterText) }
-      case (.command, _):    filteredMessages = state.messages.filter { $0.text.prefix(1) == "C" }
-      case (.S0, _):         filteredMessages = state.messages.filter { $0.text.prefix(3) == "S0|" }
-      case (.status, _):     filteredMessages = state.messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
-      case (.reply, _):      filteredMessages = state.messages.filter { $0.text.prefix(1) == "R" }
-      }
-      return filteredMessages
-    }
-    
-    /// Read the user defaults entry for a default connection and transform it into a DefaultConnection struct
-    /// - Parameters:
-    ///    - type:         gui / nonGui
-    /// - Returns:         a DefaultValue struct or nil
-    public func getDefaultValue(_ type: ConnectionType) -> DefaultValue? {
-      let key = type == .gui ? "guiDefault" : "nonGuiDefault"
-      
-      if let defaultData = UserDefaults.standard.object(forKey: key) as? Data {
-        let decoder = JSONDecoder()
-        if let defaultValue = try? decoder.decode(DefaultValue.self, from: defaultData) {
-          return defaultValue
-        } else {
-          return nil
-        }
-      }
+  case (.all, _):        filteredMessages = state.messages
+  case (.prefix, ""):    filteredMessages = state.messages
+  case (.prefix, _):     filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains("|" + filterText) }
+  case (.includes, _):   filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains(filterText) }
+  case (.excludes, ""):  filteredMessages = state.messages
+  case (.excludes, _):   filteredMessages = state.messages.filter { !$0.text.localizedCaseInsensitiveContains(filterText) }
+  case (.command, _):    filteredMessages = state.messages.filter { $0.text.prefix(1) == "C" }
+  case (.S0, _):         filteredMessages = state.messages.filter { $0.text.prefix(3) == "S0|" }
+  case (.status, _):     filteredMessages = state.messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
+  case (.reply, _):      filteredMessages = state.messages.filter { $0.text.prefix(1) == "R" }
+  }
+  return filteredMessages
+}
+
+/// Read the user defaults entry for a default connection and transform it into a DefaultConnection struct
+/// - Parameters:
+///    - type:         gui / nonGui
+/// - Returns:         a DefaultValue struct or nil
+public func getDefaultValue(_ type: ConnectionType) -> DefaultValue? {
+  let key = type == .gui ? "guiDefault" : "nonGuiDefault"
+  
+  if let defaultData = UserDefaults.standard.object(forKey: key) as? Data {
+    let decoder = JSONDecoder()
+    if let defaultValue = try? decoder.decode(DefaultValue.self, from: defaultData) {
+      return defaultValue
+    } else {
       return nil
     }
-    
-    /// Write the user defaults entry for a default connection using a DefaultConnection struct
-    /// - Parameters:
-    ///    - type:        gui / nonGui
-    ///    - value:       a DefaultValue struct  to be encoded and written to user defaults
-    public func setDefaultValue(_ type: ConnectionType, _ value: DefaultValue?) {
-      let key = type == .gui ? "guiDefault" : "nonGuiDefault"
-      
-      if value == nil {
-        UserDefaults.standard.removeObject(forKey: key)
-      } else {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(value) {
-          UserDefaults.standard.set(encoded, forKey: key)
-        } else {
-          UserDefaults.standard.removeObject(forKey: key)
-        }
-      }
+  }
+  return nil
+}
+
+/// Write the user defaults entry for a default connection using a DefaultConnection struct
+/// - Parameters:
+///    - type:        gui / nonGui
+///    - value:       a DefaultValue struct  to be encoded and written to user defaults
+public func setDefaultValue(_ type: ConnectionType, _ value: DefaultValue?) {
+  let key = type == .gui ? "guiDefault" : "nonGuiDefault"
+  
+  if value == nil {
+    UserDefaults.standard.removeObject(forKey: key)
+  } else {
+    let encoder = JSONEncoder()
+    if let encoded = try? encoder.encode(value) {
+      UserDefaults.standard.set(encoded, forKey: key)
+    } else {
+      UserDefaults.standard.removeObject(forKey: key)
     }
-    
-//// ----------------------------------------------------------------------------
-//// MARK: - Private (subscriptions)
+  }
+}
+
+/// Received data Filter condition
+/// - Parameter text:    the text of a received command
+/// - Returns:           a boolean
+private func ignoreReply(_ text: String) -> Bool {
+  if text.first != "R" { return false }     // not a Reply
+  let parts = text.components(separatedBy: "|")
+  if parts.count < 3 { return false }       // incomplete
+  if parts[1] != kNoError { return false }  // error of some type
+  if parts[2] != "" { return false }        // additional data present
+  return true                               // otherwise, ignore it
+}
+
+// ----------------------------------------------------------------------------
+// MARK: - Private (subscriptions)
 
 private func subscribeToPackets() -> Effect<ApiAction, Never> {
   Effect.run { send in
@@ -779,13 +702,19 @@ private func subscribeToPackets() -> Effect<ApiAction, Never> {
   }
 }
 
+private func subscribeToClients() -> Effect<ApiAction, Never> {
+  Effect.run { send in
+    for await event in await Model.shared.clientEvents {
+      // a client change has been observed
+      await send(.clientEvent(event))
+    }
+  }
+}
+
 private func subscribeToReceivedMessages() -> Effect<ApiAction, Never> {
   Effect.run { send in
     // process the AsyncStream of Tcp messages sent from the Radio
-    for await message in Tcp.shared.tcpInbound {
-      
-      // pass them to the API
-      await Model.shared.radio?.tcpInbound(message)
+    for await message in await Model.shared.testerInboundStream {
       
       // ignore reply unless it is non-zero or contains additional data
       if ignoreReply(message) { continue }
@@ -807,6 +736,16 @@ private func subscribeToSentMessages() -> Effect<ApiAction, Never> {
   }
 }
 
+private func subscribeToSmartlinkTest() -> Effect<ApiAction, Never> {
+  Effect.run { send in
+    // process the AsyncStream of test results
+    for await result in await Model.shared.testResultStream {
+      
+      await send(.testResult( result))
+    }
+  }
+}
+
 private func subscribeToLogAlerts() -> Effect<ApiAction, Never>  {
   Effect.run { send in
 #if DEBUG
@@ -819,59 +758,3 @@ private func subscribeToLogAlerts() -> Effect<ApiAction, Never>  {
 #endif
   }
 }
-
-private func subscribeToClients() -> Effect<ApiAction, Never> {
-  Effect.run { send in
-    for await event in await Model.shared.clientEvents {
-      // a client change has been observed
-      await send(.clientEvent(event))
-    }
-  }
-}
-
-private func subscribeToTcpStatus() -> Effect<ApiAction, Never> {
-  Effect.run { _ in
-    for await status in Tcp.shared.tcpStatus {
-      await Model.shared.radio?.tcpStatus(status)
-    }
-  }
-}
-
-private func subscribeToUdpStatus() -> Effect<ApiAction, Never>  {
-  Effect.run { _ in
-    for await status in Udp.shared.udpStatus {
-      await Model.shared.radio?.udpStatus(status)
-    }
-  }
-}
-
-//private func subscribeToWanStatus(_ listener: WanListener) -> Effect<ApiAction, Never> {
-//  Effect.run { send in
-//    for await status in listener.wanStatus {
-//      await send(.wanStatus(status))
-//    }
-//  }
-//}
-
-//private func subscribeToTest() {
-//  // subscribe to the publisher of Smartlink test results
-//  testSubscription = NotificationCenter.default.publisher(for: testNotification, object: nil)
-//    .receive(on: DispatchQueue.main)
-//    .sink { [self] note in
-//      testResultReceived( note.object as! TestNotification)
-//    }
-//}
-//
-
-/// Received data Filter condition
-/// - Parameter text:    the text of a received command
-/// - Returns:           a boolean
-private func ignoreReply(_ text: String) -> Bool {
-  if text.first != "R" { return false }     // not a Reply
-  let parts = text.components(separatedBy: "|")
-  if parts.count < 3 { return false }       // incomplete
-  if parts[1] != kNoError { return false }  // error of some type
-  if parts[2] != "" { return false }        // additional data present
-  return true                               // otherwise, ignore it
-}
-

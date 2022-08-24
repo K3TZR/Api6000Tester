@@ -53,10 +53,10 @@ public struct ApiView: View {
       .onAppear() { viewStore.send(.onAppear) }
             
       // alert dialogs
-//      .alert(
-//        self.store.scope(state: \.alert),
-//        dismiss: .alertDismissed
-//      )
+      .alert(
+        self.store.scope(state: \.alertState),
+        dismiss: .alertDismissed
+      )
       
       // Picker sheet
       .sheet(

@@ -26,7 +26,7 @@ struct SendView: View {
           .keyboardShortcut(.defaultAction)
 
           HStack(spacing: 0) {
-            Image(systemName: "x.circle").foregroundColor(viewStore.radio == nil ? .gray : nil)
+            Image(systemName: "x.circle")
               .onTapGesture {
                 viewStore.send(.commandTextField(""))
               }.disabled(viewStore.isConnected == false)

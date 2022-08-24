@@ -55,7 +55,7 @@ struct FilterMessagesView: View {
             }
           }
           .frame(width: 300)
-        Image(systemName: "x.circle").foregroundColor(viewStore.radio == nil ? .gray : nil)
+        Image(systemName: "x.circle")
           .onTapGesture {
             viewStore.send(.messagesFilterTextField(""))
           }

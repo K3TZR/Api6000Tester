@@ -8,6 +8,8 @@
 import SwiftUI
 import ComposableArchitecture
 
+import Shared
+
 // ----------------------------------------------------------------------------
 // MARK: - View
 
@@ -24,11 +26,11 @@ public struct TopButtonsView: View {
         Button(viewStore.isConnected ? "Stop" : "Start") {
           viewStore.send(.startStopButton)
         }
-        .keyboardShortcut(viewStore.radio == nil ? .defaultAction : .cancelAction)
+        .keyboardShortcut(viewStore.isConnected ? .cancelAction : .defaultAction)
 
         HStack(spacing: 20) {
           Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\.isGui)))
-            .disabled(viewStore.radio != nil)
+            .disabled(viewStore.isConnected)
           Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
           Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
         }
