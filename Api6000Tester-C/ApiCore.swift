@@ -5,9 +5,7 @@
 //  Created by Douglas Adams on 11/24/21.
 //
 
-import Combine
 import ComposableArchitecture
-import Dispatch
 import SwiftUI
 
 import Api6000
@@ -20,128 +18,54 @@ import SecureStorage
 import XCGWrapper
 
 // ----------------------------------------------------------------------------
-// MARK: - Structs and Enums
-
-public enum TcpMessageDirection {
-  case received
-  case sent
-}
-
-public struct TcpMessage: Identifiable, Equatable {
-  public static func == (lhs: TcpMessage, rhs: TcpMessage) -> Bool {
-    lhs.id == rhs.id
-  }
-  
-  public init
-  (
-    text: String,
-    direction: TcpMessageDirection = .received,
-    timeInterval: TimeInterval? = nil,
-    color: Color = .primary
-  )
-  {
-    self.id = UUID()
-    self.text = text
-    self.direction = direction
-    self.timeInterval = timeInterval
-    self.color = color
-  }
-  
-  public var id: UUID
-  public var text: String
-  public var direction: TcpMessageDirection
-  public var timeInterval: TimeInterval?
-  public var color: Color
-}
-
-public enum ViewType: Equatable {
-  case api
-  case log
-  case remote
-}
-
-public enum ObjectFilter: String, CaseIterable {
-  case core
-  case coreNoMeters = "core w/o meters"
-  case amplifiers
-  case cwx
-  case bandSettings = "band settings"
-  case equalizers
-  case interlock
-  case memories
-  case profiles
-  case meters
-  case streams
-  case transmit
-  case tnfs
-  case usbCable
-  case wan
-  case waveforms
-  case xvtrs
-}
-
-public enum MessageFilter: String, CaseIterable {
-  case all
-  case prefix
-  case includes
-  case excludes
-  case command
-  case status
-  case reply
-  case S0
-}
-
-// ----------------------------------------------------------------------------
 // MARK: - State, Actions & Environment
 
 public struct ApiState: Equatable {  
   // State held in User Defaults
-  
   public var clearOnSend: Bool { didSet { UserDefaults.standard.set(clearOnSend, forKey: "clearOnSend") } }
   public var clearOnStart: Bool { didSet { UserDefaults.standard.set(clearOnStart, forKey: "clearOnStart") } }
   public var clearOnStop: Bool { didSet { UserDefaults.standard.set(clearOnStop, forKey: "clearOnStop") } }
   public var connectionMode: ConnectionMode { didSet { UserDefaults.standard.set(connectionMode.rawValue, forKey: "connectionMode") } }
   public var guiDefault: DefaultValue? { didSet { setDefaultValue(.gui, guiDefault) } }
-  public var nonGuiDefault: DefaultValue? { didSet { setDefaultValue(.nonGui, nonGuiDefault) } }
   public var fontSize: CGFloat { didSet { UserDefaults.standard.set(fontSize, forKey: "fontSize") } }
   public var isGui: Bool { didSet { UserDefaults.standard.set(isGui, forKey: "isGui") } }
   public var messageFilter: MessageFilter { didSet { UserDefaults.standard.set(messageFilter.rawValue, forKey: "messageFilter") } }
   public var messageFilterText: String { didSet { UserDefaults.standard.set(messageFilterText, forKey: "messageFilterText") } }
+  public var nonGuiDefault: DefaultValue? { didSet { setDefaultValue(.nonGui, nonGuiDefault) } }
   public var objectFilter: ObjectFilter { didSet { UserDefaults.standard.set(objectFilter.rawValue, forKey: "objectFilter") } }
   public var showPings: Bool { didSet { UserDefaults.standard.set(showPings, forKey: "showPings") } }
   public var showTimes: Bool { didSet { UserDefaults.standard.set(showTimes, forKey: "showTimes") } }
   public var smartlinkEmail: String { didSet { UserDefaults.standard.set(smartlinkEmail, forKey: "smartlinkEmail") } }
   public var useDefault: Bool { didSet { UserDefaults.standard.set(useDefault, forKey: "useDefault") } }
   
-  // normal state
+  // other state
   public var alertState: AlertState<ApiAction>?
   public var clearNow = false
   public var clientState: ClientState?
   public var commandToSend = ""
-  public var gotoTop = false
-  public var initialized = false
-  public var isConnected = false
   public var filteredMessages = IdentifiedArrayOf<TcpMessage>()
   public var forceWanLogin = false
   public var forceUpdate = false
+  public var gotoTop = false
+  public var initialized = false
+  public var isConnected = false
   public var loginState: LoginState? = nil
   public var messages = IdentifiedArrayOf<TcpMessage>()
   public var pickerState: PickerState? = nil
-  public var station: String? = nil
-  
   public var startTime: Date?
-  
+  public var station: String? = nil
+    
   public init(
     clearOnSend: Bool  = UserDefaults.standard.bool(forKey: "clearOnSend"),
     clearOnStart: Bool = UserDefaults.standard.bool(forKey: "clearOnStart"),
     clearOnStop: Bool  = UserDefaults.standard.bool(forKey: "clearOnStop"),
     connectionMode: ConnectionMode = ConnectionMode(rawValue: UserDefaults.standard.string(forKey: "connectionMode") ?? "local") ?? .local,
-    guiDefault: DefaultValue? = getDefaultValue(.gui),
-    nonGuiDefault: DefaultValue? = getDefaultValue(.nonGui),
     fontSize: CGFloat = UserDefaults.standard.double(forKey: "fontSize") == 0 ? 12 : UserDefaults.standard.double(forKey: "fontSize"),
+    guiDefault: DefaultValue? = getDefaultValue(.gui),
     isGui: Bool = UserDefaults.standard.bool(forKey: "isGui"),
     messageFilter: MessageFilter = MessageFilter(rawValue: UserDefaults.standard.string(forKey: "messageFilter") ?? "all") ?? .all,
     messageFilterText: String = UserDefaults.standard.string(forKey: "messageFilterText") ?? "",
+    nonGuiDefault: DefaultValue? = getDefaultValue(.nonGui),
     objectFilter: ObjectFilter = ObjectFilter(rawValue: UserDefaults.standard.string(forKey: "objectFilter") ?? "core") ?? .core,
     radio: Radio? = nil,
     showPings: Bool = UserDefaults.standard.bool(forKey: "showPings"),
@@ -155,11 +79,11 @@ public struct ApiState: Equatable {
     self.clearOnSend = clearOnSend
     self.connectionMode = connectionMode
     self.guiDefault = guiDefault
-    self.nonGuiDefault = nonGuiDefault
     self.fontSize = fontSize
     self.isGui = isGui
     self.messageFilter = messageFilter
     self.messageFilterText = messageFilterText
+    self.nonGuiDefault = nonGuiDefault
     self.objectFilter = objectFilter
     self.showPings = showPings
     self.showTimes = showTimes
@@ -173,7 +97,6 @@ public enum ApiAction: Equatable {
   case onAppear
   
   // UI controls
-  case clearDefaultButton
   case clearNowButton
   case commandTextField(String)
   case connectionModePicker(ConnectionMode)
@@ -192,18 +115,18 @@ public enum ApiAction: Equatable {
   case picker(PickerAction)
   
   // Effects related
-  case returnPickables(IdentifiedArrayOf<Pickable>, Bool)
   case checkConnectionStatus(Pickable)
   case clientEvent(ClientEvent)
   case finishInitialization
   case logAlert(LogEntry)
-  case openSelection(Pickable, Handle?)
-  case radioConnected(Bool)
-  case packetEvent(PacketEvent)
-  case smartlinkLoginRequired
-  case testResult(TestNotification)
-  case tcpMessage(String, TcpMessageDirection)
   case loginStatus(Bool, String)
+  case openSelection(Pickable, Handle?)
+  case packetEvent(PacketEvent)
+  case radioConnected(Bool)
+  case returnPickables(IdentifiedArrayOf<Pickable>, Bool)
+  case smartlinkLoginRequired
+  case tcpMessage(TcpMessage)
+  case testResult(TestNotification)
 }
 
 public struct ApiEnvironment {
@@ -258,8 +181,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         return .merge(
           subscribeToPackets(),
           subscribeToClients(),
-          subscribeToReceivedMessages(),
-          subscribeToSentMessages(),
+          subscribeToMessages(),
           subscribeToLogAlerts(),
           subscribeToSmartlinkTest(),
           .run { send in
@@ -289,23 +211,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
       // ----------------------------------------------------------------------------
       // MARK: - Actions: ApiView Buttons
-      
-    case .toggle(let keyPath):
-      // handles all buttons with a Bool state
-      state[keyPath: keyPath].toggle()
-      if keyPath == \.forceWanLogin && state.forceWanLogin {
-        // re-initialize if forcing Wan login
-        return Effect(value: .connectionModePicker(state.connectionMode))
-      }
-      return .none
-      
-    case .clearDefaultButton:
-      if state.isGui {
-        state.guiDefault = nil
-      } else {
-        state.nonGuiDefault = nil
-      }
-      return .none
       
     case .clearNowButton:
       state.messages.removeAll()
@@ -383,6 +288,15 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         }
       }
       
+    case .toggle(let keyPath):
+      // handles all buttons with a Bool state
+      state[keyPath: keyPath].toggle()
+      if keyPath == \.forceWanLogin && state.forceWanLogin {
+        // re-initialize if forcing Wan login
+        return Effect(value: .connectionModePicker(state.connectionMode))
+      }
+      return .none
+      
       // ----------------------------------------------------------------------------
       // MARK: - Actions: invoked by other actions
       
@@ -396,6 +310,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           stations.append(client.station)
           handles.append(client.handle)
         }
+        // show the client chooser
         state.clientState = ClientState(selection: selection, stations: stations, handles: handles)
         return .none
         
@@ -441,8 +356,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .packetEvent(_):
       return .run { [state] send in
-        var pickables = IdentifiedArrayOf<Pickable>()
-        pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+        let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
         await send(.returnPickables(pickables, false))
       }
       
@@ -474,15 +388,14 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       }
       return .none
       
-    case .tcpMessage(let message, let direction):
+    case .tcpMessage(var tcpMessage):
       // ignore sent "ping" messages unless showPings is true
-      if message.contains("ping") && state.showPings == false { return .none }
-      // convert to TcpMessage format, add to the collection and refilter
-      let tcpMessage = TcpMessage(text: message, direction: direction, timeInterval: Date().timeIntervalSince( state.startTime!))
+      if tcpMessage.direction == .sent && tcpMessage.text.contains("ping") && state.showPings == false { return .none }
+      tcpMessage.timeInterval = tcpMessage.timeStamp.timeIntervalSince(state.startTime!)
       // add the message to the collection
       state.messages.append(tcpMessage)
       // re-filter
-      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
+      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText, partial: true, tcpMessage: tcpMessage)
       return .none
       
       // ----------------------------------------------------------------------------
@@ -620,22 +533,42 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
 ///   - filterBy:      the selected filter choice
 ///   - filterText:    the current filter text
 /// - Returns:         a filtered array
-func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: String) -> IdentifiedArrayOf<TcpMessage> {
+func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: String, partial: Bool = false, tcpMessage: TcpMessage? = nil) -> IdentifiedArrayOf<TcpMessage> {
   var filteredMessages = IdentifiedArrayOf<TcpMessage>()
   
-  // re-filter messages
-  switch (filter, filterText) {
+  if partial, let tcpMessage = tcpMessage {
+    filteredMessages = state.filteredMessages
+    // filter the latest entry
+    switch (filter, filterText) {
+      
+    case (.all, _):        filteredMessages.append(tcpMessage)
+    case (.prefix, ""):    filteredMessages.append(tcpMessage)
+    case (.prefix, _):     if tcpMessage.text.localizedCaseInsensitiveContains("|" + filterText) { filteredMessages.append(tcpMessage) }
+    case (.includes, _):   if tcpMessage.text.localizedCaseInsensitiveContains(filterText) { filteredMessages.append(tcpMessage) }
+    case (.excludes, ""):  filteredMessages.append(tcpMessage)
+    case (.excludes, _):   if !tcpMessage.text.localizedCaseInsensitiveContains(filterText) { filteredMessages.append(tcpMessage) }
+    case (.command, _):    if tcpMessage.text.prefix(1) == "C" { filteredMessages.append(tcpMessage) }
+    case (.S0, _):         if tcpMessage.text.prefix(3) == "S0|" { filteredMessages.append(tcpMessage) }
+    case (.status, _):     if tcpMessage.text.prefix(1) == "S0|" && tcpMessage.text.prefix(3) != "S0|" { filteredMessages.append(tcpMessage) }
+    case (.reply, _):      if tcpMessage.text.prefix(1) == "R" { filteredMessages.append(tcpMessage) }
+    }
+    return filteredMessages
     
-  case (.all, _):        filteredMessages = state.messages
-  case (.prefix, ""):    filteredMessages = state.messages
-  case (.prefix, _):     filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains("|" + filterText) }
-  case (.includes, _):   filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains(filterText) }
-  case (.excludes, ""):  filteredMessages = state.messages
-  case (.excludes, _):   filteredMessages = state.messages.filter { !$0.text.localizedCaseInsensitiveContains(filterText) }
-  case (.command, _):    filteredMessages = state.messages.filter { $0.text.prefix(1) == "C" }
-  case (.S0, _):         filteredMessages = state.messages.filter { $0.text.prefix(3) == "S0|" }
-  case (.status, _):     filteredMessages = state.messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
-  case (.reply, _):      filteredMessages = state.messages.filter { $0.text.prefix(1) == "R" }
+  } else {
+    // re-filter the entire messages array
+    switch (filter, filterText) {
+      
+    case (.all, _):        filteredMessages = state.messages
+    case (.prefix, ""):    filteredMessages = state.messages
+    case (.prefix, _):     filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains("|" + filterText) }
+    case (.includes, _):   filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains(filterText) }
+    case (.excludes, ""):  filteredMessages = state.messages
+    case (.excludes, _):   filteredMessages = state.messages.filter { !$0.text.localizedCaseInsensitiveContains(filterText) }
+    case (.command, _):    filteredMessages = state.messages.filter { $0.text.prefix(1) == "C" }
+    case (.S0, _):         filteredMessages = state.messages.filter { $0.text.prefix(3) == "S0|" }
+    case (.status, _):     filteredMessages = state.messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
+    case (.reply, _):      filteredMessages = state.messages.filter { $0.text.prefix(1) == "R" }
+    }
   }
   return filteredMessages
 }
@@ -690,7 +623,7 @@ private func ignoreReply(_ text: String) -> Bool {
 }
 
 // ----------------------------------------------------------------------------
-// MARK: - Private (subscriptions)
+// MARK: - Subscriptions
 
 private func subscribeToPackets() -> Effect<ApiAction, Never> {
   Effect.run { send in
@@ -711,30 +644,28 @@ private func subscribeToClients() -> Effect<ApiAction, Never> {
   }
 }
 
-private func subscribeToReceivedMessages() -> Effect<ApiAction, Never> {
+private func subscribeToMessages() -> Effect<ApiAction, Never> {
   Effect.run { send in
     // process the AsyncStream of Tcp messages sent from the Radio
-    for await message in await Model.shared.testerInboundStream {
+    for await tcpMessage in await Model.shared.testerInboundStream {
       
       // ignore reply unless it is non-zero or contains additional data
-      if ignoreReply(message) { continue }
+      if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
       
-      // convert to TcpMessage format, add to the collection and refilter
-      await send(.tcpMessage(message, .received))
+      await send(.tcpMessage(tcpMessage))
     }
   }
 }
 
-private func subscribeToSentMessages() -> Effect<ApiAction, Never> {
-  Effect.run { send in
-    // process the AsyncStream of Tcp messages sent to the Radio
-    for await message in Tcp.shared.tcpOutbound {
-      
-      // convert to TcpMessage format, add to the collection and refilter
-      await send(.tcpMessage( message, .sent))
-    }
-  }
-}
+//private func subscribeToSentMessages() -> Effect<ApiAction, Never> {
+//  Effect.run { send in
+//    // process the AsyncStream of Tcp messages sent to the Radio
+//    for await message in Tcp.shared.tcpOutbound {
+//
+//      await send(.tcpMessage( message, .sent))
+//    }
+//  }
+//}
 
 private func subscribeToSmartlinkTest() -> Effect<ApiAction, Never> {
   Effect.run { send in
@@ -758,3 +689,45 @@ private func subscribeToLogAlerts() -> Effect<ApiAction, Never>  {
 #endif
   }
 }
+
+// ----------------------------------------------------------------------------
+// MARK: - Structs and Enums
+
+public enum ViewType: Equatable {
+  case api
+  case log
+  case remote
+}
+
+public enum ObjectFilter: String, CaseIterable {
+  case core
+  case coreNoMeters = "core w/o meters"
+  case amplifiers
+  case cwx
+  case bandSettings = "band settings"
+  case equalizers
+  case interlock
+  case memories
+  case profiles
+  case meters
+  case streams
+  case transmit
+  case tnfs
+  case usbCable
+  case wan
+  case waveforms
+  case xvtrs
+}
+
+public enum MessageFilter: String, CaseIterable {
+  case all
+  case prefix
+  case includes
+  case excludes
+  case command
+  case status
+  case reply
+  case S0
+}
+
+

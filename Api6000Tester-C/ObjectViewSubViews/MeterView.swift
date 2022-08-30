@@ -44,7 +44,7 @@ struct MeterView: View {
               Group {
                 Text("Meter").padding(.leading, sliceId == nil ? 40 : 100)
                 Text(String(format: "% 3d", meter.id)).frame(width: 40, alignment: .leading)
-                Text(meter.group).frame(width: 30, alignment: .trailing)
+                if sliceId == nil { Text(meter.group).frame(width: 30, alignment: .trailing) }
                 Text(meter.name).frame(width: 110, alignment: .leading)
               }
               Group {

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import ComposableArchitecture
-import simd
 
 // ----------------------------------------------------------------------------
 // MARK: - View
@@ -24,6 +23,14 @@ struct MessagesView: View {
     return Color(.textColor)
   }
 
+//  func formatTime(_ date: Date) -> String {
+//    let formatter = DateFormatter()
+//    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
+//
+//    return formatter.string(from: date)
+//
+//  }
+  
   var body: some View {
     
     WithViewStore(store) { viewStore in
@@ -38,7 +45,7 @@ struct MessagesView: View {
             } else {
               ForEach(viewStore.filteredMessages, id: \.id) { message in
                 HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval!)") }
+                  if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
                   Text(message.text)
                 }
                 .tag(message.id)
