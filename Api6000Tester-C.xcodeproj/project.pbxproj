@@ -42,7 +42,6 @@
 		9F29E85628B011A5009BE31C /* TransmitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E84F28B011A5009BE31C /* TransmitView.swift */; };
 		9F29E85728B011A5009BE31C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85028B011A5009BE31C /* WaveformView.swift */; };
 		9F29E85828B011A5009BE31C /* WanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85128B011A5009BE31C /* WanView.swift */; };
-		9F4286F228B2CC010030C091 /* SecureStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 9F4286F128B2CC010030C091 /* SecureStorage */; };
 		9F5F4F02283321C5000E8145 /* Api6000TesterCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */; };
 		9F5F4F06283321C5000E8145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F05283321C5000E8145 /* Assets.xcassets */; };
 		9F5F4F09283321C5000E8145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */; };
@@ -80,9 +79,7 @@
 		9F29E84F28B011A5009BE31C /* TransmitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransmitView.swift; sourceTree = "<group>"; };
 		9F29E85028B011A5009BE31C /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		9F29E85128B011A5009BE31C /* WanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
-		9F4286EE28B1B8270030C091 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
-		9F4286EF28B1CBC80030C091 /* UtilityComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UtilityComponents; path = ../Packages/UtilityComponents; sourceTree = "<group>"; };
-		9F4286F028B1CE460030C091 /* ViewComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ViewComponents; path = ../Packages/ViewComponents; sourceTree = "<group>"; };
+		9F4286F328BE94FA0030C091 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
 		9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Api6000Tester-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api6000TesterCApp.swift; sourceTree = "<group>"; };
 		9F5F4F05283321C5000E8145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -103,7 +100,6 @@
 				9F256C1B28B1B468009BDE76 /* LogView in Frameworks */,
 				9F256C1728B1B468009BDE76 /* ClientView in Frameworks */,
 				9F256C1328B1B468009BDE76 /* Vita in Frameworks */,
-				9F4286F228B2CC010030C091 /* SecureStorage in Frameworks */,
 				9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */,
 				9F256C1D28B1B468009BDE76 /* PickerView in Frameworks */,
 				9F256C1928B1B468009BDE76 /* LoginView in Frameworks */,
@@ -118,9 +114,7 @@
 		9F5F4EF5283321C5000E8145 = {
 			isa = PBXGroup;
 			children = (
-				9F4286F028B1CE460030C091 /* ViewComponents */,
-				9F4286EF28B1CBC80030C091 /* UtilityComponents */,
-				9F4286EE28B1B8270030C091 /* ApiComponents */,
+				9F4286F328BE94FA0030C091 /* ApiComponents */,
 				9F5F4F00283321C5000E8145 /* Api6000Tester-C */,
 				9F5F4EFF283321C5000E8145 /* Products */,
 				9F8B9B2D28AD1C28008E761F /* Frameworks */,
@@ -234,7 +228,6 @@
 				9F256C1A28B1B468009BDE76 /* LogView */,
 				9F256C1C28B1B468009BDE76 /* PickerView */,
 				9F256C1E28B1B468009BDE76 /* Api6000 */,
-				9F4286F128B2CC010030C091 /* SecureStorage */,
 			);
 			productName = Api6000Tester;
 			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */;
@@ -469,7 +462,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -499,7 +492,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 3.2;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -605,10 +598,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */;
 			productName = Api6000;
-		};
-		9F4286F128B2CC010030C091 /* SecureStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SecureStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

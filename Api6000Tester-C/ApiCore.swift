@@ -33,6 +33,7 @@ public struct ApiState: Equatable {
   public var messageFilterText: String { didSet { UserDefaults.standard.set(messageFilterText, forKey: "messageFilterText") } }
   public var nonGuiDefault: DefaultValue? { didSet { setDefaultValue(.nonGui, nonGuiDefault) } }
   public var objectFilter: ObjectFilter { didSet { UserDefaults.standard.set(objectFilter.rawValue, forKey: "objectFilter") } }
+  public var reverse: Bool { didSet { UserDefaults.standard.set(reverse, forKey: "reverse") } }
   public var showPings: Bool { didSet { UserDefaults.standard.set(showPings, forKey: "showPings") } }
   public var showTimes: Bool { didSet { UserDefaults.standard.set(showTimes, forKey: "showTimes") } }
   public var smartlinkEmail: String { didSet { UserDefaults.standard.set(smartlinkEmail, forKey: "smartlinkEmail") } }
@@ -68,6 +69,7 @@ public struct ApiState: Equatable {
     nonGuiDefault: DefaultValue? = getDefaultValue(.nonGui),
     objectFilter: ObjectFilter = ObjectFilter(rawValue: UserDefaults.standard.string(forKey: "objectFilter") ?? "core") ?? .core,
     radio: Radio? = nil,
+    reverse: Bool = UserDefaults.standard.bool(forKey: "reverse"),
     showPings: Bool = UserDefaults.standard.bool(forKey: "showPings"),
     showTimes: Bool = UserDefaults.standard.bool(forKey: "showTimes"),
     smartlinkEmail: String = UserDefaults.standard.string(forKey: "smartlinkEmail") ?? "",
@@ -85,6 +87,7 @@ public struct ApiState: Equatable {
     self.messageFilterText = messageFilterText
     self.nonGuiDefault = nonGuiDefault
     self.objectFilter = objectFilter
+    self.reverse = reverse
     self.showPings = showPings
     self.showTimes = showTimes
     self.smartlinkEmail = smartlinkEmail
@@ -124,6 +127,7 @@ public enum ApiAction: Equatable {
   case packetEvent(PacketEvent)
   case radioConnected(Bool)
   case returnPickables(IdentifiedArrayOf<Pickable>, Bool)
+  case showErrorAlert(RadioError)
   case smartlinkLoginRequired
   case tcpMessage(TcpMessage)
   case testResult(TestNotification)
@@ -249,7 +253,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
     case .sendButton(let command):
       if state.clearOnSend { state.commandToSend = "" }
       return .run { send in
-        _ = await Tcp.shared.send(command)
+        _ = await Model.shared.radio?.send(command)
       }
       
     case .startStopButton:
@@ -348,10 +352,14 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       return .none
       
     case .openSelection(let selection, let disconnectHandle):
+      state.startTime = Date()
       return .run { [state] send in
-        
-        await Model.shared.createRadio(selection: selection, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester")
-        await send(.radioConnected(Model.shared.radio != nil))
+        do {
+          try await Model.shared.connectTo(selection: selection, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester")
+          await send(.radioConnected(Model.shared.radio != nil))
+        } catch {
+          await send(.showErrorAlert( error as! RadioError ))
+        }
       }
       
     case .packetEvent(_):
@@ -363,13 +371,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
     case .radioConnected(let connected):
       if connected {
         state.isConnected = true
-        state.startTime = Date()
         
-        // connected
-        if state.clearOnStart {
-          state.messages.removeAll()
-          state.filteredMessages.removeAll()
-        }
       } else {
         // failed
         state.isConnected = false
@@ -391,6 +393,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
     case .tcpMessage(var tcpMessage):
       // ignore sent "ping" messages unless showPings is true
       if tcpMessage.direction == .sent && tcpMessage.text.contains("ping") && state.showPings == false { return .none }
+      // set the time interval
       tcpMessage.timeInterval = tcpMessage.timeStamp.timeIntervalSince(state.startTime!)
       // add the message to the collection
       state.messages.append(tcpMessage)
@@ -501,7 +504,11 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       return Effect(value: .openSelection(selection, handle))
       
       // ----------------------------------------------------------------------------
-      // MARK: - Alert Actions: (AlertView -> ApiView)
+      // MARK: - Alert Actions
+      
+    case .showErrorAlert(let error):
+      state.alertState = AlertState(title: TextState("An Error occurred"), message: TextState(error.rawValue))
+      return .none
       
     case .alertDismissed:
       state.alertState = nil
@@ -627,63 +634,99 @@ private func ignoreReply(_ text: String) -> Bool {
 
 private func subscribeToPackets() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    // a packet change has been observed
+    
+    
+    log("ApiTester: Packet subscription STARTED", .debug, #function, #file, #line)
+    
+    
     for await event in await Model.shared.packetEvents {
-      // a packet change has been observed
+      // a packet has been added / updated or deleted
       await send(.packetEvent(event))
     }
+    
+    
+    log("ApiTester: Packet subscription STOPPED", .debug, #function, #file, #line)
+    
+    
   }
 }
 
 private func subscribeToClients() -> Effect<ApiAction, Never> {
   Effect.run { send in
+    
+    
+    log("ApiTester: GuiClient subscription STARTED", .debug, #function, #file, #line)
+    
+    
     for await event in await Model.shared.clientEvents {
-      // a client change has been observed
+      // a guiClient has been added / updated or deleted
       await send(.clientEvent(event))
     }
+    
+    
+    log("ApiTester: GuiClient subscription STOPPED", .debug, #function, #file, #line)
+    
+    
   }
 }
 
 private func subscribeToMessages() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    // process the AsyncStream of Tcp messages sent from the Radio
+    
+    
+    log("ApiTester: TcpMessage subscription STARTED", .debug, #function, #file, #line)
+    
+    
     for await tcpMessage in await Model.shared.testerInboundStream {
-      
+      // a TCP message was sent or received
       // ignore reply unless it is non-zero or contains additional data
       if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
-      
       await send(.tcpMessage(tcpMessage))
     }
+    
+    
+    log("ApiTester: TcpMessage subscription STOPPED", .debug, #function, #file, #line)
+    
+    
   }
 }
 
-//private func subscribeToSentMessages() -> Effect<ApiAction, Never> {
-//  Effect.run { send in
-//    // process the AsyncStream of Tcp messages sent to the Radio
-//    for await message in Tcp.shared.tcpOutbound {
-//
-//      await send(.tcpMessage( message, .sent))
-//    }
-//  }
-//}
-
 private func subscribeToSmartlinkTest() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    // process the AsyncStream of test results
+    
+    
+    log("ApiTester: Test subscription STARTED", .debug, #function, #file, #line)
+    
+    
     for await result in await Model.shared.testResultStream {
-      
+      // the result of a Smartlink Test has been received
       await send(.testResult( result))
     }
+    
+    
+    log("ApiTester: Test subscription STOPPED", .debug, #function, #file, #line)
+    
+    
   }
 }
 
 private func subscribeToLogAlerts() -> Effect<ApiAction, Never>  {
   Effect.run { send in
 #if DEBUG
+    
+    
+    log("ApiTester: LogAlert subscription STARTED", .debug, #function, #file, #line)
+    
+    
     for await entry in logAlerts {
       // a Warning or Error has been logged.
       await send(.logAlert(entry))
     }
+    
+    
+    log("ApiTester: LogAlert subscription STOPPED", .debug, #function, #file, #line)
+    
+    
 #else
     return .none
 #endif

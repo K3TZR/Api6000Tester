@@ -46,6 +46,7 @@ public struct TopButtonsView: View {
           Text("None").tag(ConnectionMode.none)
         }
         .pickerStyle(.segmented)
+        .disabled(viewStore.isConnected)
         .labelsHidden()
         .frame(width: 200)
 

@@ -27,31 +27,44 @@ struct PanadapterView: View {
       }
       
     } else {
-      ForEach(model.panadapters) { panadapter in
-        if panadapter.clientHandle == handle {
-          HStack(spacing: 20) {
-            HStack(spacing: 5) {
-              Text("          PANADAPTER")
-              Text(panadapter.id.hex).foregroundColor(.secondary)
-            }
-            
-            HStack(spacing: 5) {
-              Text("Streaming")
-              Text(panadapter.isStreaming ? "Y" : "N").foregroundColor(panadapter.isStreaming ? .green : .red)
-            }
-
-            HStack(spacing: 5) {
-              Text("Center")
-              Text("\(panadapter.center)").foregroundColor(.secondary)
-            }
-            
-            HStack(spacing: 5) {
-              Text("Bandwidth")
-              Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
-            }
+      
+      VStack(alignment: .leading) {
+        HStack(spacing: 20) {
+          HStack(spacing: 5) {
+            Text("          METERS    ")
+            Text(Meter.streamId?.hex ?? "----------").foregroundColor(.secondary)
           }
-          WaterfallView(model: model, panadapterId: panadapter.id)
-          SliceView(model: model, panadapterId: panadapter.id, handle: handle, showMeters: showMeters)
+          HStack(spacing: 5) {
+            Text("Streaming")
+            Text(Meter.isStreaming ? "Y" : "N").foregroundColor(Meter.isStreaming ? .green : .red)
+          }
+        }
+        ForEach(model.panadapters) { panadapter in
+          if panadapter.clientHandle == handle {
+            HStack(spacing: 20) {
+              HStack(spacing: 5) {
+                Text("          PANADAPTER")
+                Text(panadapter.id.hex).foregroundColor(.secondary)
+              }
+              
+              HStack(spacing: 5) {
+                Text("Streaming")
+                Text(panadapter.isStreaming ? "Y" : "N").foregroundColor(panadapter.isStreaming ? .green : .red)
+              }
+              
+              HStack(spacing: 5) {
+                Text("Center")
+                Text("\(panadapter.center)").foregroundColor(.secondary)
+              }
+              
+              HStack(spacing: 5) {
+                Text("Bandwidth")
+                Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
+              }
+            }
+            WaterfallView(model: model, panadapterId: panadapter.id)
+            SliceView(model: model, panadapterId: panadapter.id, handle: handle, showMeters: showMeters)
+          }
         }
       }
     }
