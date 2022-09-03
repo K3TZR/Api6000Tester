@@ -49,7 +49,7 @@ public struct ApiState: Equatable {
   public var forceUpdate = false
   public var gotoTop = false
   public var initialized = false
-  public var isConnected = false
+//  public var isConnected = false
   public var loginState: LoginState? = nil
   public var messages = IdentifiedArrayOf<TcpMessage>()
   public var pickerState: PickerState? = nil
@@ -108,7 +108,9 @@ public enum ApiAction: Equatable {
   case messagesFilterTextField(String)
   case objectsPicker(ObjectFilter)
   case sendButton(String)
+  case start
   case startStopButton
+  case stop
   case toggle(WritableKeyPath<ApiState, Bool>)
   
   // subview/sheet/alert related
@@ -258,39 +260,46 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .startStopButton:
       // current state?
-      if state.isConnected {
-        log("ApiCore: STOP clicked", .debug, #function, #file, #line)
-        // CONNECTED, disconnect
-        state.isConnected = false
-        if state.clearOnStop {
-          state.messages.removeAll()
-          state.filteredMessages.removeAll()
-        }
-        return .run { send in
-          await Model.shared.disconnect()
-        }
-        
-      } else {
-        // NOT connected, connect
-        log("ApiCore: START clicked", .debug, #function, #file, #line)
-        if state.clearOnStart {
-          state.messages.removeAll()
-          state.filteredMessages.removeAll()
-        }
-        // use the Default?
-        return .run { [state] send in
-          // get the Pickables
-          let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
-          // if using default, is there a default?
-          if state.useDefault, let selection = pickables.first(where: { $0.isDefault} ) {
-            // YES,
-            await send(.checkConnectionStatus(selection))
-          } else {
-            // NO, open the Picker
-            await send(.returnPickables(pickables, true))
-          }
+      return .run { send in
+        if await Model.shared.radio == nil {
+          await send(.start)
+        } else {
+          await send(.stop)
         }
       }
+      
+    case .stop:
+      log("ApiCore: STOP clicked", .debug, #function, #file, #line)
+      // CONNECTED, disconnect
+      if state.clearOnStop {
+        state.messages.removeAll()
+        state.filteredMessages.removeAll()
+      }
+      return .run { send in
+        await Model.shared.disconnect()
+      }
+        
+    case .start:
+      // NOT connected, connect
+      log("ApiCore: START clicked", .debug, #function, #file, #line)
+      if state.clearOnStart {
+        state.messages.removeAll()
+        state.filteredMessages.removeAll()
+      }
+      // use the Default?
+      return .run { [state] send in
+        // get the Pickables
+        let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+        // if using default, is there a default?
+        if state.useDefault, let selection = pickables.first(where: { $0.isDefault} ) {
+          // YES,
+          await send(.checkConnectionStatus(selection))
+        } else {
+          // NO, open the Picker
+          await send(.returnPickables(pickables, true))
+        }
+      }
+      
       
     case .toggle(let keyPath):
       // handles all buttons with a Bool state
@@ -369,12 +378,8 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       }
       
     case .radioConnected(let connected):
-      if connected {
-        state.isConnected = true
-        
-      } else {
+      if connected == false {
         // failed
-        state.isConnected = false
         state.alertState = AlertState(title: TextState("Failed to connect to Radio"))
       }
       return .none

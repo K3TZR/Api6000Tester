@@ -14,8 +14,7 @@ import Api6000
 
 struct SendView: View {
   let store: Store<ApiState, ApiAction>
-
-  @State var someText = ""
+  @ObservedObject var model: Model
 
   var body: some View {
 
@@ -29,13 +28,13 @@ struct SendView: View {
             Image(systemName: "x.circle")
               .onTapGesture {
                 viewStore.send(.commandTextField(""))
-              }.disabled(viewStore.isConnected == false)
+              }.disabled(model.radio == nil)
             TextField("Command to send", text: viewStore.binding(
               get: \.commandToSend,
               send: { value in .commandTextField(value) } ))
           }
         }
-        .disabled(viewStore.isConnected == false)
+        .disabled(model.radio == nil)
 
         Spacer()
         Toggle("Clear on Send", isOn: viewStore.binding(get: \.clearOnSend, send: .toggle(\.clearOnSend)))
@@ -54,7 +53,7 @@ struct SendView_Previews: PreviewProvider {
         initialState: ApiState(),
         reducer: apiReducer,
         environment: ApiEnvironment()
-      )
+      ), model: Model.shared
     )
       .frame(minWidth: 975)
       .padding()

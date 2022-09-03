@@ -5,9 +5,10 @@
 //  Created by Douglas Adams on 1/8/22.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
 
+import Api6000
 import Shared
 
 // ----------------------------------------------------------------------------
@@ -15,22 +16,20 @@ import Shared
 
 public struct TopButtonsView: View {
   let store: Store<ApiState, ApiAction>
-
-  @State var smartlinkIsLoggedIn = false
-  @State var smartlinkIsEnabled = false
+  @ObservedObject var model: Model
 
  public  var body: some View {
 
     WithViewStore(self.store) { viewStore in
       HStack(spacing: 30) {
-        Button(viewStore.isConnected ? "Stop" : "Start") {
+        Button(model.radio == nil ? "Start" : "Stop") {
           viewStore.send(.startStopButton)
         }
-        .keyboardShortcut(viewStore.isConnected ? .cancelAction : .defaultAction)
+        .keyboardShortcut(model.radio == nil ? .defaultAction : .cancelAction)
 
         HStack(spacing: 20) {
           Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\.isGui)))
-            .disabled(viewStore.isConnected)
+            .disabled(model.radio != nil)
           Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
           Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
         }
@@ -46,14 +45,15 @@ public struct TopButtonsView: View {
           Text("None").tag(ConnectionMode.none)
         }
         .pickerStyle(.segmented)
-        .disabled(viewStore.isConnected)
+        .disabled(model.radio != nil)
         .labelsHidden()
         .frame(width: 200)
 
         Spacer()
         Toggle("Force Smartlink Login", isOn: viewStore.binding(get: \.forceWanLogin, send: .toggle(\.forceWanLogin)))
-        .disabled(viewStore.connectionMode == .local || viewStore.connectionMode == .none)
+          .disabled(model.radio != nil || viewStore.connectionMode == .local || viewStore.connectionMode == .none)
         Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\.useDefault)))
+          .disabled(model.radio != nil)
       }
     }
   }
@@ -69,7 +69,7 @@ struct TopButtonsView_Previews: PreviewProvider {
         initialState: ApiState(),
         reducer: apiReducer,
         environment: ApiEnvironment()
-      )
+      ), model: Model.shared
     )
       .frame(minWidth: 975)
       .padding()

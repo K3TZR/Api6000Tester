@@ -32,8 +32,8 @@ public struct ApiView: View {
     WithViewStore(self.store) { viewStore in
       
       VStack(alignment: .leading) {
-        TopButtonsView(store: store)
-        SendView(store: store)
+        TopButtonsView(store: store, model: model)
+        SendView(store: store, model: model)
         FiltersView(store: store)
 
         Divider().background(Color(.gray))
