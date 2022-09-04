@@ -16,8 +16,6 @@ import Api6000
 struct BottomButtonsView: View {
   let store: Store<ApiState, ApiAction>
 
-  @State var fontSize: CGFloat = 12
-
   var body: some View {
 
     WithViewStore(self.store) { viewStore in
@@ -32,9 +30,9 @@ struct BottomButtonsView: View {
         Spacer()
         
         HStack {
-          Text(viewStore.gotoTop ? "Goto Bottom" : "Goto Top")
-          Image(systemName: viewStore.gotoTop ? "arrow.down.square" : "arrow.up.square").font(.title)
-            .onTapGesture { viewStore.send(.toggle(\.gotoTop)) }
+          Text(viewStore.gotoFirst ? "Goto Last" : "Goto First")
+          Image(systemName: viewStore.gotoFirst ? "arrow.up.square" : "arrow.down.square").font(.title)
+            .onTapGesture { viewStore.send(.toggle(\.gotoFirst)) }
         }
         .frame(width: 120, alignment: .trailing)
 

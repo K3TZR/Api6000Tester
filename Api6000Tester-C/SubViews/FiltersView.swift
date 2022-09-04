@@ -26,7 +26,7 @@ struct FilterObjectsView: View {
     
     WithViewStore(self.store) { viewStore in
       HStack {
-        Picker("Show objects of type", selection: viewStore.binding(
+        Picker("Show Radio Objects of type", selection: viewStore.binding(
           get: \.objectFilter,
           send: { value in .objectsPicker(value) } )) {
             ForEach(ObjectFilter.allCases, id: \.self) {
@@ -47,7 +47,7 @@ struct FilterMessagesView: View {
 
     WithViewStore(self.store) { viewStore in
       HStack {
-        Picker("Show messages of type", selection: viewStore.binding(
+        Picker("Show Tcp Messages of type", selection: viewStore.binding(
           get: \.messageFilter,
           send: { value in .messagesPicker(value) } )) {
             ForEach(MessageFilter.allCases, id: \.self) {

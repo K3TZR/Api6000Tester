@@ -40,10 +40,13 @@ struct MessagesView: View {
           VStack {
             
             if viewStore.filteredMessages.count == 0 {
-              Text("TCP messages will be displayed here")
+              VStack {
+                Text("TCP messages will be displayed here")
+                Text("(in reverse order of receipt)")
+              }
               
             } else {
-              ForEach(viewStore.filteredMessages, id: \.id) { message in
+              ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
                 HStack {
                   if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
                   Text(message.text)
@@ -53,12 +56,12 @@ struct MessagesView: View {
               }
               .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
               
-              .onChange(of: viewStore.gotoTop, perform: { _ in
-                let id = viewStore.gotoTop ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
+              .onChange(of: viewStore.gotoFirst, perform: { _ in
+                let id = viewStore.gotoFirst ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
                 proxy.scrollTo(id, anchor: .topLeading)
               })
               .onChange(of: viewStore.filteredMessages.count, perform: { _ in
-                let id = viewStore.gotoTop ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
+                let id = viewStore.gotoFirst ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
                 proxy.scrollTo(id, anchor: .bottomLeading)
               })
             }
