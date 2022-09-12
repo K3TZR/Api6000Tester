@@ -19,7 +19,7 @@ struct WanView: View {
     
     let wan = model.wan
     HStack(spacing: 20) {
-      Text("         WAN")
+      Text("        WAN")
       HStack(spacing: 5) {
         Text("Radio_Authenticated")
         Text(wan.radioAuthenticated ? "Y" : "N").foregroundColor(wan.radioAuthenticated ? .green : .red)

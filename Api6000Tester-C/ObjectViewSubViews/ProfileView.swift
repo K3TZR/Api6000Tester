@@ -15,21 +15,21 @@ struct ProfileView: View {
     
     if model.profiles.count == 0 {
       HStack(spacing: 5) {
-        Text("            PROFILEs")
+        Text("           PROFILEs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
       ForEach(model.profiles) { profile in
-        VStack(spacing: 20) {
+        VStack(spacing: 0) {
           HStack(spacing: 10) {
             HStack(spacing: 5) {
-              Text("         PROFILE")
+              Text("        PROFILE")
               Text(profile.id)
                 .frame(width: 50, alignment: .leading)
                 .foregroundColor(.secondary)
             }
-            .padding(.top, 10)
+//            .padding(.top, 10)
             
             HStack(spacing: 5) {
               Text("Current")
@@ -37,7 +37,7 @@ struct ProfileView: View {
                 .frame(width: 100, alignment: .leading)
                 .foregroundColor(.secondary)
             }
-            .padding(.top, 10)
+//            .padding(.top, 10)
             
             HStack(spacing: 5) {
               Text("List")

@@ -19,7 +19,7 @@ struct TransmitView: View {
     
     VStack(alignment: .leading) {
       HStack(spacing: 10) {
-        Text("         TRANSMIT")
+        Text("        TRANSMIT")
         Group {
           HStack(spacing: 5) {
             Text("RF_Power")
@@ -53,7 +53,7 @@ struct TransmitView: View {
       }
       HStack(spacing: 10) {
         Group {
-          Text("                 ")
+          Text("                ")
           HStack(spacing: 5) {
             Text("Proc")
             Text(model.transmit.speechProcessorEnabled ? "ON" : "OFF")

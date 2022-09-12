@@ -18,7 +18,7 @@ struct AmplifierView: View {
   var body: some View {
     if model.amplifiers.count == 0 {
       HStack(spacing: 5) {
-        Text("          AMPLIFIERs")
+        Text("        AMPLIFIERs")
         Text("None present").foregroundColor(.red)
       }
       
@@ -26,7 +26,7 @@ struct AmplifierView: View {
       ForEach(model.amplifiers) { amplifier in
         VStack (alignment: .leading) {
           HStack(spacing: 20) {
-            Text("         AMPLIFIER -> ")
+            Text("       AMPLIFIER -> ")
             Text(amplifier.id.hex)
             Text(amplifier.model)
             Text(amplifier.ip)

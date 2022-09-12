@@ -22,39 +22,39 @@ import XCGWrapper
 
 public struct ApiState: Equatable {  
   // State held in User Defaults
-  public var clearOnSend: Bool { didSet { UserDefaults.standard.set(clearOnSend, forKey: "clearOnSend") } }
-  public var clearOnStart: Bool { didSet { UserDefaults.standard.set(clearOnStart, forKey: "clearOnStart") } }
-  public var clearOnStop: Bool { didSet { UserDefaults.standard.set(clearOnStop, forKey: "clearOnStop") } }
-  public var connectionMode: ConnectionMode { didSet { UserDefaults.standard.set(connectionMode.rawValue, forKey: "connectionMode") } }
-  public var guiDefault: DefaultValue? { didSet { setDefaultValue(.gui, guiDefault) } }
-  public var fontSize: CGFloat { didSet { UserDefaults.standard.set(fontSize, forKey: "fontSize") } }
-  public var isGui: Bool { didSet { UserDefaults.standard.set(isGui, forKey: "isGui") } }
-  public var messageFilter: MessageFilter { didSet { UserDefaults.standard.set(messageFilter.rawValue, forKey: "messageFilter") } }
-  public var messageFilterText: String { didSet { UserDefaults.standard.set(messageFilterText, forKey: "messageFilterText") } }
-  public var nonGuiDefault: DefaultValue? { didSet { setDefaultValue(.nonGui, nonGuiDefault) } }
-  public var objectFilter: ObjectFilter { didSet { UserDefaults.standard.set(objectFilter.rawValue, forKey: "objectFilter") } }
-  public var reverse: Bool { didSet { UserDefaults.standard.set(reverse, forKey: "reverse") } }
-  public var showPings: Bool { didSet { UserDefaults.standard.set(showPings, forKey: "showPings") } }
-  public var showTimes: Bool { didSet { UserDefaults.standard.set(showTimes, forKey: "showTimes") } }
-  public var smartlinkEmail: String { didSet { UserDefaults.standard.set(smartlinkEmail, forKey: "smartlinkEmail") } }
-  public var useDefault: Bool { didSet { UserDefaults.standard.set(useDefault, forKey: "useDefault") } }
+  var clearOnSend: Bool { didSet { UserDefaults.standard.set(clearOnSend, forKey: "clearOnSend") } }
+  var clearOnStart: Bool { didSet { UserDefaults.standard.set(clearOnStart, forKey: "clearOnStart") } }
+  var clearOnStop: Bool { didSet { UserDefaults.standard.set(clearOnStop, forKey: "clearOnStop") } }
+  var connectionMode: ConnectionMode { didSet { UserDefaults.standard.set(connectionMode.rawValue, forKey: "connectionMode") } }
+  var guiDefault: DefaultValue? { didSet { setDefaultValue("guiDefault", guiDefault) } }
+  var fontSize: CGFloat { didSet { UserDefaults.standard.set(fontSize, forKey: "fontSize") } }
+  var isGui: Bool { didSet { UserDefaults.standard.set(isGui, forKey: "isGui") } }
+  var messageFilter: MessageFilter { didSet { UserDefaults.standard.set(messageFilter.rawValue, forKey: "messageFilter") } }
+  var messageFilterText: String { didSet { UserDefaults.standard.set(messageFilterText, forKey: "messageFilterText") } }
+  var nonGuiDefault: DefaultValue? { didSet { setDefaultValue("nonGuiDefault", nonGuiDefault) } }
+  var objectFilter: ObjectFilter { didSet { UserDefaults.standard.set(objectFilter.rawValue, forKey: "objectFilter") } }
+  var reverse: Bool { didSet { UserDefaults.standard.set(reverse, forKey: "reverse") } }
+  var showPings: Bool { didSet { UserDefaults.standard.set(showPings, forKey: "showPings") } }
+  var showTimes: Bool { didSet { UserDefaults.standard.set(showTimes, forKey: "showTimes") } }
+  var smartlinkEmail: String { didSet { UserDefaults.standard.set(smartlinkEmail, forKey: "smartlinkEmail") } }
+  var useDefault: Bool { didSet { UserDefaults.standard.set(useDefault, forKey: "useDefault") } }
   
   // other state
-  public var alertState: AlertState<ApiAction>?
-  public var clearNow = false
-  public var clientState: ClientState?
-  public var commandToSend = ""
-  public var filteredMessages = IdentifiedArrayOf<TcpMessage>()
-  public var forceWanLogin = false
-  public var forceUpdate = false
-  public var gotoFirst = false
-  public var initialized = false
-  public var loginState: LoginState? = nil
-  public var messages = IdentifiedArrayOf<TcpMessage>()
-  public var pickables = IdentifiedArrayOf<Pickable>()
-  public var pickerState: PickerState? = nil
-  public var startTime: Date?
-  public var station: String? = nil
+  var alertState: AlertState<ApiAction>?
+  var clearNow = false
+  var clientState: ClientState?
+  var commandToSend = ""
+  var filteredMessages = IdentifiedArrayOf<TcpMessage>()
+  var loginRequired = false
+  var forceUpdate = false
+  var gotoFirst = false
+  var initialized = false
+  var loginState: LoginState? = nil
+  var messages = IdentifiedArrayOf<TcpMessage>()
+  var pickables = IdentifiedArrayOf<Pickable>()
+  var pickerState: PickerState? = nil
+  var startTime: Date?
+  var station: String? = nil
     
   public init(
     clearOnSend: Bool  = UserDefaults.standard.bool(forKey: "clearOnSend"),
@@ -62,11 +62,11 @@ public struct ApiState: Equatable {
     clearOnStop: Bool  = UserDefaults.standard.bool(forKey: "clearOnStop"),
     connectionMode: ConnectionMode = ConnectionMode(rawValue: UserDefaults.standard.string(forKey: "connectionMode") ?? "local") ?? .local,
     fontSize: CGFloat = UserDefaults.standard.double(forKey: "fontSize") == 0 ? 12 : UserDefaults.standard.double(forKey: "fontSize"),
-    guiDefault: DefaultValue? = getDefaultValue(.gui),
+    guiDefault: DefaultValue? = getDefaultValue("guiDefault"),
     isGui: Bool = UserDefaults.standard.bool(forKey: "isGui"),
     messageFilter: MessageFilter = MessageFilter(rawValue: UserDefaults.standard.string(forKey: "messageFilter") ?? "all") ?? .all,
     messageFilterText: String = UserDefaults.standard.string(forKey: "messageFilterText") ?? "",
-    nonGuiDefault: DefaultValue? = getDefaultValue(.nonGui),
+    nonGuiDefault: DefaultValue? = getDefaultValue("nonGuiDefault"),
     objectFilter: ObjectFilter = ObjectFilter(rawValue: UserDefaults.standard.string(forKey: "objectFilter") ?? "core") ?? .core,
     radio: Radio? = nil,
     reverse: Bool = UserDefaults.standard.bool(forKey: "reverse"),
@@ -104,32 +104,31 @@ public enum ApiAction: Equatable {
   case commandTextField(String)
   case connectionModePicker(ConnectionMode)
   case fontSizeStepper(CGFloat)
+  case loginRequiredButton(Bool)
   case messagesPicker(MessageFilter)
   case messagesFilterTextField(String)
   case objectsPicker(ObjectFilter)
   case sendButton(String)
-  case start
-  case startStopButton
-  case stop
+  case startStopButton(Bool)
   case toggle(WritableKeyPath<ApiState, Bool>)
   
-  // subview/sheet/alert related
+  // subview related
   case alertDismissed
   case client(ClientAction)
   case login(LoginAction)
   case picker(PickerAction)
   
   // Effects related
-  case checkStatus(Pickable)
-  case clientEvent(ClientEvent)
-  case connectTo(Pickable, Handle?)
-  case finishInitialization
-  case logAlert(LogEntry)
   case loginStatus(Bool, String)
-  case openPicker(IdentifiedArrayOf<Pickable>)
+  case showClientSheet(Pickable)
+  case showErrorAlert(ConnectionError)
+  case showLogAlert(LogEntry)
+  case showLoginSheet
+  case showPickerSheet(IdentifiedArrayOf<Pickable>)
+
+  // Subscription related
+  case clientEvent(ClientEvent)
   case packetEvent(PacketEvent)
-  case showErrorAlert(RadioError)
-  case smartlinkLoginRequired
   case tcpMessage(TcpMessage)
   case testResult(TestNotification)
 }
@@ -189,34 +188,13 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           subscribeToMessages(),
           subscribeToLogAlerts(),
           subscribeToSmartlinkTest(),
-          .run { send in
-            await send(.finishInitialization)
-          }
+          initializeMode(state)
         )
       }
       return .none
       
-    case .finishInitialization:
-      // start / stop listeners as appropriate for the Mode
-      return .run { [state] send in
-        // set the connection mode, start the Lan and/or Wan listener
-        if await Model.shared.setConnectionMode(state.connectionMode, state.smartlinkEmail) == true {
-          if state.forceWanLogin && (state.connectionMode == .smartlink || state.connectionMode == .both) {
-            // Smartlink login is required
-            await send(.smartlinkLoginRequired)
-          }
-        } else {
-          // Wan listener was required and failed to start
-          await send(.smartlinkLoginRequired)
-        }
-      }
-      
-    case .smartlinkLoginRequired:
-      state.loginState = LoginState(heading: "Smartlink Login Required")
-      return .none
-      
       // ----------------------------------------------------------------------------
-      // MARK: - Actions: ApiView Buttons
+      // MARK: - Actions: ApiView UI controls
       
     case .clearNowButton:
       state.messages.removeAll()
@@ -230,10 +208,18 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
     case .connectionModePicker(let mode):
       state.connectionMode = mode
       // re-initialize
-      return Effect(value: .finishInitialization)
+      return initializeMode(state)
       
     case .fontSizeStepper(let size):
       state.fontSize = size
+      return .none
+      
+    case .loginRequiredButton(let isRequired):
+      state.loginRequired.toggle()
+      if state.loginRequired {
+        // re-initialize the connection mode
+        return initializeMode(state)
+      }
       return .none
       
     case .messagesFilterTextField(let text):
@@ -259,63 +245,59 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         _ = await Model.shared.radio?.send(command)
       }
       
-    case .startStopButton:
-      return .run { send in
-        if await Model.shared.radio == nil {
-          // currently not connected, START
-          await send(.start)
-        } else {
-          // currrently connected, STOP
-          await send(.stop)
+    case .startStopButton(let isStopped):
+      if isStopped {
+        // ----- START -----
+        if state.clearOnStart {
+          state.messages.removeAll()
+          state.filteredMessages.removeAll()
+        }
+        // use the Default?
+        return .run { [state] send in
+          // get the Pickables
+          let pickables = await Api.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+          // if using default, is there a default?
+          if state.useDefault, let selection = pickables.first(where: { $0.isDefault} ) {
+            // YES, default found, check for existing connections
+            await send(.showClientSheet(selection))
+          } else {
+            // NO, open the Picker
+            await send(.showPickerSheet(pickables))
+          }
+        }
+
+      } else {
+        // ----- STOP -----
+        if state.clearOnStop {
+          state.messages.removeAll()
+          state.filteredMessages.removeAll()
+        }
+        return .run { send in
+          await Api.shared.disconnect()
         }
       }
-      
-    case .stop:
-      if state.clearOnStop {
-        state.messages.removeAll()
-        state.filteredMessages.removeAll()
-      }
-      return .run { send in
-        await Model.shared.disconnect()
-      }
-        
-    case .start:
-      if state.clearOnStart {
-        state.messages.removeAll()
-        state.filteredMessages.removeAll()
-      }
-      // use the Default?
-      return .run { [state] send in
-        // get the Pickables
-        let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
-        // if using default, is there a default?
-        if state.useDefault, let selection = pickables.first(where: { $0.isDefault} ) {
-          // YES, default found, check for existing connections
-          await send(.checkStatus(selection))
-        } else {
-          // NO, open the Picker
-          await send(.openPicker(pickables))
-        }
-      }
-      
-    case .openPicker(let pickables):
-      // open the Picker sheet
-      state.pickerState = PickerState(pickables: pickables, isGui: state.isGui)
-      return .none
       
     case .toggle(let keyPath):
-      // handles all buttons with a Bool state
+      // handles all buttons with a Bool state, EXCEPT LoginRequired
       state[keyPath: keyPath].toggle()
-      if keyPath == \.forceWanLogin && state.forceWanLogin {
-        // re-initialize the connection mode
-        return Effect(value: .connectionModePicker(state.connectionMode))
-      }
       return .none
       
       // ----------------------------------------------------------------------------
       // MARK: - Actions: invoked by other actions
       
-    case .checkStatus(let selection):
+    case .loginStatus(let success, let user):
+      // a smartlink login was completed
+      if success {
+        // save the User
+        state.smartlinkEmail = user
+        state.loginRequired = false
+      } else {
+        // tell the user it failed
+        state.alertState = AlertState(title: TextState("Smartlink login failed for \(user)"))
+      }
+      return .none
+      
+    case .showClientSheet(let selection):
       // Gui connection with othe stations?
       if state.isGui && selection.packet.guiClients.count > 0 {
         // YES, may need a disconnect
@@ -331,28 +313,56 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         
       } else {
         // not Gui connection or Gui without other stations, attempt to connect
-        return Effect(value: .connectTo(selection, nil))
+        return connectTo(&state, selection, nil)
       }
+
+    case .showErrorAlert(let error):
+      // an error occurred
+      state.alertState = AlertState(title: TextState("An Error occurred"), message: TextState(error.rawValue))
+      return .none
+   
+    case .showLoginSheet:
+      state.loginState = LoginState(heading: "Smartlink Login Required", user: state.smartlinkEmail)
+      return .none
+      
+    case .showPickerSheet(let pickables):
+      // open the Picker sheet
+      state.pickerState = PickerState(pickables: pickables, isGui: state.isGui)
+      return .none
+      
+      // ----------------------------------------------------------------------------
+      // MARK: - Actions: invoked by subscriptions
       
     case .clientEvent(let event):
       // a GuiClient change occurred
       switch event.action {
       case .added:      break
-      case .deleted:    break
+      case .deleted:    break   // FIXME:
       case .completed:
-        if state.isGui == false {
-          // YES, is there a clientId for our connected Station?
-          if event.client.station == state.station {
-            // YES, bind to it
-            return .run { _ in
-              await Model.shared.radio?.bindToGuiClient(event.client.clientId)
-            }
-          }
+        // if nonGui, is there a clientId for our connected Station?
+        if state.isGui == false && event.client.station == state.station {
+          // YES, bind to it
+          return .run { _ in await Model.shared.radio?.bindToGuiClient(event.client.clientId) }
         }
       }
       return .none
       
-    case .logAlert(let logEntry):
+    case .packetEvent(_):
+      // a packet change occurred
+      // is the Picker open?
+      if state.pickerState == nil {
+        // NO, ignore
+        return .none
+      } else {
+        // YES, update it
+        return .run { [state] send in
+          // reload the Pickables
+          let pickables = await Api.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+          await send(.showPickerSheet(pickables))
+        }
+      }
+      
+    case .showLogAlert(let logEntry):
       // a Warning or Error has been logged.
       // exit any sheet states
       state.clientState = nil
@@ -361,31 +371,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // alert the user
       state.alertState = .init(title: TextState("\(logEntry.level == .warning ? "A Warning" : "An Error") was logged:"),
                                message: TextState(logEntry.msg))
-      return .none
-      
-    case .connectTo(let selection, let disconnectHandle):
-      // attempt to connect to the selected Radio / Station
-      state.startTime = Date()
-      return .run { [state] send in
-        do {
-          // try to connect
-          try await Model.shared.connectTo(selection: selection, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester")
-        } catch {
-          // connection attempt failed
-          await send(.showErrorAlert( error as! RadioError ))
-        }
-      }
-      
-    case .packetEvent(_):
-      // a packet change occurred
-      if state.pickerState != nil {
-        // the Picker is open
-        return .run { [state] send in
-          // update the Picker with a reloaded Pickables array
-          let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
-          await send(.openPicker(pickables))
-        }
-      }
       return .none
       
     case .tcpMessage(var tcpMessage):
@@ -399,20 +384,25 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // re-filter
       state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText, partial: true, tcpMessage: tcpMessage)
       return .none
-      
+
+    case .testResult(let testNotification):
+      // a test notification has been received
+      state.pickerState?.testResult = testNotification.result
+      return .none
+
       // ----------------------------------------------------------------------------
       // MARK: - Login Actions (LoginView -> ApiView)
       
     case .login(.cancelButton):
       state.loginState = nil
-      state.forceWanLogin = false
+      state.loginRequired = false
       return .none
       
     case .login(.loginButton(let user, let pwd)):
       state.loginState = nil
       // try a Smartlink login
       return .run { send in
-        let success = await Model.shared.smartlinkLogin(user, pwd)
+        let success = await Api.shared.smartlinkLogin(user, pwd)
         if success {
           let secureStore = SecureStore(service: "Api6000Tester-C")
           _ = secureStore.set(account: "user", data: user)
@@ -420,18 +410,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         }
         await send(.loginStatus(success, user))
       }
-      
-    case .loginStatus(let success, let user):
-      // a smartlink login was completed
-      if success {
-        // save the User
-        state.smartlinkEmail = user
-        state.forceWanLogin = false
-      } else {
-        // tell the user it failed
-        state.alertState = AlertState(title: TextState("Smartlink login failed for \(user)"))
-      }
-      return .none
       
     case .login(_):
       // IGNORE ALL OTHER login actions
@@ -450,7 +428,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // save the station (if any)
       state.station = selection.station
       // check for other connections
-      return Effect(value: .checkStatus(selection))
+      return Effect(value: .showClientSheet(selection))
       
     case .picker(.defaultButton(let selection)):
       // SET / RESET the default
@@ -473,15 +451,15 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       }
       // redo the Pickables
       return .run { [state] send in
-        let pickables = await Model.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
-        await send(.openPicker(pickables))
+        let pickables = await Api.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+        await send(.showPickerSheet(pickables))
       }
       
     case .picker(.testButton(let selection)):
       state.pickerState?.testResult = false
       return .run { send in
         // send a Test request
-        await Model.shared.smartlinkTest(for: selection.packet.serial)
+        await Api.shared.smartlinkTest(for: selection.packet.serial)
       }
       
     case .picker(_):
@@ -493,36 +471,22 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .client(.cancelButton):
       state.clientState = nil
-      // additional processing upstream
       return .none
       
     case .client(.connect(let selection, let disconnectHandle)):
       state.clientState = nil
-      return Effect(value: .connectTo(selection, disconnectHandle))
+      return connectTo(&state, selection, disconnectHandle)
       
       // ----------------------------------------------------------------------------
       // MARK: - Alert Actions
       
-    case .showErrorAlert(let error):
-      // an error occurred
-      state.alertState = AlertState(title: TextState("An Error occurred"), message: TextState(error.rawValue))
-      return .none
-      
     case .alertDismissed:
       state.alertState = nil
-      if state.forceWanLogin {
-        return .run { send in
-          await send(.smartlinkLoginRequired)
-        }
-      }
-      return .none
-      
-      // ----------------------------------------------------------------------------
-      // MARK: - Smartlink Test Actions
-      
-    case .testResult(let testNotification):
-      // a test notification has been received
-      state.pickerState?.testResult = testNotification.result
+//      if state.forceWanLogin {
+//        return .run { send in
+//          await send(.smartlinkLoginRequired)
+//        }
+//      }
       return .none
     }
   }
@@ -530,6 +494,36 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
 
 // ----------------------------------------------------------------------------
 // MARK: - Helper methods
+
+func initializeMode(_ state: ApiState) -> Effect<ApiAction, Never> {
+  // start / stop listeners as appropriate for the Mode
+  return .run { [state] send in
+    // set the connection mode, start the Lan and/or Wan listener
+    if await Api.shared.setConnectionMode(state.connectionMode, state.smartlinkEmail) {
+      if state.loginRequired && (state.connectionMode == .smartlink || state.connectionMode == .both) {
+        // Smartlink login is required
+        await send(.showLoginSheet)
+      }
+    } else {
+      // Wan listener was required and failed to start
+      await send(.showLoginSheet)
+    }
+  }
+}
+
+func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandle: Handle?) -> Effect<ApiAction, Never> {
+  // attempt to connect to the selected Radio / Station
+  state.startTime = Date()
+  return .run { [state] send in
+    do {
+      // try to connect
+      try await Api.shared.connectTo(selection: selection, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester")
+    } catch {
+      // connection attempt failed
+      await send(.showErrorAlert( error as! ConnectionError ))
+    }
+  }
+}
 
 /// FIlter the Messages array
 /// - Parameters:
@@ -577,113 +571,64 @@ func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: St
   return filteredMessages
 }
 
-/// Read the user defaults entry for a default connection and transform it into a DefaultConnection struct
-/// - Parameters:
-///    - type:         gui / nonGui
-/// - Returns:         a DefaultValue struct or nil
-public func getDefaultValue(_ type: ConnectionType) -> DefaultValue? {
-  let key = type == .gui ? "guiDefault" : "nonGuiDefault"
-  
-  if let defaultData = UserDefaults.standard.object(forKey: key) as? Data {
-    let decoder = JSONDecoder()
-    if let defaultValue = try? decoder.decode(DefaultValue.self, from: defaultData) {
-      return defaultValue
-    } else {
-      return nil
-    }
-  }
-  return nil
-}
-
-/// Write the user defaults entry for a default connection using a DefaultConnection struct
-/// - Parameters:
-///    - type:        gui / nonGui
-///    - value:       a DefaultValue struct  to be encoded and written to user defaults
-public func setDefaultValue(_ type: ConnectionType, _ value: DefaultValue?) {
-  let key = type == .gui ? "guiDefault" : "nonGuiDefault"
-  
-  if value == nil {
-    UserDefaults.standard.removeObject(forKey: key)
-  } else {
-    let encoder = JSONEncoder()
-    if let encoded = try? encoder.encode(value) {
-      UserDefaults.standard.set(encoded, forKey: key)
-    } else {
-      UserDefaults.standard.removeObject(forKey: key)
-    }
-  }
-}
-
-/// TcpMessage reply filter condition
-/// - Parameter text:    the text of a message
-/// - Returns:           a boolean
-private func ignoreReply(_ text: String) -> Bool {
-  if text.first != "R" { return false }     // not a Reply
-  let parts = text.components(separatedBy: "|")
-  if parts.count < 3 { return false }       // incomplete
-  if parts[1] != kNoError { return false }  // error of some type
-  if parts[2] != "" { return false }        // additional data present
-  return true                               // otherwise, ignore it
-}
-
+//
 // ----------------------------------------------------------------------------
 // MARK: - Subscriptions
 
 private func subscribeToPackets() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    log("ApiTester: Packet subscription STARTED", .debug, #function, #file, #line)
-    for await event in await Model.shared.packetEvents {
+    for await event in await Api.shared.packetEvents {
       // a packet has been added / updated or deleted
       await send(.packetEvent(event))
     }
-    log("ApiTester: Packet subscription STOPPED", .debug, #function, #file, #line)
   }
 }
 
 private func subscribeToClients() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    log("ApiTester: GuiClient subscription STARTED", .debug, #function, #file, #line)
-    for await event in await Model.shared.clientEvents {
+    for await event in await Api.shared.clientEvents {
       // a guiClient has been added / updated or deleted
       await send(.clientEvent(event))
     }
-    log("ApiTester: GuiClient subscription STOPPED", .debug, #function, #file, #line)
   }
 }
 
 private func subscribeToMessages() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    log("ApiTester: TcpMessage subscription STARTED", .debug, #function, #file, #line)
-    for await tcpMessage in await Model.shared.testerInboundStream {
+    func ignoreReply(_ text: String) -> Bool {
+      if text.first != "R" { return false }     // not a Reply
+      let parts = text.components(separatedBy: "|")
+      if parts.count < 3 { return false }       // incomplete
+      if parts[1] != kNoError { return false }  // error of some type
+      if parts[2] != "" { return false }        // additional data present
+      return true                               // otherwise, ignore it
+    }
+
+    for await tcpMessage in await Api.shared.testerInboundStream {
       // a TCP message was sent or received
       // ignore reply unless it is non-zero or contains additional data
       if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
       await send(.tcpMessage(tcpMessage))
     }
-    log("ApiTester: TcpMessage subscription STOPPED", .debug, #function, #file, #line)
   }
 }
 
 private func subscribeToSmartlinkTest() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    log("ApiTester: Test subscription STARTED", .debug, #function, #file, #line)
-    for await result in await Model.shared.testResultStream {
+    for await result in await Api.shared.testResultStream {
       // the result of a Smartlink Test has been received
       await send(.testResult( result))
     }
-    log("ApiTester: Test subscription STOPPED", .debug, #function, #file, #line)
   }
 }
 
 private func subscribeToLogAlerts() -> Effect<ApiAction, Never>  {
   Effect.run { send in
 #if DEBUG
-    log("ApiTester: LogAlert subscription STARTED", .debug, #function, #file, #line)
     for await entry in logAlerts {
       // a Warning or Error has been logged.
-      await send(.logAlert(entry))
+      await send(.showLogAlert(entry))
     }
-    log("ApiTester: LogAlert subscription STOPPED", .debug, #function, #file, #line)
 #else
     return .none
 #endif
@@ -696,7 +641,6 @@ private func subscribeToLogAlerts() -> Effect<ApiAction, Never>  {
 public enum ViewType: Equatable {
   case api
   case log
-  case remote
 }
 
 public enum ObjectFilter: String, CaseIterable {
@@ -712,7 +656,6 @@ public enum ObjectFilter: String, CaseIterable {
   case meters
   case streams
   case transmit
-  case tnfs
   case usbCable
   case wan
   case waveforms

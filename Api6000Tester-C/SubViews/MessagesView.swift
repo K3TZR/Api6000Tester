@@ -14,6 +14,9 @@ import ComposableArchitecture
 struct MessagesView: View {
   let store: Store<ApiState, ApiAction>
   
+  @Namespace var topID
+  @Namespace var bottomID
+  
   func chooseColor(_ text: String) -> Color {
     if text.prefix(1) == "C" { return Color(.systemGreen) }                         // Commands
     if text.prefix(1) == "R" && text.contains("|0|") { return Color(.systemGray) }  // Replies no error
@@ -22,51 +25,45 @@ struct MessagesView: View {
     
     return Color(.textColor)
   }
-
-//  func formatTime(_ date: Date) -> String {
-//    let formatter = DateFormatter()
-//    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
-//
-//    return formatter.string(from: date)
-//
-//  }
+  
+  //  func formatTime(_ date: Date) -> String {
+  //    let formatter = DateFormatter()
+  //    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
+  //
+  //    return formatter.string(from: date)
+  //
+  //  }
   
   var body: some View {
     
     WithViewStore(store) { viewStore in
       ScrollViewReader { proxy in
-        ScrollView([.horizontal, .vertical]) {
-          
-          VStack {
-            
-            if viewStore.filteredMessages.count == 0 {
-              VStack {
-                Text("TCP messages will be displayed here")
-                Text("(in reverse order of receipt)")
+        ScrollView([.vertical, .horizontal]) {
+          VStack(alignment: .leading) {
+            Text("Top").hidden()
+              .id(topID)            
+            ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
+              HStack {
+                if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
+                Text(message.text)
               }
-              
-            } else {
-              ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
-                HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
-                  Text(message.text)
-                }
-                .tag(message.id)
-                .foregroundColor( chooseColor(message.text) )
-              }
-              .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
-              
-              .onChange(of: viewStore.gotoFirst, perform: { _ in
-                let id = viewStore.gotoFirst ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
-                proxy.scrollTo(id, anchor: .topLeading)
-              })
-              .onChange(of: viewStore.filteredMessages.count, perform: { _ in
-                let id = viewStore.gotoFirst ? viewStore.filteredMessages.first!.id : viewStore.filteredMessages.last!.id
-                proxy.scrollTo(id, anchor: .bottomLeading)
-              })
+              .tag(message.id)
+              .foregroundColor( chooseColor(message.text) )
             }
+            Text("Bottom").hidden()
+              .id(bottomID)
           }
-          .frame(minWidth: 900, maxWidth: .infinity)
+          .onChange(of: viewStore.gotoFirst, perform: { _ in
+            let id = viewStore.gotoFirst ? bottomID : topID
+            proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+          })
+          .onChange(of: viewStore.filteredMessages.count, perform: { _ in
+            let id = viewStore.gotoFirst ? bottomID : topID
+            proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+          })
+          //            }
+          //          .frame(alignment: .leading)
+          .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
           .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
         }
       }
@@ -86,7 +83,7 @@ struct MessagesView_Previews: PreviewProvider {
         environment: ApiEnvironment()
       )
     )
-      .frame(minWidth: 975)
-      .padding()
+    .frame(minWidth: 975)
+    .padding()
   }
 }

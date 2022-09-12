@@ -29,7 +29,7 @@ struct SliceView: View {
     
     if model.slices.count == 0 {
       HStack(spacing: 5) {
-        Text("          SLICEs")
+        Text("        SLICEs")
         Text("None present").foregroundColor(.red)
       }
     
@@ -40,8 +40,8 @@ struct SliceView: View {
             HStack(spacing: 20) {
               
               HStack(spacing: 5) {
-                Text("          SLICE     ")
-                Text(String(format: "% 3d", slice.id)).foregroundColor(.green)
+                Text("        SLICE     ")
+                Text(String(format: "%02d", slice.id)).foregroundColor(.green)
               }
               
               HStack(spacing: 5) {

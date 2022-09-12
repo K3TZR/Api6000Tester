@@ -23,7 +23,7 @@ public struct TopButtonsView: View {
     WithViewStore(self.store) { viewStore in
       HStack(spacing: 30) {
         Button(model.radio == nil ? "Start" : "Stop") {
-          viewStore.send(.startStopButton)
+          viewStore.send(.startStopButton(model.radio == nil))
         }
         .keyboardShortcut(model.radio == nil ? .defaultAction : .cancelAction)
 
@@ -50,7 +50,7 @@ public struct TopButtonsView: View {
         .frame(width: 200)
 
         Spacer()
-        Toggle("Force Smartlink Login", isOn: viewStore.binding(get: \.forceWanLogin, send: .toggle(\.forceWanLogin)))
+        Toggle("Force Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
           .disabled(model.radio != nil || viewStore.connectionMode == .local || viewStore.connectionMode == .none)
         Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\.useDefault)))
           .disabled(model.radio != nil)

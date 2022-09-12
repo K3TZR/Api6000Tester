@@ -81,6 +81,7 @@
 		9F29E85128B011A5009BE31C /* WanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
 		9F4286F428C2A7830030C091 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
 		9F4286F528C434280030C091 /* UtilityComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UtilityComponents; path = ../Packages/UtilityComponents; sourceTree = "<group>"; };
+		9F4286F628C78DB80030C091 /* ViewComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ViewComponents; path = ../Packages/ViewComponents; sourceTree = "<group>"; };
 		9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Api6000Tester-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api6000TesterCApp.swift; sourceTree = "<group>"; };
 		9F5F4F05283321C5000E8145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -115,6 +116,7 @@
 		9F5F4EF5283321C5000E8145 = {
 			isa = PBXGroup;
 			children = (
+				9F4286F628C78DB80030C091 /* ViewComponents */,
 				9F4286F528C434280030C091 /* UtilityComponents */,
 				9F4286F428C2A7830030C091 /* ApiComponents */,
 				9F5F4F00283321C5000E8145 /* Api6000Tester-C */,
@@ -464,7 +466,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.2;
+				MARKETING_VERSION = 4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -494,7 +496,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.2;
+				MARKETING_VERSION = 4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

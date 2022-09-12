@@ -19,7 +19,7 @@ struct GpsView: View {
     
     if let radio = model.radio {
       HStack(spacing: 10) {
-        Text("          GPS  ")
+        Text("        GPS  ")
         if radio.gpsPresent {
           Text("NOT IMPLEMENTED").foregroundColor(.red)
         } else {

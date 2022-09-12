@@ -19,13 +19,13 @@ struct XvtrView: View {
     
     if model.xvtrs.count == 0 {
       HStack(spacing: 5) {
-        Text("         XVTRs")
+        Text("        XVTRs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
       HStack(spacing: 10) {
-        Text("         XVTR -> ")
+        Text("        XVTR -> ")
         Text("NOT IMPLEMENTED").foregroundColor(.red)
       }
     }

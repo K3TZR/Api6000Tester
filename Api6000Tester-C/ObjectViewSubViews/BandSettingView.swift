@@ -19,7 +19,7 @@ struct BandSettingView: View {
     
     if model.bandSettings.count == 0 {
       HStack(spacing: 5) {
-        Text("         BANDSETTINGs")
+        Text("       BANDSETTINGs")
         Text("None present").foregroundColor(.red)
       }
       
@@ -29,7 +29,7 @@ struct BandSettingView: View {
           HStack(spacing: 20) {
             Group {
               HStack(spacing: 5) {
-                Text("          BAND")
+                Text("        BAND")
                 Text("\(setting.name)")
                   .frame(maxWidth: .infinity, alignment: .trailing)
                   .frame(width: 40)

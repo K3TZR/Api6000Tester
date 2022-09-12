@@ -15,13 +15,13 @@ struct WaveformView: View {
     
     if model.waveform.waveformList.isEmpty {
       HStack(spacing: 5) {
-        Text("         WAVEFORMs")
+        Text("        WAVEFORMs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
       HStack(spacing: 10) {
-        Text("         WAVEFORMS -> ")
+        Text("        WAVEFORMS -> ")
         Text(model.waveform.waveformList)
       }
     }

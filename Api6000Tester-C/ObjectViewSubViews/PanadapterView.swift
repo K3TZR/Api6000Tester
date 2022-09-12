@@ -22,28 +22,18 @@ struct PanadapterView: View {
     
     if model.panadapters.count == 0 {
       HStack(spacing: 5) {
-        Text("          PANADAPTERs")
+        Text("        PANADAPTERs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
       
       VStack(alignment: .leading) {
-        HStack(spacing: 20) {
-          HStack(spacing: 5) {
-            Text("          METERS    ")
-            Text(Meter.streamId?.hex ?? "----------").foregroundColor(.secondary)
-          }
-          HStack(spacing: 5) {
-            Text("Streaming")
-            Text(Meter.isStreaming ? "Y" : "N").foregroundColor(Meter.isStreaming ? .green : .red)
-          }
-        }
         ForEach(model.panadapters) { panadapter in
           if panadapter.clientHandle == handle {
             HStack(spacing: 20) {
               HStack(spacing: 5) {
-                Text("          PANADAPTER")
+                Text("        PANADAPTER")
                 Text(panadapter.id.hex).foregroundColor(.secondary)
               }
               

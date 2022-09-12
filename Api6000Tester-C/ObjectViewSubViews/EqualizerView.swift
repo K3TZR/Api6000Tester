@@ -21,7 +21,7 @@ struct EqualizerView: View {
         HStack(spacing: 20) {
           
           HStack(spacing: 5) {
-            Text("          EQUALIZER")
+            Text("        EQUALIZER")
             Text(eq.id).foregroundColor(.green)
           }
           

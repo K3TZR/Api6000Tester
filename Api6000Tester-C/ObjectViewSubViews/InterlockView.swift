@@ -16,7 +16,7 @@ struct InterlockView: View {
       HStack(spacing: 20) {
 
         Group {
-          Text("          INTERLOCK")
+          Text("        INTERLOCK")
           HStack(spacing: 5) {
             Text("Tx_Allowed")
             Text(model.interlock.txAllowed ? "Y" : "N")

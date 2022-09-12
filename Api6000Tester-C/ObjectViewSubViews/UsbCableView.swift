@@ -24,7 +24,7 @@ struct UsbCableView: View {
   var body: some View {
     if model.usbCables.count == 0 {
       HStack(spacing: 5) {
-        Text("         USBCABLEs")
+        Text("        USBCABLEs")
         Text("None present").foregroundColor(.red)
       }
       
@@ -45,7 +45,7 @@ struct CableLine1View: View {
   var body: some View {
     HStack(spacing: 20) {
       HStack(spacing: 5) {
-        Text("         USBCABLE")
+        Text("        USBCABLE")
         Text(cable.id).foregroundColor(.secondary)
       }
       

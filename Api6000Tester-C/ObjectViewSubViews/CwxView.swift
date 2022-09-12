@@ -19,7 +19,7 @@ struct CwxView: View {
     
     let cwx = model.cwx
     HStack(spacing: 20) {
-      Text("          CWX")
+      Text("        CWX")
       
       HStack(spacing: 5) {
         Text("Breakin_Delay")

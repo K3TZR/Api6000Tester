@@ -27,7 +27,7 @@ struct RadioView: View {
             Group {
               
               HStack(spacing: 0) {
-                Text("RADIO     ").foregroundColor(.blue)
+                Text("RADIO   ").foregroundColor(.blue)
                 Text(model.packets[id: model.activePacketId!]!.source.rawValue)
                   .foregroundColor(.secondary)
               }

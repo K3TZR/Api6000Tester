@@ -21,7 +21,7 @@ struct WaterfallView: View {
     
     if model.waterfalls.count == 0 {
       HStack(spacing: 5) {
-        Text("          WATERFALLs")
+        Text("        WATERFALLs")
         Text("None present").foregroundColor(.red)
       }
 
@@ -30,7 +30,7 @@ struct WaterfallView: View {
         if waterfall.panadapterId == panadapterId {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("          WATERFALL ")
+              Text("        WATERFALL ")
               Text(waterfall.id.hex).foregroundColor(.secondary)
             }
             HStack(spacing: 5) {

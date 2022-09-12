@@ -22,7 +22,7 @@ struct MemoryView: View {
     
     if model.memories.count == 0 {
       HStack(spacing: 5) {
-        Text("         MEMORYs")
+        Text("        MEMORYs")
         Text("None present").foregroundColor(.red)
       }
     
@@ -44,7 +44,7 @@ struct Line1View: View {
     HStack(spacing: 10) {
       Group {
         HStack(spacing: 5) {
-          Text("          MEMORY")
+          Text("         MEMORY")
           Text("\(memory.id)").foregroundColor(.secondary)
         }
         
@@ -105,7 +105,7 @@ struct Line2View: View {
     HStack(spacing: 10) {
       Group {
         HStack(spacing: 5) {
-          Text("         MEMORY")
+          Text("        MEMORY")
           Text("\(memory.id)").foregroundColor(.secondary)
         }.hidden()
 

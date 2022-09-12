@@ -31,8 +31,8 @@ struct ObjectsView: View {
           }
         }
       }
-      .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
       .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
+      .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
     }
   }
 }
