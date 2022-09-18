@@ -32,6 +32,8 @@ public struct TopButtonsView: View {
             .disabled(model.radio != nil)
           Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
           Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
+          Toggle("Audio", isOn: viewStore.binding(get: \.enableAudio, send: .enableAudio))
+            .disabled(viewStore.isGui == false || model.radio == nil)
         }
 
         Spacer()
@@ -50,7 +52,7 @@ public struct TopButtonsView: View {
         .frame(width: 200)
 
         Spacer()
-        Toggle("Force Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
+        Toggle("Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
           .disabled(model.radio != nil || viewStore.connectionMode == .local || viewStore.connectionMode == .none)
         Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\.useDefault)))
           .disabled(model.radio != nil)

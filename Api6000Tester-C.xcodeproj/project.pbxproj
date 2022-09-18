@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F24394F28D2021C00356E7D /* RingBuffer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F24394E28D2021C00356E7D /* RingBuffer */; };
+		9F24395128D2591B00356E7D /* OpusPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F24395028D2591B00356E7D /* OpusPlayer */; };
 		9F24CFDC28AD73600048A9FE /* ObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDB28AD73600048A9FE /* ObjectsView.swift */; };
 		9F24CFDE28AD78D20048A9FE /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDD28AD78D20048A9FE /* BottomButtonsView.swift */; };
 		9F24CFE028AD798A0048A9FE /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDF28AD798A0048A9FE /* MessagesView.swift */; };
@@ -105,7 +107,9 @@
 				9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */,
 				9F256C1D28B1B468009BDE76 /* PickerView in Frameworks */,
 				9F256C1928B1B468009BDE76 /* LoginView in Frameworks */,
+				9F24394F28D2021C00356E7D /* RingBuffer in Frameworks */,
 				9F256C1128B1B468009BDE76 /* Shared in Frameworks */,
+				9F24395128D2591B00356E7D /* OpusPlayer in Frameworks */,
 				9F256C1F28B1B468009BDE76 /* Api6000 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,6 +236,8 @@
 				9F256C1A28B1B468009BDE76 /* LogView */,
 				9F256C1C28B1B468009BDE76 /* PickerView */,
 				9F256C1E28B1B468009BDE76 /* Api6000 */,
+				9F24394E28D2021C00356E7D /* RingBuffer */,
+				9F24395028D2591B00356E7D /* OpusPlayer */,
 			);
 			productName = Api6000Tester;
 			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */;
@@ -466,7 +472,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.3;
+				MARKETING_VERSION = 4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -496,7 +502,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.3;
+				MARKETING_VERSION = 4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -556,13 +562,21 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.39.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9F24394E28D2021C00356E7D /* RingBuffer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RingBuffer;
+		};
+		9F24395028D2591B00356E7D /* OpusPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OpusPlayer;
+		};
 		9F256C1028B1B468009BDE76 /* Shared */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;

@@ -12,10 +12,13 @@ import Api6000
 import ClientView
 import LoginView
 import LogView
+import OpusPlayer
 import PickerView
 import Shared
 import SecureStorage
 import XCGWrapper
+
+import RingBuffer
 
 // ----------------------------------------------------------------------------
 // MARK: - State, Actions & Environment
@@ -26,6 +29,7 @@ public struct ApiState: Equatable {
   var clearOnStart: Bool { didSet { UserDefaults.standard.set(clearOnStart, forKey: "clearOnStart") } }
   var clearOnStop: Bool { didSet { UserDefaults.standard.set(clearOnStop, forKey: "clearOnStop") } }
   var connectionMode: ConnectionMode { didSet { UserDefaults.standard.set(connectionMode.rawValue, forKey: "connectionMode") } }
+  var enableAudio: Bool { didSet { UserDefaults.standard.set(enableAudio, forKey: "enableAudio") } }
   var guiDefault: DefaultValue? { didSet { setDefaultValue("guiDefault", guiDefault) } }
   var fontSize: CGFloat { didSet { UserDefaults.standard.set(fontSize, forKey: "fontSize") } }
   var isGui: Bool { didSet { UserDefaults.standard.set(isGui, forKey: "isGui") } }
@@ -51,6 +55,7 @@ public struct ApiState: Equatable {
   var initialized = false
   var loginState: LoginState? = nil
   var messages = IdentifiedArrayOf<TcpMessage>()
+  var opusPlayer: OpusPlayer? = nil
   var pickables = IdentifiedArrayOf<Pickable>()
   var pickerState: PickerState? = nil
   var startTime: Date?
@@ -61,6 +66,7 @@ public struct ApiState: Equatable {
     clearOnStart: Bool = UserDefaults.standard.bool(forKey: "clearOnStart"),
     clearOnStop: Bool  = UserDefaults.standard.bool(forKey: "clearOnStop"),
     connectionMode: ConnectionMode = ConnectionMode(rawValue: UserDefaults.standard.string(forKey: "connectionMode") ?? "local") ?? .local,
+    enableAudio: Bool  = UserDefaults.standard.bool(forKey: "enableAudio"),
     fontSize: CGFloat = UserDefaults.standard.double(forKey: "fontSize") == 0 ? 12 : UserDefaults.standard.double(forKey: "fontSize"),
     guiDefault: DefaultValue? = getDefaultValue("guiDefault"),
     isGui: Bool = UserDefaults.standard.bool(forKey: "isGui"),
@@ -80,6 +86,7 @@ public struct ApiState: Equatable {
     self.clearOnStop = clearOnStop
     self.clearOnSend = clearOnSend
     self.connectionMode = connectionMode
+    self.enableAudio = enableAudio
     self.guiDefault = guiDefault
     self.fontSize = fontSize
     self.isGui = isGui
@@ -103,6 +110,7 @@ public enum ApiAction: Equatable {
   case clearNowButton
   case commandTextField(String)
   case connectionModePicker(ConnectionMode)
+  case enableAudio
   case fontSizeStepper(CGFloat)
   case loginRequiredButton(Bool)
   case messagesPicker(MessageFilter)
@@ -125,6 +133,7 @@ public enum ApiAction: Equatable {
   case showLogAlert(LogEntry)
   case showLoginSheet
   case showPickerSheet(IdentifiedArrayOf<Pickable>)
+  case startAudio(RemoteRxAudioStreamId)
 
   // Subscription related
   case clientEvent(ClientEvent)
@@ -210,6 +219,36 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // re-initialize
       return initializeMode(state)
       
+    case .enableAudio:
+      if state.enableAudio {
+        // Audio is ON
+        state.enableAudio = false
+        state.opusPlayer?.stop()
+        state.opusPlayer = nil
+        return .run {send in
+          await Model.shared.removeRemoteRxAudioStream(Model.shared.radio!.connectionHandle)
+        }
+        
+      } else {
+        // Audio is OFF
+        state.enableAudio = true
+        return .run { [state] send in
+          let id = try await Model.shared.radio!.requestRemoteRxAudioStream()
+          print("---->", "RxStreamId = \(String(describing: id.streamId!.hex))")
+          await send(.startAudio(id.streamId!))
+        }
+      }
+      
+      
+      
+      
+    case .startAudio(let id):
+      state.opusPlayer = OpusPlayer()
+      state.opusPlayer!.start()
+      return .run { [state] send in
+        await Model.shared.remoteRxAudioStreams[id: id]?.setDelegate(state.opusPlayer)
+      }
+      
     case .fontSizeStepper(let size):
       state.fontSize = size
       return .none
@@ -268,6 +307,8 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
 
       } else {
         // ----- STOP -----
+        state.opusPlayer?.stop()
+        state.opusPlayer = nil
         if state.clearOnStop {
           state.messages.removeAll()
           state.filteredMessages.removeAll()
@@ -313,7 +354,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         
       } else {
         // not Gui connection or Gui without other stations, attempt to connect
-        return connectTo(&state, selection, nil)
+        return connectTo(&state, selection, nil, true)
       }
 
     case .showErrorAlert(let error):
@@ -475,7 +516,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .client(.connect(let selection, let disconnectHandle)):
       state.clientState = nil
-      return connectTo(&state, selection, disconnectHandle)
+      return connectTo(&state, selection, disconnectHandle, true)
       
       // ----------------------------------------------------------------------------
       // MARK: - Alert Actions
@@ -511,13 +552,19 @@ func initializeMode(_ state: ApiState) -> Effect<ApiAction, Never> {
   }
 }
 
-func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandle: Handle?) -> Effect<ApiAction, Never> {
+func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandle: Handle?, _ testerMode: Bool = false) -> Effect<ApiAction, Never> {
   // attempt to connect to the selected Radio / Station
   state.startTime = Date()
   return .run { [state] send in
     do {
       // try to connect
-      try await Api.shared.connectTo(selection: selection, isGui: state.isGui, disconnectHandle: disconnectHandle, station: "Tester", program: "Api6000Tester")
+      try await Api.shared.connectTo(selection: selection,
+                                     isGui: state.isGui,
+                                     disconnectHandle: disconnectHandle,
+                                     station: "Tester",
+                                     program: "Api6000Tester",
+                                     testerMode: testerMode)
+      if state.isGui && state.enableAudio { let _ = try await Model.shared.radio?.requestRemoteRxAudioStream() }
     } catch {
       // connection attempt failed
       await send(.showErrorAlert( error as! ConnectionError ))
