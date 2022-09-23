@@ -19,7 +19,7 @@ struct MeterView: View {
   let sliceId: UInt32?
   let sliceClientHandle: UInt32?
   let handle: Handle
-  
+
   func valueColor(_ value: Float, _ low: Float, _ high: Float) -> Color {
     if value > high { return .red }
     if value < low { return .yellow }
@@ -33,12 +33,12 @@ struct MeterView: View {
     if UInt32(group) != id { return false }
     return true
   }
-  
+
   var body: some View {
-    
+
       VStack(alignment: .leading) {
         ForEach(model.meters ) { meter in
-          
+
           if showMeter(sliceId, sliceClientHandle, meter.source, meter.group) {
             HStack(spacing: 10) {
               Group {

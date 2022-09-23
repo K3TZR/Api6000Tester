@@ -60,6 +60,8 @@ public struct ApiState: Equatable {
   var pickerState: PickerState? = nil
   var startTime: Date?
   var station: String? = nil
+  
+  var isStopped = true
     
   public init(
     clearOnSend: Bool  = UserDefaults.standard.bool(forKey: "clearOnSend"),
@@ -74,7 +76,6 @@ public struct ApiState: Equatable {
     messageFilterText: String = UserDefaults.standard.string(forKey: "messageFilterText") ?? "",
     nonGuiDefault: DefaultValue? = getDefaultValue("nonGuiDefault"),
     objectFilter: ObjectFilter = ObjectFilter(rawValue: UserDefaults.standard.string(forKey: "objectFilter") ?? "core") ?? .core,
-    radio: Radio? = nil,
     reverse: Bool = UserDefaults.standard.bool(forKey: "reverse"),
     showPings: Bool = UserDefaults.standard.bool(forKey: "showPings"),
     showTimes: Bool = UserDefaults.standard.bool(forKey: "showTimes"),
@@ -110,7 +111,7 @@ public enum ApiAction: Equatable {
   case clearNowButton
   case commandTextField(String)
   case connectionModePicker(ConnectionMode)
-  case enableAudio
+  case audioCheckbox(Bool)
   case fontSizeStepper(CGFloat)
   case loginRequiredButton(Bool)
   case messagesPicker(MessageFilter)
@@ -139,17 +140,18 @@ public enum ApiAction: Equatable {
   case clientEvent(ClientEvent)
   case packetEvent(PacketEvent)
   case tcpMessage(TcpMessage)
-  case testResult(TestNotification)
+  case testResult(TestResult)
 }
 
 public struct ApiEnvironment {
+  var queue: () -> AnySchedulerOf<DispatchQueue>
+
   public init(
     queue: @escaping () -> AnySchedulerOf<DispatchQueue> = { .main }
   )
   {
     self.queue = queue
   }
-  var queue: () -> AnySchedulerOf<DispatchQueue>
 }
 
 // ----------------------------------------------------------------------------
@@ -205,6 +207,36 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // ----------------------------------------------------------------------------
       // MARK: - Actions: ApiView UI controls
       
+    case .audioCheckbox(let newState):
+      if newState {
+        state.enableAudio = true
+        if state.isStopped {
+          return .none
+        } else {
+          // start audio
+          return .run { [state] send in
+            // request a stream
+            let id = try await Model.shared.radio!.requestRemoteRxAudioStream()
+            // finish audio setup
+            await send(.startAudio(id.streamId!))
+          }
+        }
+        
+      } else {
+        // stop audio
+        state.enableAudio = false
+        state.opusPlayer?.stop()
+        state.opusPlayer = nil
+        if state.isStopped == false {
+          return .run {send in
+            // request removal of the stream
+            await StreamModel.shared.removeRemoteRxAudioStream(Model.shared.radio!.connectionHandle)
+          }
+        } else {
+          return .none
+        }
+      }
+
     case .clearNowButton:
       state.messages.removeAll()
       state.filteredMessages.removeAll()
@@ -218,36 +250,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.connectionMode = mode
       // re-initialize
       return initializeMode(state)
-      
-    case .enableAudio:
-      if state.enableAudio {
-        // Audio is ON
-        state.enableAudio = false
-        state.opusPlayer?.stop()
-        state.opusPlayer = nil
-        return .run {send in
-          await Model.shared.removeRemoteRxAudioStream(Model.shared.radio!.connectionHandle)
-        }
-        
-      } else {
-        // Audio is OFF
-        state.enableAudio = true
-        return .run { [state] send in
-          let id = try await Model.shared.radio!.requestRemoteRxAudioStream()
-          print("---->", "RxStreamId = \(String(describing: id.streamId!.hex))")
-          await send(.startAudio(id.streamId!))
-        }
-      }
-      
-      
-      
-      
-    case .startAudio(let id):
-      state.opusPlayer = OpusPlayer()
-      state.opusPlayer!.start()
-      return .run { [state] send in
-        await Model.shared.remoteRxAudioStreams[id: id]?.setDelegate(state.opusPlayer)
-      }
       
     case .fontSizeStepper(let size):
       state.fontSize = size
@@ -284,9 +286,10 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         _ = await Model.shared.radio?.send(command)
       }
       
-    case .startStopButton(let isStopped):
-      if isStopped {
+    case .startStopButton(_):
+      if state.isStopped {
         // ----- START -----
+        state.isStopped = false
         if state.clearOnStart {
           state.messages.removeAll()
           state.filteredMessages.removeAll()
@@ -307,19 +310,28 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
 
       } else {
         // ----- STOP -----
-        state.opusPlayer?.stop()
-        state.opusPlayer = nil
+        state.isStopped = true
         if state.clearOnStop {
           state.messages.removeAll()
           state.filteredMessages.removeAll()
         }
-        return .run { send in
-          await Api.shared.disconnect()
+        if state.enableAudio {
+          // Audio is started, stop it
+          state.opusPlayer?.stop()
+          state.opusPlayer = nil
+          return .run { send in
+            await StreamModel.shared.removeRemoteRxAudioStream(Model.shared.radio!.connectionHandle)
+            await Api.shared.disconnect()
+          }
+        } else {
+          return .run { send in
+            await Api.shared.disconnect()
+          }
         }
       }
       
     case .toggle(let keyPath):
-      // handles all buttons with a Bool state, EXCEPT LoginRequired
+      // handles all buttons with a Bool state, EXCEPT LoginRequiredButton and audioCheckbox
       state[keyPath: keyPath].toggle()
       return .none
       
@@ -354,7 +366,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         
       } else {
         // not Gui connection or Gui without other stations, attempt to connect
-        return connectTo(&state, selection, nil, true)
+        return connectTo(&state, selection, nil)
       }
 
     case .showErrorAlert(let error):
@@ -369,6 +381,13 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
     case .showPickerSheet(let pickables):
       // open the Picker sheet
       state.pickerState = PickerState(pickables: pickables, isGui: state.isGui)
+      return .none
+      
+    case .startAudio(let id):
+      state.enableAudio = true
+      state.opusPlayer = OpusPlayer()
+      StreamModel.shared.remoteRxAudioStreams[id: id]?.setDelegate(state.opusPlayer)
+      state.opusPlayer!.start()
       return .none
       
       // ----------------------------------------------------------------------------
@@ -426,9 +445,9 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText, partial: true, tcpMessage: tcpMessage)
       return .none
 
-    case .testResult(let testNotification):
-      // a test notification has been received
-      state.pickerState?.testResult = testNotification.result
+    case .testResult(let result):
+      // a test result has been received
+      state.pickerState?.testResult = result.success
       return .none
 
       // ----------------------------------------------------------------------------
@@ -516,18 +535,13 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .client(.connect(let selection, let disconnectHandle)):
       state.clientState = nil
-      return connectTo(&state, selection, disconnectHandle, true)
+      return connectTo(&state, selection, disconnectHandle)
       
       // ----------------------------------------------------------------------------
       // MARK: - Alert Actions
       
     case .alertDismissed:
       state.alertState = nil
-//      if state.forceWanLogin {
-//        return .run { send in
-//          await send(.smartlinkLoginRequired)
-//        }
-//      }
       return .none
     }
   }
@@ -552,7 +566,7 @@ func initializeMode(_ state: ApiState) -> Effect<ApiAction, Never> {
   }
 }
 
-func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandle: Handle?, _ testerMode: Bool = false) -> Effect<ApiAction, Never> {
+func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandle: Handle?) -> Effect<ApiAction, Never> {
   // attempt to connect to the selected Radio / Station
   state.startTime = Date()
   return .run { [state] send in
@@ -562,9 +576,13 @@ func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandl
                                      isGui: state.isGui,
                                      disconnectHandle: disconnectHandle,
                                      station: "Tester",
-                                     program: "Api6000Tester",
-                                     testerMode: testerMode)
-      if state.isGui && state.enableAudio { let _ = try await Model.shared.radio?.requestRemoteRxAudioStream() }
+                                     program: "Api6000Tester")
+      if state.isGui && state.enableAudio {
+        // start audio, request a stream
+        let id = try await Model.shared.radio!.requestRemoteRxAudioStream()
+        // finish audio setup
+        await send(.startAudio(id.streamId!))
+      }
     } catch {
       // connection attempt failed
       await send(.showErrorAlert( error as! ConnectionError ))
@@ -624,7 +642,7 @@ func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: St
 
 private func subscribeToPackets() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    for await event in await Api.shared.packetEvents {
+    for await event in await Api.shared.packetStream {
       // a packet has been added / updated or deleted
       await send(.packetEvent(event))
     }
@@ -633,7 +651,7 @@ private func subscribeToPackets() -> Effect<ApiAction, Never> {
 
 private func subscribeToClients() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    for await event in await Api.shared.clientEvents {
+    for await event in await Api.shared.clientStream {
       // a guiClient has been added / updated or deleted
       await send(.clientEvent(event))
     }
@@ -651,7 +669,7 @@ private func subscribeToMessages() -> Effect<ApiAction, Never> {
       return true                               // otherwise, ignore it
     }
 
-    for await tcpMessage in await Api.shared.testerInboundStream {
+    for await tcpMessage in await Api.shared.testerStream {
       // a TCP message was sent or received
       // ignore reply unless it is non-zero or contains additional data
       if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
@@ -662,9 +680,9 @@ private func subscribeToMessages() -> Effect<ApiAction, Never> {
 
 private func subscribeToSmartlinkTest() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    for await result in await Api.shared.testResultStream {
+    for await result in await Api.shared.testStream {
       // the result of a Smartlink Test has been received
-      await send(.testResult( result))
+      await send(.testResult(result))
     }
   }
 }

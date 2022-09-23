@@ -40,41 +40,18 @@ struct ObjectsView: View {
 // ----------------------------------------------------------------------------
 // MARK: - Preview
 
-//struct ObjectsView_Previews: PreviewProvider {
-//
-//  static var previews: some View {
-//    ObjectsView(
-//      store: Store(
-//        initialState: ApiState(
-//          isGui: false,
-//          radio: Radio(testPacket,
-//                       connectionType: .nonGui,
-//                       command: Tcp(),
-//                       stream: Udp())
-//        ),
-//        reducer: apiReducer,
-//        environment: ApiEnvironment()
-//      )
-//    )
-//      .frame(minWidth: 975)
-//      .padding()
-//      .previewDisplayName("----- Non Gui -----")
-//
-//    ObjectsView(
-//      store: Store(
-//        initialState: ApiState(
-//          isGui: true,
-//          radio: Radio(testPacket,
-//                       connectionType: .gui,
-//                       command: Tcp(),
-//                       stream: Udp())
-//        ),
-//        reducer: apiReducer,
-//        environment: ApiEnvironment()
-//      )
-//    )
-//      .frame(minWidth: 975)
-//      .padding()
-//      .previewDisplayName("----- Gui -----")
-//  }
-//}
+struct ObjectsView_Previews: PreviewProvider {
+
+  static var previews: some View {
+    ObjectsView(
+      store: Store(
+        initialState: ApiState(isGui: false),
+        reducer: apiReducer,
+        environment: ApiEnvironment()
+      ),
+      model: Model.shared
+    )
+      .frame(minWidth: 975)
+      .padding()
+  }
+}

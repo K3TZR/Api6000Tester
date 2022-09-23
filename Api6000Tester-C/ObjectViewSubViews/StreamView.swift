@@ -19,20 +19,20 @@ struct StreamView: View {
   
   var body: some View {
     
-    // Meter
-    if Meter.streamId != nil {
-      HStack(spacing: 20) {
-        HStack(spacing: 5) {
-          Text("        METERS     Stream").foregroundColor(.blue)
-          Text(Meter.streamId!.hex).foregroundColor(.secondary)
-        }
-        
-        HStack(spacing: 5) {
-          Text("Streaming")
-          Text(Meter.isStreaming ? "Y" : "N").foregroundColor(Meter.isStreaming ? .green : .red)
-        }
-      }
-    }
+//    // Meter
+//    if Meter.streamId != nil {
+//      HStack(spacing: 20) {
+//        HStack(spacing: 5) {
+//          Text("        METERS     Stream").foregroundColor(.blue)
+//          Text(Meter.streamId!.hex).foregroundColor(.secondary)
+//        }
+//        
+//        HStack(spacing: 5) {
+//          Text("Streaming")
+//          Text(Meter.isStreaming ? "Y" : "N").foregroundColor(Meter.isStreaming ? .green : .red)
+//        }
+//      }
+//    }
     
     // Panadapter
     ForEach(model.panadapters) { panadapter in
@@ -79,63 +79,63 @@ struct StreamView: View {
     }
     
     // RemoteRxAudioStream
-    ForEach(model.remoteRxAudioStreams) { stream in
-      if handle == stream.clientHandle {
-        HStack(spacing: 20) {
-          HStack(spacing: 5) {
-            Text("        REMOTE Rx  Stream").foregroundColor(.blue)
-            Text(stream.id.hex).foregroundColor(.secondary)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Streaming")
-            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Handle")
-            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Compression")
-            Text("\(stream.compression)").foregroundColor(.secondary)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Ip")
-            Text("\(stream.ip)").foregroundColor(.secondary)
-          }
-        }
-      }
-    }
+//    ForEach(model.remoteRxAudioStreams) { stream in
+//      if handle == stream.clientHandle {
+//        HStack(spacing: 20) {
+//          HStack(spacing: 5) {
+//            Text("        REMOTE Rx  Stream").foregroundColor(.blue)
+//            Text(stream.id.hex).foregroundColor(.secondary)
+//          }
+//
+//          HStack(spacing: 5) {
+//            Text("Streaming")
+//            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
+//          }
+//
+//          HStack(spacing: 5) {
+//            Text("Handle")
+//            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
+//          }
+//
+//          HStack(spacing: 5) {
+//            Text("Compression")
+//            Text("\(stream.compression)").foregroundColor(.secondary)
+//          }
+//
+//          HStack(spacing: 5) {
+//            Text("Ip")
+//            Text("\(stream.ip)").foregroundColor(.secondary)
+//          }
+//        }
+//      }
+//    }
     
     // RemoteTxAudioStream
-    ForEach(model.remoteTxAudioStreams) { stream in
-      if handle == stream.clientHandle {
-        HStack(spacing: 20) {
-          HStack(spacing: 5) {
-            Text("        REMOTE Tx  Stream").foregroundColor(.blue)
-            Text(stream.id.hex).foregroundColor(.secondary)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Streaming")
-            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Handle")
-            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Compression")
-            Text("\(stream.compression)").foregroundColor(.secondary)
-          }
-        }
-      }
-    }
+//    ForEach(model.remoteTxAudioStreams) { stream in
+//      if handle == stream.clientHandle {
+//        HStack(spacing: 20) {
+//          HStack(spacing: 5) {
+//            Text("        REMOTE Tx  Stream").foregroundColor(.blue)
+//            Text(stream.id.hex).foregroundColor(.secondary)
+//          }
+//          
+//          HStack(spacing: 5) {
+//            Text("Streaming")
+//            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
+//          }
+//          
+//          HStack(spacing: 5) {
+//            Text("Handle")
+//            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
+//          }
+//          
+//          HStack(spacing: 5) {
+//            Text("Compression")
+//            Text("\(stream.compression)").foregroundColor(.secondary)
+//          }
+//        }
+//      }
+//    }
     
     // DaxMicAudioStream
     ForEach(model.daxMicAudioStreams) { stream in

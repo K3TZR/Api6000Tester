@@ -22,7 +22,7 @@ public struct TopButtonsView: View {
 
     WithViewStore(self.store) { viewStore in
       HStack(spacing: 30) {
-        Button(model.radio == nil ? "Start" : "Stop") {
+        Button(viewStore.isStopped ? "Start" : "Stop") {
           viewStore.send(.startStopButton(model.radio == nil))
         }
         .keyboardShortcut(model.radio == nil ? .defaultAction : .cancelAction)
@@ -32,8 +32,8 @@ public struct TopButtonsView: View {
             .disabled(model.radio != nil)
           Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
           Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
-          Toggle("Audio", isOn: viewStore.binding(get: \.enableAudio, send: .enableAudio))
-            .disabled(viewStore.isGui == false || model.radio == nil)
+          Toggle("Audio", isOn: viewStore.binding(get: \.enableAudio, send: { .audioCheckbox($0)} ))
+            .disabled(viewStore.isGui == false)
         }
 
         Spacer()

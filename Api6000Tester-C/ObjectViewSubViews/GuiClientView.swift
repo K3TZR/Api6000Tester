@@ -72,13 +72,9 @@ struct GuiClientSubView: View {
       switch viewStore.objectFilter {
         
       case ObjectFilter.core:
-        //      StreamView(api6000: api6000, handle: handle)
-        //      TnfView(api6000: api6000)
         PanadapterView(model: model, handle: handle, showMeters: true)
         
       case ObjectFilter.coreNoMeters:
-        //      StreamView(api6000: api6000, handle: handle)
-        //      TnfView(api6000: api6000)
         PanadapterView(model: model, handle: handle, showMeters: false)
         
       case ObjectFilter.amplifiers:        AmplifierView(model: model)
@@ -95,7 +91,7 @@ struct GuiClientSubView: View {
       case ObjectFilter.wan:               WanView(model: model)
       case ObjectFilter.waveforms:         WaveformView(model: model)
       case ObjectFilter.xvtrs:             XvtrView(model: model)
-      default:    EmptyView()
+//      default:    EmptyView()
       }
     }
   }

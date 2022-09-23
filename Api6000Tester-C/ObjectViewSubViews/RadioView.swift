@@ -84,6 +84,7 @@ struct RadioView: View {
         AtuView(model: model)
         GpsView(model: model)
         TnfView(model: model)
+        MeterStreamView(model: model)
       }
     }
   }

@@ -25,46 +25,41 @@ struct MessagesView: View {
     
     return Color(.textColor)
   }
-  
-  //  func formatTime(_ date: Date) -> String {
-  //    let formatter = DateFormatter()
-  //    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
-  //
-  //    return formatter.string(from: date)
-  //
-  //  }
-  
+
   var body: some View {
     
     WithViewStore(store) { viewStore in
-      ScrollViewReader { proxy in
-        ScrollView([.vertical, .horizontal]) {
-          VStack(alignment: .leading) {
-            Text("Top").hidden()
-              .id(topID)            
-            ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
-              HStack {
-                if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
-                Text(message.text)
+      ZStack {
+        if viewStore.filteredMessages.count == 0 { Text("Tcp Messages will be displayed here") }
+        ScrollViewReader { proxy in
+          ScrollView([.vertical, .horizontal]) {
+            VStack(alignment: .leading) {
+              Text("Top").hidden()
+                .id(topID)
+              ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
+                HStack {
+                  if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
+                  Text(message.text)
+                }
+                .tag(message.id)
+                .foregroundColor( chooseColor(message.text) )
               }
-              .tag(message.id)
-              .foregroundColor( chooseColor(message.text) )
+              Text("Bottom").hidden()
+                .id(bottomID)
             }
-            Text("Bottom").hidden()
-              .id(bottomID)
+            .onChange(of: viewStore.gotoFirst, perform: { _ in
+              let id = viewStore.gotoFirst ? bottomID : topID
+              proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+            })
+            .onChange(of: viewStore.filteredMessages.count, perform: { _ in
+              let id = viewStore.gotoFirst ? bottomID : topID
+              proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+            })
+            //            }
+            //          .frame(alignment: .leading)
+            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+            .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
           }
-          .onChange(of: viewStore.gotoFirst, perform: { _ in
-            let id = viewStore.gotoFirst ? bottomID : topID
-            proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
-          })
-          .onChange(of: viewStore.filteredMessages.count, perform: { _ in
-            let id = viewStore.gotoFirst ? bottomID : topID
-            proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
-          })
-          //            }
-          //          .frame(alignment: .leading)
-          .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
-          .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
         }
       }
     }
