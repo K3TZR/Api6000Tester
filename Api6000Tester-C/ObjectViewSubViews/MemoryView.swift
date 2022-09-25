@@ -16,28 +16,28 @@ import Api6000
 // highlightColor
 
 struct MemoryView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
-    if model.memories.count == 0 {
+    if viewModel.memories.count == 0 {
       HStack(spacing: 5) {
         Text("        MEMORYs")
         Text("None present").foregroundColor(.red)
       }
     
     } else {
-      ForEach(model.memories) { memory in
+      ForEach(viewModel.memories) { memory in
         VStack(alignment: .leading) {
-          Line1View(memory: memory)
-          Line2View(memory: memory)
+          DetailView1(memory: memory)
+          DetailView2(memory: memory)
         }
       }
     }
   }
 }
 
-struct Line1View: View {
+private struct DetailView1: View {
   @ObservedObject var memory: Memory
   
   var body: some View {
@@ -98,7 +98,7 @@ struct Line1View: View {
   }
 }
 
-struct Line2View: View {
+private struct DetailView2: View {
   @ObservedObject var memory: Memory
   
   var body: some View {
@@ -168,7 +168,7 @@ struct Line2View: View {
 // MARK: - Preview
 struct MemoryView_Previews: PreviewProvider {
   static var previews: some View {
-    MemoryView(model: Model.shared)
+    MemoryView(viewModel: ViewModel.shared)
       .frame(minWidth: 975)
       .padding()
   }

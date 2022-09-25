@@ -13,28 +13,36 @@ import Api6000
 // MARK: - View
 
 struct AmplifierView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
-    if model.amplifiers.count == 0 {
+    if viewModel.amplifiers.count == 0 {
       HStack(spacing: 5) {
         Text("        AMPLIFIERs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
-      ForEach(model.amplifiers) { amplifier in
+      ForEach(viewModel.amplifiers) { amplifier in
         VStack (alignment: .leading) {
-          HStack(spacing: 20) {
-            Text("       AMPLIFIER -> ")
-            Text(amplifier.id.hex)
-            Text(amplifier.model)
-            Text(amplifier.ip)
-            Text("Port \(amplifier.port)")
-            Text(amplifier.state)
-          }
+          DetailView(amplifier: amplifier)
         }
       }
+    }
+  }
+}
+
+private struct DetailView: View {
+  @ObservedObject var amplifier: Amplifier
+  
+  var body: some View {
+    HStack(spacing: 20) {
+      Text("       AMPLIFIER -> ")
+      Text(amplifier.id.hex)
+      Text(amplifier.model)
+      Text(amplifier.ip)
+      Text("Port \(amplifier.port)")
+      Text(amplifier.state)
     }
   }
 }
@@ -49,7 +57,7 @@ import Shared
 
 struct AmplifierView_Previews: PreviewProvider {
   static var previews: some View {
-    AmplifierView(model: Model.shared)
+    AmplifierView(viewModel: ViewModel.shared)
       .frame(minWidth: 975)
       .padding()
   }

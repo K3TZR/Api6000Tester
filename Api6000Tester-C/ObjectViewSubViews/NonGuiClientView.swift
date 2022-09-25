@@ -13,10 +13,10 @@ import Api6000
 // MARK: - View
 
 struct NonGuiClientView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
-    if model.radio != nil {
+    if viewModel.radio != nil {
       VStack(alignment: .leading) {
         Divider().background(Color(.red))
         HStack(spacing: 10) {
@@ -25,17 +25,17 @@ struct NonGuiClientView: View {
 
           HStack(spacing: 5) {
             Text("Handle")
-            Text(model.radio!.connectionHandle?.hex ?? "").foregroundColor(.secondary)
+            Text(viewModel.radio!.connectionHandle?.hex ?? "").foregroundColor(.secondary)
           }
 
           HStack(spacing: 5) {
             Text("Bound_to_Station")
-            Text("\(model.activeStation ?? "none")").foregroundColor(.secondary)
+            Text("\(viewModel.activeStation ?? "none")").foregroundColor(.secondary)
           }
           
           HStack(spacing: 5) {
             Text("Client_Id")
-            Text("\(model.radio!.boundClientId ?? "none")").foregroundColor(.secondary)
+            Text("\(viewModel.radio!.boundClientId ?? "none")").foregroundColor(.secondary)
           }
         }
       }
@@ -48,7 +48,7 @@ struct NonGuiClientView: View {
 
 struct NonGuiClientView_Previews: PreviewProvider {
   static var previews: some View {
-    NonGuiClientView(model: Model.shared)
+    NonGuiClientView(viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

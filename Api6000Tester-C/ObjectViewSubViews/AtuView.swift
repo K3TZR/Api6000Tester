@@ -13,14 +13,14 @@ import Api6000
 // MARK: - View
 
 struct AtuView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
-    if let radio = model.radio {
+    if let radio = viewModel.radio {
       HStack(spacing: 10) {
         Text("        ATU  ")
         if radio.atuPresent {
-          let atu = model.atu
+          let atu = viewModel.atu
           
           HStack(spacing: 5) {
             Text("Enabled")
@@ -58,7 +58,7 @@ struct AtuView_Previews: PreviewProvider {
   
   static var previews: some View {
     
-    AtuView(model: Model.shared)
+    AtuView(viewModel: ViewModel.shared)
       .frame(minWidth: 1000)
       .padding()
   }

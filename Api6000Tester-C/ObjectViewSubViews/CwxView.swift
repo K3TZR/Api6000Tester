@@ -13,11 +13,11 @@ import Api6000
 // MARK: - View
 
 struct CwxView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
-    let cwx = model.cwx
+    let cwx = viewModel.cwx
     HStack(spacing: 20) {
       Text("        CWX")
       
@@ -44,7 +44,7 @@ struct CwxView: View {
 
 struct CwxView_Previews: PreviewProvider {
   static var previews: some View {
-    CwxView(model: Model.shared)
+    CwxView(viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

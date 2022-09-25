@@ -14,7 +14,7 @@ import Api6000
 
 struct SendView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
 
   var body: some View {
 
@@ -27,14 +27,21 @@ struct SendView: View {
           HStack(spacing: 0) {
             Image(systemName: "x.circle")
               .onTapGesture {
-                viewStore.send(.commandTextField(""))
-              }.disabled(model.radio == nil)
+                viewStore.send(.sendClear)
+              }.disabled(viewModel.radio == nil)
+            
+            Stepper("", onIncrement: {
+              viewStore.send(.sendPrevious)
+            }, onDecrement: {
+              viewStore.send(.sendNext)
+            })
+            
             TextField("Command to send", text: viewStore.binding(
               get: \.commandToSend,
               send: { value in .commandTextField(value) } ))
           }
         }
-        .disabled(model.radio == nil)
+        .disabled(viewModel.radio == nil)
 
         Spacer()
         Toggle("Clear on Send", isOn: viewStore.binding(get: \.clearOnSend, send: .toggle(\.clearOnSend)))
@@ -53,7 +60,7 @@ struct SendView_Previews: PreviewProvider {
         initialState: ApiState(),
         reducer: apiReducer,
         environment: ApiEnvironment()
-      ), model: Model.shared
+      ), viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)
       .padding()

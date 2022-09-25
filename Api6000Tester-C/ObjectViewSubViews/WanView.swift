@@ -13,11 +13,11 @@ import Api6000
 // MARK: - View
 
 struct WanView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
-    let wan = model.wan
+    let wan = viewModel.wan
     HStack(spacing: 20) {
       Text("        WAN")
       HStack(spacing: 5) {
@@ -37,7 +37,7 @@ struct WanView: View {
 
 struct WanView_Previews: PreviewProvider {
   static var previews: some View {
-    WanView(model: Model.shared)
+    WanView(viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

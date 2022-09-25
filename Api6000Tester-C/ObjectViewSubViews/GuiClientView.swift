@@ -16,14 +16,16 @@ import Shared
 
 struct GuiClientView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var model: Model
-  
+  @ObservedObject var packets: Packets
+  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var streamModel: StreamModel
+
   var body: some View {
-    if model.activePacketId == nil {
+    if viewModel.activePacket == nil {
       EmptyView()
     } else {
       VStack(alignment: .leading) {
-        ForEach(model.guiClients, id: \.id) { guiClient in
+        ForEach(packets.guiClients, id: \.id) { guiClient in
           Divider().background(Color(.red))
           HStack(spacing: 10) {
             
@@ -53,7 +55,7 @@ struct GuiClientView: View {
               Text(guiClient.isLocalPtt ? "Y" : "N").foregroundColor(guiClient.isLocalPtt ? .green : .red)
             }
           }
-          GuiClientSubView(store: store, model: model, handle: guiClient.handle)
+          GuiClientSubView(store: store, viewModel: viewModel, streamModel: streamModel, handle: guiClient.handle)
         }
       }
       .padding(.bottom, 10)
@@ -63,7 +65,8 @@ struct GuiClientView: View {
 
 struct GuiClientSubView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var streamModel: StreamModel
   let handle: Handle
   
   var body: some View {
@@ -72,25 +75,25 @@ struct GuiClientSubView: View {
       switch viewStore.objectFilter {
         
       case ObjectFilter.core:
-        PanadapterView(model: model, handle: handle, showMeters: true)
+        PanadapterView(viewModel: viewModel, handle: handle, showMeters: true)
         
       case ObjectFilter.coreNoMeters:
-        PanadapterView(model: model, handle: handle, showMeters: false)
+        PanadapterView(viewModel: viewModel, handle: handle, showMeters: false)
         
-      case ObjectFilter.amplifiers:        AmplifierView(model: model)
-      case ObjectFilter.bandSettings:      BandSettingView(model: model)
-      case ObjectFilter.cwx:               CwxView(model: model)
-      case ObjectFilter.equalizers:        EqualizerView(model: model)
-      case ObjectFilter.interlock:         InterlockView(model: model)
-      case ObjectFilter.memories:          MemoryView(model: model)
-      case ObjectFilter.meters:            MeterView(model: model, sliceId: nil, sliceClientHandle: nil, handle: handle)
-      case ObjectFilter.profiles:          ProfileView(model: model)
-      case ObjectFilter.streams:           StreamView(model: model, handle: handle)
-      case ObjectFilter.transmit:          TransmitView(model: model)
-      case ObjectFilter.usbCable:          UsbCableView(model: model)
-      case ObjectFilter.wan:               WanView(model: model)
-      case ObjectFilter.waveforms:         WaveformView(model: model)
-      case ObjectFilter.xvtrs:             XvtrView(model: model)
+      case ObjectFilter.amplifiers:        AmplifierView(viewModel: viewModel)
+      case ObjectFilter.bandSettings:      BandSettingView(viewModel: viewModel)
+      case ObjectFilter.cwx:               CwxView(viewModel: viewModel)
+      case ObjectFilter.equalizers:        EqualizerView(viewModel: viewModel)
+      case ObjectFilter.interlock:         InterlockView(viewModel: viewModel)
+      case ObjectFilter.memories:          MemoryView(viewModel: viewModel)
+      case ObjectFilter.meters:            MeterView(viewModel: viewModel, sliceId: nil, sliceClientHandle: nil, handle: handle)
+      case ObjectFilter.profiles:          ProfileView(viewModel: viewModel)
+      case ObjectFilter.streams:           StreamView(viewModel: viewModel, streamModel: streamModel, handle: handle)
+      case ObjectFilter.transmit:          TransmitView(viewModel: viewModel)
+      case ObjectFilter.usbCable:          UsbCableView(viewModel: viewModel)
+      case ObjectFilter.wan:               WanView(viewModel: viewModel)
+      case ObjectFilter.waveforms:         WaveformView(viewModel: viewModel)
+      case ObjectFilter.xvtrs:             XvtrView(viewModel: viewModel)
 //      default:    EmptyView()
       }
     }
@@ -106,7 +109,9 @@ struct GuiClientView_Previews: PreviewProvider {
                     Store(initialState: ApiState(),
                           reducer: apiReducer,
                           environment: ApiEnvironment()),
-                   model: Model.shared )
+                   packets: Packets.shared,
+                   viewModel: ViewModel.shared,
+                   streamModel: StreamModel.shared)
       .frame(minWidth: 1000)
       .padding()
   }

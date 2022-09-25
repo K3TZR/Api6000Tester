@@ -63,6 +63,13 @@ public struct ApiState: Equatable {
   
   var isStopped = true
     
+  
+  var previousCommand = ""
+  var commandsIndex = 0
+  var commandsArray = [""]
+
+  
+  
   public init(
     clearOnSend: Bool  = UserDefaults.standard.bool(forKey: "clearOnSend"),
     clearOnStart: Bool = UserDefaults.standard.bool(forKey: "clearOnStart"),
@@ -114,10 +121,14 @@ public enum ApiAction: Equatable {
   case audioCheckbox(Bool)
   case fontSizeStepper(CGFloat)
   case loginRequiredButton(Bool)
-  case messagesPicker(MessageFilter)
   case messagesFilterTextField(String)
+  case messagesPicker(MessageFilter)
+  case messagesSave
   case objectsPicker(ObjectFilter)
   case sendButton(String)
+  case sendClear
+  case sendNext
+  case sendPrevious
   case startStopButton(Bool)
   case toggle(WritableKeyPath<ApiState, Bool>)
   
@@ -216,7 +227,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           // start audio
           return .run { [state] send in
             // request a stream
-            let id = try await Model.shared.radio!.requestRemoteRxAudioStream()
+            let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
             // finish audio setup
             await send(.startAudio(id.streamId!))
           }
@@ -230,7 +241,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         if state.isStopped == false {
           return .run {send in
             // request removal of the stream
-            await StreamModel.shared.removeRemoteRxAudioStream(Model.shared.radio!.connectionHandle)
+            await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
           }
         } else {
           return .none
@@ -275,16 +286,63 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
       return .none
       
+    case .messagesSave:
+      let savePanel = NSSavePanel()
+      savePanel.nameFieldStringValue = "Api6000Tester-C.messages"
+      savePanel.canCreateDirectories = true
+      savePanel.isExtensionHidden = false
+      savePanel.allowsOtherFileTypes = false
+      savePanel.title = "Save the Log"
+      
+      let response = savePanel.runModal()
+      if response == .OK {
+        let textArray = state.filteredMessages.map { String(format: "%.6f", $0.timeInterval ?? 0) + " " + $0.text }
+        let fileTextArray = textArray.joined(separator: "\n")
+        try? fileTextArray.write(to: savePanel.url!, atomically: true, encoding: .utf8)
+      }
+      return .none
+      
     case .objectsPicker(let newFilter):
       let prevObjectFilter = state.objectFilter
       state.objectFilter = newFilter
       return .none
       
     case .sendButton(let command):
-      if state.clearOnSend { state.commandToSend = "" }
-      return .run { send in
-        _ = await Model.shared.radio?.send(command)
+      // update the command history
+      if command != state.previousCommand { state.commandsArray.append(command) }
+      state.previousCommand = command
+      state.commandsIndex = state.commandsIndex + 1
+
+      if state.clearOnSend {
+        state.commandToSend = ""
+        state.commandsIndex = 0
       }
+      return .run { send in
+        _ = await ViewModel.shared.radio?.send(command)
+      }
+      
+    case .sendClear:
+      state.commandToSend = ""
+      state.commandsIndex = 0
+      return .none
+      
+    case .sendNext:
+        if state.commandsIndex == state.commandsArray.count - 1{
+          state.commandsIndex = 0
+        } else {
+          state.commandsIndex += 1
+        }
+      state.commandToSend = state.commandsArray[state.commandsIndex]
+      return .none
+
+    case .sendPrevious:
+        if state.commandsIndex == 0 {
+          state.commandsIndex = state.commandsArray.count - 1
+        } else {
+          state.commandsIndex -= 1
+        }
+      state.commandToSend = state.commandsArray[state.commandsIndex]
+      return .none
       
     case .startStopButton(_):
       if state.isStopped {
@@ -297,7 +355,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         // use the Default?
         return .run { [state] send in
           // get the Pickables
-          let pickables = await Api.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+          let pickables = await Packets.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
           // if using default, is there a default?
           if state.useDefault, let selection = pickables.first(where: { $0.isDefault} ) {
             // YES, default found, check for existing connections
@@ -320,7 +378,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           state.opusPlayer?.stop()
           state.opusPlayer = nil
           return .run { send in
-            await StreamModel.shared.removeRemoteRxAudioStream(Model.shared.radio!.connectionHandle)
+            await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
             await Api.shared.disconnect()
           }
         } else {
@@ -402,7 +460,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         // if nonGui, is there a clientId for our connected Station?
         if state.isGui == false && event.client.station == state.station {
           // YES, bind to it
-          return .run { _ in await Model.shared.radio?.bindToGuiClient(event.client.clientId) }
+          return .run { _ in await ViewModel.shared.radio?.bindToGuiClient(event.client.clientId) }
         }
       }
       return .none
@@ -417,7 +475,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         // YES, update it
         return .run { [state] send in
           // reload the Pickables
-          let pickables = await Api.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+          let pickables = await Packets.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
           await send(.showPickerSheet(pickables))
         }
       }
@@ -511,7 +569,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       }
       // redo the Pickables
       return .run { [state] send in
-        let pickables = await Api.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+        let pickables = await Packets.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
         await send(.showPickerSheet(pickables))
       }
       
@@ -579,7 +637,7 @@ func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandl
                                      program: "Api6000Tester")
       if state.isGui && state.enableAudio {
         // start audio, request a stream
-        let id = try await Model.shared.radio!.requestRemoteRxAudioStream()
+        let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
         // finish audio setup
         await send(.startAudio(id.streamId!))
       }
@@ -642,7 +700,7 @@ func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: St
 
 private func subscribeToPackets() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    for await event in await Api.shared.packetStream {
+    for await event in await Packets.shared.packetStream {
       // a packet has been added / updated or deleted
       await send(.packetEvent(event))
     }
@@ -651,7 +709,7 @@ private func subscribeToPackets() -> Effect<ApiAction, Never> {
 
 private func subscribeToClients() -> Effect<ApiAction, Never> {
   Effect.run { send in
-    for await event in await Api.shared.clientStream {
+    for await event in await Packets.shared.clientStream {
       // a guiClient has been added / updated or deleted
       await send(.clientEvent(event))
     }

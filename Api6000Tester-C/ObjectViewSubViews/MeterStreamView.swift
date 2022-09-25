@@ -13,7 +13,7 @@ import Shared
 // MARK: - View
 
 struct MeterStreamView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
@@ -34,6 +34,6 @@ struct MeterStreamView: View {
 
 struct MeterStreamView_Previews: PreviewProvider {
   static var previews: some View {
-    MeterStreamView( model: Model.shared )
+    MeterStreamView( viewModel: ViewModel.shared )
   }
 }

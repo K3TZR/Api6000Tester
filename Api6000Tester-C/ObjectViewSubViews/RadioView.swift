@@ -16,79 +16,90 @@ import Shared
 
 struct RadioView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
     WithViewStore(store) { viewStore in
-      if model.activePacketId != nil {
+      if viewModel.activePacket != nil {
+        
+        let packet = viewModel.activePacket!
         VStack(alignment: .leading) {
           HStack(spacing: 10) {
             Group {
               
               HStack(spacing: 0) {
                 Text("RADIO   ").foregroundColor(.blue)
-                Text(model.packets[id: model.activePacketId!]!.source.rawValue)
+                Text(packet.source.rawValue)
                   .foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("Name")
-                Text(model.packets[id: model.activePacketId!]!.nickname)
+                Text(packet.nickname)
                   .foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("Ip")
-                Text(model.packets[id: model.activePacketId!]!.publicIp).foregroundColor(.secondary)
+                Text(packet.publicIp).foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("FW")
-                Text(model.packets[id: model.activePacketId!]!.version).foregroundColor(.secondary)
+                Text(packet.version).foregroundColor(.secondary)
               }
               
               HStack(spacing: 5) {
                 Text("Model")
-                Text(model.packets[id: model.activePacketId!]!.model).foregroundColor(.secondary)
+                Text(packet.model).foregroundColor(.secondary)
               }
             }
             Group {
               HStack(spacing: 5) {
                 Text("Serial")
-                Text(model.packets[id: model.activePacketId!]!.serial).foregroundColor(.secondary)
+                Text(packet.serial).foregroundColor(.secondary)
               }
 
               HStack(spacing: 5) {
                 Text("Stations")
-                Text(model.packets[id: model.activePacketId!]!.guiClientStations).foregroundColor(.secondary)
+                Text(packet.guiClientStations).foregroundColor(.secondary)
               }.frame(width: 150, alignment: .leading)
-
-              HStack(spacing: 5) {
-                Text("Atu")
-                Text(model.radio!.atuPresent ? "Y" : "N").foregroundColor(model.radio!.atuPresent ? .green : .red)
-              }
-
-              HStack(spacing: 5) {
-                Text("Gps")
-                Text(model.radio!.gpsPresent ? "Y" : "N").foregroundColor(model.radio!.gpsPresent ? .green : .red)
-              }
-
-              HStack(spacing: 5) {
-                Text("Scu")
-                Text("\(model.radio!.numberOfScus)").foregroundColor(.green)
-              }
             }
           }
         }
-        AtuView(model: model)
-        GpsView(model: model)
-        TnfView(model: model)
-        MeterStreamView(model: model)
+        RadioSubView(store: store, viewModel: viewModel)
       }
     }
   }
 }
+
+struct RadioSubView: View {
+  let store: Store<ApiState, ApiAction>
+  @ObservedObject var viewModel: ViewModel
+  
+  var body: some View {
+    
+    WithViewStore(store) { viewStore in
+      AtuView(viewModel: viewModel)
+      GpsView(viewModel: viewModel)
+
+      if let radio = viewModel.radio {
+        HStack(spacing: 10) {
+          Text("        TNFs ")
+          HStack(spacing: 5) {
+            Text("Enabled")
+            Text(radio.tnfsEnabled ? "Y" : "N").foregroundColor(radio.tnfsEnabled ? .green : .red)
+          }
+        }
+      }
+
+      TnfView(viewModel: viewModel)
+      MeterStreamView(viewModel: viewModel)
+    }
+  }
+}
+
 
 // ----------------------------------------------------------------------------
 // MARK: - Preview
@@ -98,8 +109,9 @@ struct RadioView_Previews: PreviewProvider {
     RadioView(store: Store(
       initialState: ApiState(),
       reducer: apiReducer,
-      environment: ApiEnvironment()),
-              model: Model.shared)
+      environment: ApiEnvironment()
+    ),
+              viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
   }
 }

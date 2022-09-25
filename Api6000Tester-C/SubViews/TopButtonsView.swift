@@ -16,20 +16,20 @@ import Shared
 
 public struct TopButtonsView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
 
  public  var body: some View {
 
     WithViewStore(self.store) { viewStore in
       HStack(spacing: 30) {
         Button(viewStore.isStopped ? "Start" : "Stop") {
-          viewStore.send(.startStopButton(model.radio == nil))
+          viewStore.send(.startStopButton(viewModel.radio == nil))
         }
-        .keyboardShortcut(model.radio == nil ? .defaultAction : .cancelAction)
+        .keyboardShortcut(viewModel.radio == nil ? .defaultAction : .cancelAction)
 
         HStack(spacing: 20) {
           Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\.isGui)))
-            .disabled(model.radio != nil)
+            .disabled(viewModel.radio != nil)
           Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
           Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
           Toggle("Audio", isOn: viewStore.binding(get: \.enableAudio, send: { .audioCheckbox($0)} ))
@@ -47,15 +47,15 @@ public struct TopButtonsView: View {
           Text("None").tag(ConnectionMode.none)
         }
         .pickerStyle(.segmented)
-        .disabled(model.radio != nil)
+        .disabled(viewModel.radio != nil)
         .labelsHidden()
         .frame(width: 200)
 
         Spacer()
         Toggle("Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
-          .disabled(model.radio != nil || viewStore.connectionMode == .local || viewStore.connectionMode == .none)
+          .disabled(viewModel.radio != nil || viewStore.connectionMode == .local || viewStore.connectionMode == .none)
         Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\.useDefault)))
-          .disabled(model.radio != nil)
+          .disabled(viewModel.radio != nil)
       }
     }
   }
@@ -71,7 +71,7 @@ struct TopButtonsView_Previews: PreviewProvider {
         initialState: ApiState(),
         reducer: apiReducer,
         environment: ApiEnvironment()
-      ), model: Model.shared
+      ), viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)
       .padding()

@@ -47,6 +47,7 @@ struct MessagesView: View {
               Text("Bottom").hidden()
                 .id(bottomID)
             }
+            .textSelection(.enabled)
             .onChange(of: viewStore.gotoFirst, perform: { _ in
               let id = viewStore.gotoFirst ? bottomID : topID
               proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)

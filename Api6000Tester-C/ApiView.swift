@@ -25,21 +25,23 @@ public struct ApiView: View {
     self.store = store
   }
   
-  @StateObject var model: Model = Model.shared
-  
+  @StateObject var packets: Packets = Packets.shared
+  @StateObject var viewModel: ViewModel = ViewModel.shared
+  @StateObject var streamModel: StreamModel = StreamModel.shared
+
   public var body: some View {
     
     WithViewStore(self.store) { viewStore in
       
       VStack(alignment: .leading) {
-        TopButtonsView(store: store, model: model)
-        SendView(store: store, model: model)
+        TopButtonsView(store: store, viewModel: viewModel)
+        SendView(store: store, viewModel: viewModel)
         FiltersView(store: store)
 
         Divider().background(Color(.gray))
 
         VSplitView {
-          ObjectsView(store: store, model: model)
+          ObjectsView(store: store, packets: packets, viewModel: viewModel, streamModel: streamModel)
             .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
           Divider().background(Color(.cyan))
           MessagesView(store: store)

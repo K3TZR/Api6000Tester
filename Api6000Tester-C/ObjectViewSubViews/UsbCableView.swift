@@ -19,27 +19,27 @@ import Api6000
 // MARK: - View
 
 struct UsbCableView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
-    if model.usbCables.count == 0 {
+    if viewModel.usbCables.count == 0 {
       HStack(spacing: 5) {
         Text("        USBCABLEs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
-      ForEach(model.usbCables) { cable in
+      ForEach(viewModel.usbCables) { cable in
         VStack (alignment: .leading) {
-          CableLine1View(cable: cable)
-          CableLine2View(cable: cable)
+          DetailView1(cable: cable)
+          DetailView2(cable: cable)
         }
       }
     }
   }
 }
 
-struct CableLine1View: View {
+private struct DetailView1: View {
   @ObservedObject var cable: UsbCable
   
   var body: some View {
@@ -97,7 +97,7 @@ struct CableLine1View: View {
   }
 }
 
-struct CableLine2View: View {
+private struct DetailView2: View {
   @ObservedObject var cable: UsbCable
   
   var body: some View {
@@ -152,7 +152,7 @@ struct CableLine2View: View {
 
 struct UsbCableView_Previews: PreviewProvider {
   static var previews: some View {
-    UsbCableView(model: Model.shared)
+    UsbCableView(viewModel: ViewModel.shared)
       .frame(minWidth: 1000)
       .padding()
   }

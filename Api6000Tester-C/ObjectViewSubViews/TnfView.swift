@@ -13,7 +13,27 @@ import Api6000
 // MARK: - View
 
 struct TnfView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
+    
+  var body: some View {
+    if viewModel.tnfs.count == 0 {
+      HStack(spacing: 10) {
+        Text("        TNF  ")
+        Text("None present").foregroundColor(.red)
+      }
+      
+    } else {
+      ForEach(viewModel.tnfs) { tnf in
+        VStack (alignment: .leading) {
+          DetailView(tnf: tnf)
+        }
+      }
+    }
+  }
+}
+
+private struct DetailView: View {
+  @ObservedObject var tnf: Tnf
   
   func depthName(_ depth: UInt) -> String {
     switch depth {
@@ -23,52 +43,36 @@ struct TnfView: View {
     default:  return "Invalid"
     }
   }
-  
+
   var body: some View {
-    if model.tnfs.count == 0 {
+    HStack(spacing: 10) {
+      
       HStack(spacing: 10) {
         Text("        TNF  ")
-        Text("None present").foregroundColor(.red)
+        Text(String(format: "%02d", tnf.id)).foregroundColor(.green)
       }
       
-    } else {
-      ForEach(model.tnfs) { tnf in
-        VStack (alignment: .leading) {
-          HStack(spacing: 10) {
-            
-            HStack(spacing: 10) {
-              Text("        TNF  ")
-              Text(String(format: "%02d", tnf.id)).foregroundColor(.green)
-            }
-            
-            HStack(spacing: 5) {
-              Text("Frequency")
-              Text("\(tnf.frequency)").foregroundColor(.secondary)
-            }
-            
-            HStack(spacing: 5) {
-              Text("Width")
-              Text("\(tnf.width)").foregroundColor(.secondary)
-            }
-            
-            HStack(spacing: 5) {
-              Text("Depth")
-              Text(depthName(tnf.depth)).foregroundColor(.secondary)
-            }
-            
-            HStack(spacing: 5) {
-              Text("Permanent")
-              Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
-            }
-            
-            HStack(spacing: 5) {
-              Text("TNFs Enabled")
-              Text(model.radio?.tnfsEnabled ?? false ? "Y" : "N").foregroundColor(model.radio?.tnfsEnabled ?? false ? .green : .red)
-            }
-          }
-        }
+      HStack(spacing: 5) {
+        Text("Frequency")
+        Text("\(tnf.frequency)").foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Width")
+        Text("\(tnf.width)").foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Depth")
+        Text(depthName(tnf.depth)).foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Permanent")
+        Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
       }
     }
+
   }
 }
 
@@ -77,7 +81,7 @@ struct TnfView: View {
 
 struct TnfView_Previews: PreviewProvider {
   static var previews: some View {
-    TnfView(model: Model.shared)
+    TnfView(viewModel: ViewModel.shared)
       .frame(minWidth: 1000)
       .padding()
   }

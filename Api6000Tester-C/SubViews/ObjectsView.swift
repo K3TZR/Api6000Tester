@@ -16,18 +16,20 @@ import Shared
 
 struct ObjectsView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var model: Model
+  @ObservedObject var packets: Packets
+  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var streamModel: StreamModel
   
   var body: some View {
     WithViewStore(self.store) { viewStore in
       ScrollView([.horizontal, .vertical]) {
         VStack(alignment: .leading) {
-          if model.radio == nil {
+          if viewModel.radio == nil {
             Text("Radio objects will be displayed here")
           } else {
-            RadioView(store: store, model: model)
-            GuiClientView(store: store, model: model)
-            if viewStore.isGui == false { NonGuiClientView(model: model) }
+            RadioView(store: store, viewModel: viewModel)
+            GuiClientView(store: store, packets: packets, viewModel: viewModel, streamModel: streamModel)
+            if viewStore.isGui == false { NonGuiClientView(viewModel: viewModel) }
           }
         }
       }
@@ -49,7 +51,9 @@ struct ObjectsView_Previews: PreviewProvider {
         reducer: apiReducer,
         environment: ApiEnvironment()
       ),
-      model: Model.shared
+      packets: Packets.shared,
+      viewModel: ViewModel.shared,
+      streamModel: StreamModel.shared
     )
       .frame(minWidth: 975)
       .padding()

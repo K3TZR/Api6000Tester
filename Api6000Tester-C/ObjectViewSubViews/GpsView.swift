@@ -13,11 +13,11 @@ import Api6000
 // MARK: - View
 
 struct GpsView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
-    if let radio = model.radio {
+    if let radio = viewModel.radio {
       HStack(spacing: 10) {
         Text("        GPS  ")
         if radio.gpsPresent {
@@ -35,7 +35,7 @@ struct GpsView: View {
 
 struct GpsView_Previews: PreviewProvider {
   static var previews: some View {
-    GpsView(model: Model.shared)
+    GpsView(viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

@@ -39,6 +39,11 @@ struct BottomButtonsView: View {
 
         Spacer()
         
+        HStack {
+          Button("Save") { viewStore.send(.messagesSave) }
+        }
+        Spacer()
+        
         HStack(spacing: 40) {
           Toggle("Clear on Start", isOn: viewStore.binding(get: \.clearOnStart, send: .toggle(\.clearOnStart)))
           Toggle("Clear on Stop", isOn: viewStore.binding(get: \.clearOnStop, send: .toggle(\.clearOnStop)))

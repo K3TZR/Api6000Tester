@@ -14,28 +14,14 @@ import Shared
 // MARK: - View
 
 struct StreamView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var streamModel: StreamModel
   let handle: Handle
-  
+    
   var body: some View {
     
-//    // Meter
-//    if Meter.streamId != nil {
-//      HStack(spacing: 20) {
-//        HStack(spacing: 5) {
-//          Text("        METERS     Stream").foregroundColor(.blue)
-//          Text(Meter.streamId!.hex).foregroundColor(.secondary)
-//        }
-//        
-//        HStack(spacing: 5) {
-//          Text("Streaming")
-//          Text(Meter.isStreaming ? "Y" : "N").foregroundColor(Meter.isStreaming ? .green : .red)
-//        }
-//      }
-//    }
-    
     // Panadapter
-    ForEach(model.panadapters) { panadapter in
+    ForEach(viewModel.panadapters) { panadapter in
       if handle == panadapter.clientHandle {
         HStack(spacing: 20) {
           HStack(spacing: 5) {
@@ -57,7 +43,7 @@ struct StreamView: View {
     }
     
     // Waterfall
-    ForEach(model.waterfalls) { waterfall in
+    ForEach(viewModel.waterfalls) { waterfall in
       if handle == waterfall.clientHandle {
         HStack(spacing: 20) {
           HStack(spacing: 5) {
@@ -79,70 +65,43 @@ struct StreamView: View {
     }
     
     // RemoteRxAudioStream
-//    ForEach(model.remoteRxAudioStreams) { stream in
-//      if handle == stream.clientHandle {
-//        HStack(spacing: 20) {
-//          HStack(spacing: 5) {
-//            Text("        REMOTE Rx  Stream").foregroundColor(.blue)
-//            Text(stream.id.hex).foregroundColor(.secondary)
-//          }
-//
-//          HStack(spacing: 5) {
-//            Text("Streaming")
-//            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
-//          }
-//
-//          HStack(spacing: 5) {
-//            Text("Handle")
-//            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
-//          }
-//
-//          HStack(spacing: 5) {
-//            Text("Compression")
-//            Text("\(stream.compression)").foregroundColor(.secondary)
-//          }
-//
-//          HStack(spacing: 5) {
-//            Text("Ip")
-//            Text("\(stream.ip)").foregroundColor(.secondary)
-//          }
-//        }
-//      }
-//    }
-    
-    // RemoteTxAudioStream
-//    ForEach(model.remoteTxAudioStreams) { stream in
-//      if handle == stream.clientHandle {
-//        HStack(spacing: 20) {
-//          HStack(spacing: 5) {
-//            Text("        REMOTE Tx  Stream").foregroundColor(.blue)
-//            Text(stream.id.hex).foregroundColor(.secondary)
-//          }
-//          
-//          HStack(spacing: 5) {
-//            Text("Streaming")
-//            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
-//          }
-//          
-//          HStack(spacing: 5) {
-//            Text("Handle")
-//            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
-//          }
-//          
-//          HStack(spacing: 5) {
-//            Text("Compression")
-//            Text("\(stream.compression)").foregroundColor(.secondary)
-//          }
-//        }
-//      }
-//    }
-    
-    // DaxMicAudioStream
-    ForEach(model.daxMicAudioStreams) { stream in
+    ForEach(streamModel.remoteRxAudioStreams) { stream in
       if handle == stream.clientHandle {
         HStack(spacing: 20) {
           HStack(spacing: 5) {
-            Text("        DAX MIC    Stream").foregroundColor(.blue)
+            Text("        REMOTE Rx  Stream").foregroundColor(.blue)
+            Text(stream.id.hex).foregroundColor(.secondary)
+          }
+
+          HStack(spacing: 5) {
+            Text("Streaming")
+            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
+          }
+
+          HStack(spacing: 5) {
+            Text("Handle")
+            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
+          }
+
+          HStack(spacing: 5) {
+            Text("Compression")
+            Text("\(stream.compression)").foregroundColor(.secondary)
+          }
+
+          HStack(spacing: 5) {
+            Text("Ip")
+            Text("\(stream.ip)").foregroundColor(.secondary)
+          }
+        }
+      }
+    }
+    
+    // RemoteTxAudioStream
+    ForEach(streamModel.remoteTxAudioStreams) { stream in
+      if handle == stream.clientHandle {
+        HStack(spacing: 20) {
+          HStack(spacing: 5) {
+            Text("        REMOTE Tx  Stream").foregroundColor(.blue)
             Text(stream.id.hex).foregroundColor(.secondary)
           }
           
@@ -157,10 +116,37 @@ struct StreamView: View {
           }
           
           HStack(spacing: 5) {
+            Text("Compression")
+            Text("\(stream.compression)").foregroundColor(.secondary)
+          }
+        }
+      }
+    }
+    
+    // DaxMicAudioStream
+    ForEach(streamModel.daxMicAudioStreams) { stream in
+      if handle == stream.clientHandle {
+        HStack(spacing: 20) {
+          HStack(spacing: 5) {
+            Text("        DAX MIC    Stream").foregroundColor(.blue)
+            Text(stream.id.hex).foregroundColor(.secondary)
+          }
+
+          HStack(spacing: 5) {
+            Text("Streaming")
+            Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
+          }
+
+          HStack(spacing: 5) {
+            Text("Handle")
+            Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
+          }
+
+          HStack(spacing: 5) {
             Text("Ip")
             Text("\(stream.ip)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Streaming")
             Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
@@ -170,29 +156,29 @@ struct StreamView: View {
     }
     
     // DaxRxAudioStream
-    ForEach(model.daxRxAudioStreams) { stream in
+    ForEach(streamModel.daxRxAudioStreams) { stream in
       if handle == stream.clientHandle {
         HStack(spacing: 20) {
           HStack(spacing: 5) {
             Text("        DAX RX     Stream").foregroundColor(.blue)
             Text(stream.id.hex).foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Streaming")
             Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
           }
-          
+
           HStack(spacing: 5) {
             Text("Handle")
             Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Channel")
             Text("\(stream.daxChannel)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Ip")
             Text("\(stream.ip)").foregroundColor(.secondary)
@@ -203,24 +189,24 @@ struct StreamView: View {
     
     
     // DaxTxAudioStream
-    ForEach(model.daxTxAudioStreams) { stream in
+    ForEach(streamModel.daxTxAudioStreams) { stream in
       if handle == stream.clientHandle {
         HStack(spacing: 20) {
           HStack(spacing: 5) {
             Text("        DAX TX     Stream").foregroundColor(.blue)
             Text("\(stream.id.hex)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Streaming")
             Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
           }
-          
+
           HStack(spacing: 5) {
             Text("Client_Handle")
             Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Transmit")
             Text(stream.isTransmitChannel ? "Y" : "N").foregroundColor(stream.isTransmitChannel ? .green : .red)
@@ -230,34 +216,34 @@ struct StreamView: View {
     }
     
     // DaxIqStream
-    ForEach(model.daxIqStreams) { stream in
+    ForEach(streamModel.daxIqStreams) { stream in
       if handle == stream.clientHandle {
         HStack(spacing: 20) {
           HStack(spacing: 5) {
             Text("        DAX IQ     Stream").foregroundColor(.blue)
             Text(stream.id.hex).foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Streaming")
             Text(stream.isStreaming ? "Y" : "N").foregroundColor(stream.isStreaming ? .green : .red)
           }
-          
+
           HStack(spacing: 5) {
             Text("Handle")
             Text("\(stream.clientHandle.hex)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Channel")
             Text("\(stream.channel)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Ip")
             Text("\(stream.ip)").foregroundColor(.secondary)
           }
-          
+
           HStack(spacing: 5) {
             Text("Pan")
             Text("\(stream.pan.hex)").foregroundColor(.secondary)
@@ -273,7 +259,7 @@ struct StreamView: View {
 
 struct StreamView_Previews: PreviewProvider {
   static var previews: some View {
-    StreamView(model: Model.shared, handle: 1)
+    StreamView(viewModel: ViewModel.shared, streamModel: StreamModel.shared, handle: 1)
       .frame(minWidth: 1000)
       .padding()
   }

@@ -13,9 +13,11 @@ import Api6000
 // MARK: - View
 
 struct TransmitView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
+    
+    let transmit = viewModel.transmit
     
     VStack(alignment: .leading) {
       HStack(spacing: 10) {
@@ -23,31 +25,31 @@ struct TransmitView: View {
         Group {
           HStack(spacing: 5) {
             Text("RF_Power")
-            Text("\(model.transmit.rfPower)").foregroundColor(.green)
+            Text("\(transmit.rfPower)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
             Text("Tune_Power")
-            Text("\(model.transmit.tunePower)").foregroundColor(.green)
+            Text("\(transmit.tunePower)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
             Text("Frequency")
-            Text("\(model.transmit.frequency)").foregroundColor(.secondary)
+            Text("\(transmit.frequency)").foregroundColor(.secondary)
           }
           HStack(spacing: 5) {
             Text("Mon_Level")
-            Text("\(model.transmit.txMonitorGainSb)").foregroundColor(.green)
+            Text("\(transmit.txMonitorGainSb)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
             Text("Comp_Level")
-            Text("\(model.transmit.companderLevel)").foregroundColor(.green)
+            Text("\(transmit.companderLevel)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
             Text("Mic")
-            Text("\(model.transmit.micSelection)").foregroundColor(.secondary)
+            Text("\(transmit.micSelection)").foregroundColor(.secondary)
           }
           HStack(spacing: 5) {
             Text("Mic_Level")
-            Text("\(model.transmit.micLevel)").foregroundColor(.green)
+            Text("\(transmit.micLevel)").foregroundColor(.green)
           }
         }
       }
@@ -56,41 +58,41 @@ struct TransmitView: View {
           Text("                ")
           HStack(spacing: 5) {
             Text("Proc")
-            Text(model.transmit.speechProcessorEnabled ? "ON" : "OFF")
-              .foregroundColor(model.transmit.speechProcessorEnabled ? .green : .red)
+            Text(transmit.speechProcessorEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.speechProcessorEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
             Text("Comp")
-            Text(model.transmit.companderEnabled ? "ON" : "OFF")
-              .foregroundColor(model.transmit.companderEnabled ? .green : .red)
+            Text(transmit.companderEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.companderEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
             Text("Mon")
-            Text(model.transmit.txMonitorEnabled ? "ON" : "OFF")
-              .foregroundColor(model.transmit.txMonitorEnabled ? .green : .red)
+            Text(transmit.txMonitorEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.txMonitorEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
             Text("Acc")
-            Text(model.transmit.micAccEnabled ? "ON" : "OFF")
-              .foregroundColor(model.transmit.micAccEnabled ? .green : .red)
+            Text(transmit.micAccEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.micAccEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
             Text("Dax")
-            Text(model.transmit.daxEnabled ? "ON" : "OFF")
-              .foregroundColor(model.transmit.daxEnabled ? .green : .red)
+            Text(transmit.daxEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.daxEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
             Text("Vox")
-            Text(model.transmit.voxEnabled ? "ON" : "OFF")
-              .foregroundColor(model.transmit.voxEnabled ? .green : .red)
+            Text(transmit.voxEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.voxEnabled ? .green : .red)
           }
           HStack(spacing: 5) {
             Text("Vox_Delay")
-            Text("\(model.transmit.voxDelay)").foregroundColor(.green)
+            Text("\(transmit.voxDelay)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
             Text("Vox_Level")
-            Text("\(model.transmit.voxLevel)").foregroundColor(.green)
+            Text("\(transmit.voxLevel)").foregroundColor(.green)
           }
         }
       }
@@ -104,7 +106,7 @@ struct TransmitView: View {
 
 struct TransmitView_Previews: PreviewProvider {
   static var previews: some View {
-    TransmitView(model: Model.shared)
+    TransmitView(viewModel: ViewModel.shared)
       .frame(minWidth: 1000)
       .padding()
   }

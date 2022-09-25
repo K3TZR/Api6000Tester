@@ -13,11 +13,11 @@ import Api6000
 // MARK: - View
 
 struct XvtrView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   
   var body: some View {
     
-    if model.xvtrs.count == 0 {
+    if viewModel.xvtrs.count == 0 {
       HStack(spacing: 5) {
         Text("        XVTRs")
         Text("None present").foregroundColor(.red)
@@ -37,7 +37,7 @@ struct XvtrView: View {
 
 struct XvtrView_Previews: PreviewProvider {
   static var previews: some View {
-    XvtrView(model: Model.shared)
+    XvtrView(viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

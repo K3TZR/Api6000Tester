@@ -15,17 +15,13 @@ import Shared
 // MARK: - View
 
 struct MeterView: View {
-  @ObservedObject var model: Model
+  @ObservedObject var viewModel: ViewModel
   let sliceId: UInt32?
   let sliceClientHandle: UInt32?
   let handle: Handle
 
-  func valueColor(_ value: Float, _ low: Float, _ high: Float) -> Color {
-    if value > high { return .red }
-    if value < low { return .yellow }
-    return .green
-  }
-
+  @StateObject var metersModel = Meters.shared
+  
   func showMeter(_ id: UInt32?, _ clientHandle: UInt32?, _ source: String, _ group: String) -> Bool {
     if id == nil { return true }
     if clientHandle != handle { return false }
@@ -35,34 +31,49 @@ struct MeterView: View {
   }
 
   var body: some View {
-
-      VStack(alignment: .leading) {
-        ForEach(model.meters ) { meter in
-
-          if showMeter(sliceId, sliceClientHandle, meter.source, meter.group) {
-            HStack(spacing: 10) {
-              Group {
-                Text("Meter").padding(.leading, sliceId == nil ? 0 : 80)
-                Text(String(format: "% 3d", meter.id)).frame(width: 40, alignment: .trailing)
-                if sliceId == nil {
-                  Text(meter.group).frame(width: 30, alignment: .trailing)
-                  Text(meter.source).frame(width: 40, alignment: .leading)
-                }
-                Text(meter.name).frame(width: 110, alignment: .leading)
-              }
-              Group {
-                Text(String(format: "%-4.2f", meter.value))
-                  .help("        range: \(String(format: "%-4.2f", meter.low)) to \(String(format: "%-4.2f", meter.high))")
-                  .foregroundColor(valueColor(meter.value, meter.low, meter.high))
-                  .frame(width: 75, alignment: .trailing)
-                Text(meter.units).frame(width: 50, alignment: .leading)
-                Text(String(format: "% 2d", meter.fps) + " fps").frame(width: 70, alignment: .leading)
-                Text(meter.desc).foregroundColor(.primary)
-              }
-            }
+    
+    VStack(alignment: .leading) {
+      ForEach(metersModel.meters ) { meter in
+        if showMeter(sliceId, sliceClientHandle, meter.source, meter.group) {
+          DetailView(meter: meter, sliceId: sliceId)
         }
       }
       .foregroundColor(.secondary)
+    }
+  }
+}
+
+private struct DetailView: View {
+  @ObservedObject var meter: Meter
+  let sliceId: UInt32?
+
+  func valueColor(_ value: Float, _ low: Float, _ high: Float) -> Color {
+    if value > high { return .red }
+    if value < low { return .yellow }
+    return .green
+  }
+  
+  var body: some View {
+    
+    HStack(spacing: 10) {
+      Group {
+        Text("Meter").padding(.leading, sliceId == nil ? 0 : 80)
+        Text(String(format: "% 3d", meter.id)).frame(width: 40, alignment: .trailing)
+        if sliceId == nil {
+          Text(meter.group).frame(width: 30, alignment: .trailing)
+          Text(meter.source).frame(width: 40, alignment: .leading)
+        }
+        Text(meter.name).frame(width: 110, alignment: .leading)
+      }
+      Group {
+        Text(String(format: "%-4.2f", meter.value))
+          .help("        range: \(String(format: "%-4.2f", meter.low)) to \(String(format: "%-4.2f", meter.high))")
+          .foregroundColor(valueColor(meter.value, meter.low, meter.high))
+          .frame(width: 75, alignment: .trailing)
+        Text(meter.units).frame(width: 50, alignment: .leading)
+        Text(String(format: "% 2d", meter.fps) + " fps").frame(width: 70, alignment: .leading)
+        Text(meter.desc).foregroundColor(.primary)
+      }
     }
   }
 }
@@ -72,8 +83,8 @@ struct MeterView: View {
 
 struct MeterView_Previews: PreviewProvider {
   static var previews: some View {
-    MeterView(model: Model.shared, sliceId: 1, sliceClientHandle: nil, handle: 1)
-    .frame(minWidth: 1000)
-    .padding()
+    MeterView(viewModel: ViewModel.shared, sliceId: 1, sliceClientHandle: nil, handle: 1)
+      .frame(minWidth: 1000)
+      .padding()
   }
 }
