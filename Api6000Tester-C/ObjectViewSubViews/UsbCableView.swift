@@ -5,12 +5,6 @@
 //  Created by Douglas Adams on 8/10/22.
 //
 
-// autoReport = false
-// preamp = ""//
-// sourceRxAnt = ""//
-// sourceSlice = 0//
-// sourceTxAnt = ""//
-// usbLog = false
 import SwiftUI
 
 import Api6000

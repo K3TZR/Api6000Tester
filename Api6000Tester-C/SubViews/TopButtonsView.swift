@@ -21,7 +21,7 @@ public struct TopButtonsView: View {
  public  var body: some View {
 
     WithViewStore(self.store) { viewStore in
-      HStack(spacing: 30) {
+      HStack(spacing: 20) {
         Button(viewStore.isStopped ? "Start" : "Stop") {
           viewStore.send(.startStopButton(viewModel.radio == nil))
         }
@@ -32,28 +32,27 @@ public struct TopButtonsView: View {
             .disabled(viewModel.radio != nil)
           Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
           Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
-          Toggle("Audio", isOn: viewStore.binding(get: \.enableAudio, send: { .audioCheckbox($0)} ))
-            .disabled(viewStore.isGui == false)
         }
 
         Spacer()
-        Picker("", selection: viewStore.binding(
-          get: \.connectionMode,
-          send: { .connectionModePicker($0) }
-        )) {
-          Text("Local").tag(ConnectionMode.local)
-          Text("Smartlink").tag(ConnectionMode.smartlink)
-          Text("Both").tag(ConnectionMode.both)
-          Text("None").tag(ConnectionMode.none)
+        ControlGroup {
+          Toggle(isOn: viewStore.binding(get: \.rxAudio, send: { .rxAudioCheckbox($0)} )) {
+            Text("Rx Audio") }
+          Toggle(isOn: viewStore.binding(get: \.txAudio, send: { .txAudioCheckbox($0)} )) {
+            Text("Tx Audio") }
+        }.frame(width: 50)
+
+        Spacer()
+        ControlGroup {
+          Toggle("Local", isOn: viewStore.binding(get: \.local, send: { .localButton($0) } ))
+          Toggle("Smartlink", isOn: viewStore.binding(get: \.smartlink, send: { .smartlinkButton($0) } ))
         }
-        .pickerStyle(.segmented)
+        .frame(width: 75)
         .disabled(viewModel.radio != nil)
-        .labelsHidden()
-        .frame(width: 200)
 
         Spacer()
         Toggle("Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
-          .disabled(viewModel.radio != nil || viewStore.connectionMode == .local || viewStore.connectionMode == .none)
+          .disabled(viewModel.radio != nil || viewStore.smartlink == false )
         Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\.useDefault)))
           .disabled(viewModel.radio != nil)
       }

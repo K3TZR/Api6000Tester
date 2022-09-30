@@ -18,8 +18,6 @@ import Shared
 import SecureStorage
 import XCGWrapper
 
-import RingBuffer
-
 // ----------------------------------------------------------------------------
 // MARK: - State, Actions & Environment
 
@@ -28,19 +26,21 @@ public struct ApiState: Equatable {
   var clearOnSend: Bool { didSet { UserDefaults.standard.set(clearOnSend, forKey: "clearOnSend") } }
   var clearOnStart: Bool { didSet { UserDefaults.standard.set(clearOnStart, forKey: "clearOnStart") } }
   var clearOnStop: Bool { didSet { UserDefaults.standard.set(clearOnStop, forKey: "clearOnStop") } }
-  var connectionMode: ConnectionMode { didSet { UserDefaults.standard.set(connectionMode.rawValue, forKey: "connectionMode") } }
-  var enableAudio: Bool { didSet { UserDefaults.standard.set(enableAudio, forKey: "enableAudio") } }
   var guiDefault: DefaultValue? { didSet { setDefaultValue("guiDefault", guiDefault) } }
   var fontSize: CGFloat { didSet { UserDefaults.standard.set(fontSize, forKey: "fontSize") } }
   var isGui: Bool { didSet { UserDefaults.standard.set(isGui, forKey: "isGui") } }
+  var local: Bool { didSet { UserDefaults.standard.set(local, forKey: "local") } }
   var messageFilter: MessageFilter { didSet { UserDefaults.standard.set(messageFilter.rawValue, forKey: "messageFilter") } }
   var messageFilterText: String { didSet { UserDefaults.standard.set(messageFilterText, forKey: "messageFilterText") } }
   var nonGuiDefault: DefaultValue? { didSet { setDefaultValue("nonGuiDefault", nonGuiDefault) } }
   var objectFilter: ObjectFilter { didSet { UserDefaults.standard.set(objectFilter.rawValue, forKey: "objectFilter") } }
   var reverse: Bool { didSet { UserDefaults.standard.set(reverse, forKey: "reverse") } }
+  var rxAudio: Bool { didSet { UserDefaults.standard.set(rxAudio, forKey: "rxAudio") } }
   var showPings: Bool { didSet { UserDefaults.standard.set(showPings, forKey: "showPings") } }
   var showTimes: Bool { didSet { UserDefaults.standard.set(showTimes, forKey: "showTimes") } }
+  var smartlink: Bool { didSet { UserDefaults.standard.set(smartlink, forKey: "smartlink") } }
   var smartlinkEmail: String { didSet { UserDefaults.standard.set(smartlinkEmail, forKey: "smartlinkEmail") } }
+  var txAudio: Bool { didSet { UserDefaults.standard.set(txAudio, forKey: "txAudio") } }
   var useDefault: Bool { didSet { UserDefaults.standard.set(useDefault, forKey: "useDefault") } }
   
   // other state
@@ -53,6 +53,7 @@ public struct ApiState: Equatable {
   var forceUpdate = false
   var gotoFirst = false
   var initialized = false
+  var isStopped = true
   var loginState: LoginState? = nil
   var messages = IdentifiedArrayOf<TcpMessage>()
   var opusPlayer: OpusPlayer? = nil
@@ -61,51 +62,51 @@ public struct ApiState: Equatable {
   var startTime: Date?
   var station: String? = nil
   
-  var isStopped = true
     
-  
   var previousCommand = ""
   var commandsIndex = 0
   var commandsArray = [""]
-
-  
   
   public init(
     clearOnSend: Bool  = UserDefaults.standard.bool(forKey: "clearOnSend"),
     clearOnStart: Bool = UserDefaults.standard.bool(forKey: "clearOnStart"),
     clearOnStop: Bool  = UserDefaults.standard.bool(forKey: "clearOnStop"),
-    connectionMode: ConnectionMode = ConnectionMode(rawValue: UserDefaults.standard.string(forKey: "connectionMode") ?? "local") ?? .local,
-    enableAudio: Bool  = UserDefaults.standard.bool(forKey: "enableAudio"),
     fontSize: CGFloat = UserDefaults.standard.double(forKey: "fontSize") == 0 ? 12 : UserDefaults.standard.double(forKey: "fontSize"),
     guiDefault: DefaultValue? = getDefaultValue("guiDefault"),
     isGui: Bool = UserDefaults.standard.bool(forKey: "isGui"),
+    local: Bool = UserDefaults.standard.bool(forKey: "local"),
     messageFilter: MessageFilter = MessageFilter(rawValue: UserDefaults.standard.string(forKey: "messageFilter") ?? "all") ?? .all,
     messageFilterText: String = UserDefaults.standard.string(forKey: "messageFilterText") ?? "",
     nonGuiDefault: DefaultValue? = getDefaultValue("nonGuiDefault"),
     objectFilter: ObjectFilter = ObjectFilter(rawValue: UserDefaults.standard.string(forKey: "objectFilter") ?? "core") ?? .core,
     reverse: Bool = UserDefaults.standard.bool(forKey: "reverse"),
+    rxAudio: Bool  = UserDefaults.standard.bool(forKey: "rxAudio"),
     showPings: Bool = UserDefaults.standard.bool(forKey: "showPings"),
     showTimes: Bool = UserDefaults.standard.bool(forKey: "showTimes"),
+    smartlink: Bool = UserDefaults.standard.bool(forKey: "smartlink"),
     smartlinkEmail: String = UserDefaults.standard.string(forKey: "smartlinkEmail") ?? "",
+    txAudio: Bool  = UserDefaults.standard.bool(forKey: "txAudio"),
     useDefault: Bool = UserDefaults.standard.bool(forKey: "useDefault")
   )
   {
     self.clearOnStart = clearOnStart
     self.clearOnStop = clearOnStop
     self.clearOnSend = clearOnSend
-    self.connectionMode = connectionMode
-    self.enableAudio = enableAudio
     self.guiDefault = guiDefault
     self.fontSize = fontSize
     self.isGui = isGui
+    self.local = local
     self.messageFilter = messageFilter
     self.messageFilterText = messageFilterText
     self.nonGuiDefault = nonGuiDefault
     self.objectFilter = objectFilter
     self.reverse = reverse
+    self.rxAudio = rxAudio
     self.showPings = showPings
     self.showTimes = showTimes
+    self.smartlink = smartlink
     self.smartlinkEmail = smartlinkEmail
+    self.txAudio = txAudio
     self.useDefault = useDefault
   }
 }
@@ -117,21 +118,23 @@ public enum ApiAction: Equatable {
   // UI controls
   case clearNowButton
   case commandTextField(String)
-  case connectionModePicker(ConnectionMode)
-  case audioCheckbox(Bool)
   case fontSizeStepper(CGFloat)
+  case localButton(Bool)
   case loginRequiredButton(Bool)
   case messagesFilterTextField(String)
   case messagesPicker(MessageFilter)
-  case messagesSave
+  case messagesSaveButton
   case objectsPicker(ObjectFilter)
+  case rxAudioCheckbox(Bool)
   case sendButton(String)
-  case sendClear
-  case sendNext
-  case sendPrevious
+  case sendClearButton
+  case sendNextStepper
+  case sendPreviousStepper
+  case smartlinkButton(Bool)
   case startStopButton(Bool)
   case toggle(WritableKeyPath<ApiState, Bool>)
-  
+  case txAudioCheckbox(Bool)
+
   // subview related
   case alertDismissed
   case client(ClientAction)
@@ -145,7 +148,7 @@ public enum ApiAction: Equatable {
   case showLogAlert(LogEntry)
   case showLoginSheet
   case showPickerSheet(IdentifiedArrayOf<Pickable>)
-  case startAudio(RemoteRxAudioStreamId)
+  case startRxAudio(RemoteRxAudioStreamId)
 
   // Subscription related
   case clientEvent(ClientEvent)
@@ -218,9 +221,9 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // ----------------------------------------------------------------------------
       // MARK: - Actions: ApiView UI controls
       
-    case .audioCheckbox(let newState):
+    case .rxAudioCheckbox(let newState):
       if newState {
-        state.enableAudio = true
+        state.rxAudio = true
         if state.isStopped {
           return .none
         } else {
@@ -229,13 +232,13 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
             // request a stream
             let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
             // finish audio setup
-            await send(.startAudio(id.streamId!))
+            await send(.startRxAudio(id.streamId!))
           }
         }
         
       } else {
         // stop audio
-        state.enableAudio = false
+        state.rxAudio = false
         state.opusPlayer?.stop()
         state.opusPlayer = nil
         if state.isStopped == false {
@@ -257,14 +260,13 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.commandToSend = text
       return .none
       
-    case .connectionModePicker(let mode):
-      state.connectionMode = mode
-      // re-initialize
-      return initializeMode(state)
-      
     case .fontSizeStepper(let size):
       state.fontSize = size
       return .none
+      
+    case .localButton(let newState):
+      state.local = newState
+      return initializeMode(state)
       
     case .loginRequiredButton(let isRequired):
       state.loginRequired.toggle()
@@ -286,7 +288,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
       return .none
       
-    case .messagesSave:
+    case .messagesSaveButton:
       let savePanel = NSSavePanel()
       savePanel.nameFieldStringValue = "Api6000Tester-C.messages"
       savePanel.canCreateDirectories = true
@@ -321,12 +323,12 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         _ = await ViewModel.shared.radio?.send(command)
       }
       
-    case .sendClear:
+    case .sendClearButton:
       state.commandToSend = ""
       state.commandsIndex = 0
       return .none
       
-    case .sendNext:
+    case .sendNextStepper:
         if state.commandsIndex == state.commandsArray.count - 1{
           state.commandsIndex = 0
         } else {
@@ -335,7 +337,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.commandToSend = state.commandsArray[state.commandsIndex]
       return .none
 
-    case .sendPrevious:
+    case .sendPreviousStepper:
         if state.commandsIndex == 0 {
           state.commandsIndex = state.commandsArray.count - 1
         } else {
@@ -343,6 +345,10 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         }
       state.commandToSend = state.commandsArray[state.commandsIndex]
       return .none
+      
+    case .smartlinkButton(let newState):
+      state.smartlink = newState
+      return initializeMode(state)
       
     case .startStopButton(_):
       if state.isStopped {
@@ -373,7 +379,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
           state.messages.removeAll()
           state.filteredMessages.removeAll()
         }
-        if state.enableAudio {
+        if state.rxAudio {
           // Audio is started, stop it
           state.opusPlayer?.stop()
           state.opusPlayer = nil
@@ -391,6 +397,43 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
     case .toggle(let keyPath):
       // handles all buttons with a Bool state, EXCEPT LoginRequiredButton and audioCheckbox
       state[keyPath: keyPath].toggle()
+      return .none
+      
+    case .txAudioCheckbox(let newState):
+      if newState {
+        state.txAudio = true
+        if state.isStopped {
+          return .none
+        } else {
+          
+          // TODO:
+          
+//          // start audio
+//          return .run { [state] send in
+//            // request a stream
+//            let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
+//            // finish audio setup
+//            await send(.startAudio(id.streamId!))
+//          }
+        }
+        
+      } else {
+        // stop audio
+        state.txAudio = false
+        
+        // TODO:
+        
+//        state.opusPlayer?.stop()
+//        state.opusPlayer = nil
+//        if state.isStopped == false {
+//          return .run {send in
+//            // request removal of the stream
+//            await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
+//          }
+//        } else {
+//          return .none
+//        }
+      }
       return .none
       
       // ----------------------------------------------------------------------------
@@ -441,8 +484,8 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.pickerState = PickerState(pickables: pickables, isGui: state.isGui)
       return .none
       
-    case .startAudio(let id):
-      state.enableAudio = true
+    case .startRxAudio(let id):
+      state.rxAudio = true
       state.opusPlayer = OpusPlayer()
       StreamModel.shared.remoteRxAudioStreams[id: id]?.setDelegate(state.opusPlayer)
       state.opusPlayer!.start()
@@ -538,6 +581,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       
     case .picker(.cancelButton):
       state.pickerState = nil
+      state.isStopped = true
       return .none
       
     case .picker(.connectButton(let selection)):
@@ -612,8 +656,8 @@ func initializeMode(_ state: ApiState) -> Effect<ApiAction, Never> {
   // start / stop listeners as appropriate for the Mode
   return .run { [state] send in
     // set the connection mode, start the Lan and/or Wan listener
-    if await Api.shared.setConnectionMode(state.connectionMode, state.smartlinkEmail) {
-      if state.loginRequired && (state.connectionMode == .smartlink || state.connectionMode == .both) {
+    if await Api.shared.setConnectionMode(state.local, state.smartlink, state.smartlinkEmail) {
+      if state.loginRequired && state.smartlink {
         // Smartlink login is required
         await send(.showLoginSheet)
       }
@@ -635,11 +679,11 @@ func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandl
                                      disconnectHandle: disconnectHandle,
                                      station: "Tester",
                                      program: "Api6000Tester")
-      if state.isGui && state.enableAudio {
+      if state.isGui && state.rxAudio {
         // start audio, request a stream
         let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
         // finish audio setup
-        await send(.startAudio(id.streamId!))
+        await send(.startRxAudio(id.streamId!))
       }
     } catch {
       // connection attempt failed
@@ -727,7 +771,7 @@ private func subscribeToMessages() -> Effect<ApiAction, Never> {
       return true                               // otherwise, ignore it
     }
 
-    for await tcpMessage in await Api.shared.testerStream {
+    for await tcpMessage in Tcp.shared.testerInbound{
       // a TCP message was sent or received
       // ignore reply unless it is non-zero or contains additional data
       if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }

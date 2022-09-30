@@ -5,8 +5,8 @@
 //  Created by Douglas Adams on 8/10/20.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
 
 struct FiltersView: View {
   let store: Store<ApiState, ApiAction>

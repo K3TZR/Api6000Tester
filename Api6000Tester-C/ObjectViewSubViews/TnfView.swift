@@ -53,26 +53,28 @@ private struct DetailView: View {
       }
       
       HStack(spacing: 5) {
-        Text("Frequency")
-        Text("\(tnf.frequency)").foregroundColor(.secondary)
+        Text("Frequency").frame(width: 80, alignment: .leading)
+        Text("\(tnf.frequency)").foregroundColor(.secondary).frame(width: 80, alignment: .trailing)
       }
       
-      HStack(spacing: 5) {
-        Text("Width")
-        Text("\(tnf.width)").foregroundColor(.secondary)
+      Group {
+        HStack(spacing: 5) {
+          Text("Width")
+          Text("\(tnf.width)").foregroundColor(.secondary)
+        }
+        
+        HStack(spacing: 5) {
+          Text("Depth")
+          Text(depthName(tnf.depth)).foregroundColor(.secondary)
+        }
+        
+        HStack(spacing: 5) {
+          Text("Permanent")
+          Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
+        }
       }
-      
-      HStack(spacing: 5) {
-        Text("Depth")
-        Text(depthName(tnf.depth)).foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("Permanent")
-        Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
-      }
+      .frame(width: 100)
     }
-
   }
 }
 

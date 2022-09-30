@@ -5,8 +5,9 @@
 //  Created by Douglas Adams on 1/8/22.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
+
 import Api6000
 
 // ----------------------------------------------------------------------------
@@ -27,13 +28,13 @@ struct SendView: View {
           HStack(spacing: 0) {
             Image(systemName: "x.circle")
               .onTapGesture {
-                viewStore.send(.sendClear)
+                viewStore.send(.sendClearButton)
               }.disabled(viewModel.radio == nil)
             
             Stepper("", onIncrement: {
-              viewStore.send(.sendPrevious)
+              viewStore.send(.sendPreviousStepper)
             }, onDecrement: {
-              viewStore.send(.sendNext)
+              viewStore.send(.sendNextStepper)
             })
             
             TextField("Command to send", text: viewStore.binding(

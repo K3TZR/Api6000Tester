@@ -5,8 +5,8 @@
 //  Created by Douglas Adams on 1/8/22.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
 
 import Api6000
 
@@ -40,7 +40,7 @@ struct BottomButtonsView: View {
         Spacer()
         
         HStack {
-          Button("Save") { viewStore.send(.messagesSave) }
+          Button("Save") { viewStore.send(.messagesSaveButton) }
         }
         Spacer()
         

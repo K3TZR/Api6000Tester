@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 import Api6000
 
 struct WaveformView: View {
