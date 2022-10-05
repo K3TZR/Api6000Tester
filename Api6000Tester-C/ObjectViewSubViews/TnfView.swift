@@ -14,11 +14,14 @@ import Api6000
 
 struct TnfView: View {
   @ObservedObject var viewModel: ViewModel
-    
+
+  let pre = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 6)
+
   var body: some View {
     if viewModel.tnfs.count == 0 {
-      HStack(spacing: 10) {
-        Text("        TNF  ")
+      HStack(spacing: 0) {
+        Text(pre + "TNF" + post)
         Text("None present").foregroundColor(.red)
       }
       

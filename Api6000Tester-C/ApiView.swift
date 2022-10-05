@@ -5,14 +5,14 @@
 //  Created by Douglas Adams on 12/1/21.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
 
 import Api6000
-import LoginView
 import ClientView
-import PickerView
+import LoginView
 import LogView
+import PickerView
 import Shared
 
 // ----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ public struct ApiView: View {
             then: ClientView.init(store:)
           )
         }
-      )
+      )      
     }
   }
 }

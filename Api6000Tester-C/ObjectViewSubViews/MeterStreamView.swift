@@ -15,13 +15,17 @@ import Shared
 struct MeterStreamView: View {
   @ObservedObject var viewModel: ViewModel
   
+  let pre = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 3)
+
   var body: some View {
     
     // MeterStream
     HStack(spacing: 20) {
-      HStack(spacing: 5) {
-        Text("        METERS     Stream").foregroundColor(.blue)
-        Text(Meter.isStreaming ? Meter.streamId!.hex : "0x--------").foregroundColor(.secondary)
+      HStack(spacing: 0) {
+        Text(pre + "METERS" + post)
+        Text("Id")
+        Text(Meter.isStreaming ? Meter.streamId!.hex : "0x--------").padding(.leading, 5).foregroundColor(.secondary)
       }
       
       HStack(spacing: 5) {

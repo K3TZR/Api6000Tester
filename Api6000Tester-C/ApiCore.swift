@@ -123,9 +123,9 @@ public enum ApiAction: Equatable {
   case loginRequiredButton(Bool)
   case messagesFilterTextField(String)
   case messagesPicker(MessageFilter)
-  case messagesSaveButton
   case objectsPicker(ObjectFilter)
-  case rxAudioCheckbox(Bool)
+  case rxAudioButton(Bool)
+  case saveButton
   case sendButton(String)
   case sendClearButton
   case sendNextStepper
@@ -133,7 +133,7 @@ public enum ApiAction: Equatable {
   case smartlinkButton(Bool)
   case startStopButton(Bool)
   case toggle(WritableKeyPath<ApiState, Bool>)
-  case txAudioCheckbox(Bool)
+  case txAudioButton(Bool)
 
   // subview related
   case alertDismissed
@@ -221,36 +221,6 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // ----------------------------------------------------------------------------
       // MARK: - Actions: ApiView UI controls
       
-    case .rxAudioCheckbox(let newState):
-      if newState {
-        state.rxAudio = true
-        if state.isStopped {
-          return .none
-        } else {
-          // start audio
-          return .run { [state] send in
-            // request a stream
-            let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
-            // finish audio setup
-            await send(.startRxAudio(id.streamId!))
-          }
-        }
-        
-      } else {
-        // stop audio
-        state.rxAudio = false
-        state.opusPlayer?.stop()
-        state.opusPlayer = nil
-        if state.isStopped == false {
-          return .run {send in
-            // request removal of the stream
-            await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
-          }
-        } else {
-          return .none
-        }
-      }
-
     case .clearNowButton:
       state.messages.removeAll()
       state.filteredMessages.removeAll()
@@ -288,25 +258,55 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
       return .none
       
-    case .messagesSaveButton:
+    case .objectsPicker(let newFilter):
+      let prevObjectFilter = state.objectFilter
+      state.objectFilter = newFilter
+      return .none
+      
+    case .rxAudioButton(let newState):
+      if newState {
+        state.rxAudio = true
+        if state.isStopped {
+          return .none
+        } else {
+          // start audio
+          return .run { [state] send in
+            // request a stream
+            let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
+            // finish audio setup
+            await send(.startRxAudio(id.streamId!))
+          }
+        }
+        
+      } else {
+        // stop audio
+        state.rxAudio = false
+        state.opusPlayer?.stop()
+        state.opusPlayer = nil
+        if state.isStopped == false {
+          return .run {send in
+            // request removal of the stream
+            await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
+          }
+        } else {
+          return .none
+        }
+      }
+
+    case .saveButton:
       let savePanel = NSSavePanel()
       savePanel.nameFieldStringValue = "Api6000Tester-C.messages"
       savePanel.canCreateDirectories = true
       savePanel.isExtensionHidden = false
       savePanel.allowsOtherFileTypes = false
       savePanel.title = "Save the Log"
-      
+
       let response = savePanel.runModal()
       if response == .OK {
         let textArray = state.filteredMessages.map { String(format: "%.6f", $0.timeInterval ?? 0) + " " + $0.text }
         let fileTextArray = textArray.joined(separator: "\n")
         try? fileTextArray.write(to: savePanel.url!, atomically: true, encoding: .utf8)
       }
-      return .none
-      
-    case .objectsPicker(let newFilter):
-      let prevObjectFilter = state.objectFilter
-      state.objectFilter = newFilter
       return .none
       
     case .sendButton(let command):
@@ -399,42 +399,35 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       state[keyPath: keyPath].toggle()
       return .none
       
-    case .txAudioCheckbox(let newState):
+    case .txAudioButton(let newState):
       if newState {
         state.txAudio = true
         if state.isStopped {
           return .none
         } else {
-          
-          // TODO:
-          
-//          // start audio
-//          return .run { [state] send in
-//            // request a stream
-//            let id = try await ViewModel.shared.radio!.requestRemoteRxAudioStream()
-//            // finish audio setup
+          // start audio
+          return .run { [state] send in
+            // request a stream
+            let id = try await ViewModel.shared.radio!.requestRemoteTxAudioStream()
+            // finish audio setup
 //            await send(.startAudio(id.streamId!))
-//          }
+          }
         }
         
       } else {
         // stop audio
         state.txAudio = false
-        
-        // TODO:
-        
 //        state.opusPlayer?.stop()
 //        state.opusPlayer = nil
-//        if state.isStopped == false {
-//          return .run {send in
-//            // request removal of the stream
-//            await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
-//          }
-//        } else {
-//          return .none
-//        }
+        if state.isStopped == false {
+          return .run {send in
+            // request removal of the stream
+            await StreamModel.shared.removeRemoteTxAudioStream(ViewModel.shared.radio!.connectionHandle)
+          }
+        } else {
+          return .none
+        }
       }
-      return .none
       
       // ----------------------------------------------------------------------------
       // MARK: - Actions: invoked by other actions
@@ -821,8 +814,8 @@ public enum ObjectFilter: String, CaseIterable {
   case memories
   case profiles
   case meters
+  case network
   case streams
-  case transmit
   case usbCable
   case wan
   case waveforms

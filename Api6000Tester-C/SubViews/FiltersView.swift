@@ -59,7 +59,7 @@ struct FilterMessagesView: View {
           .onTapGesture {
             viewStore.send(.messagesFilterTextField(""))
           }
-        TextField("", text: viewStore.binding(
+        TextField("filter text", text: viewStore.binding(
           get: \.messageFilterText,
           send: { value in ApiAction.messagesFilterTextField(value) }))
       }

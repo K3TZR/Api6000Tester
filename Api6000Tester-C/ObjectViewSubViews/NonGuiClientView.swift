@@ -14,14 +14,18 @@ import Api6000
 
 struct NonGuiClientView: View {
   @ObservedObject var viewModel: ViewModel
-  
+    
   var body: some View {
     if viewModel.radio != nil {
       VStack(alignment: .leading) {
         Divider().background(Color(.red))
         HStack(spacing: 10) {
           
-          Text("Tester    nonGui").foregroundColor(.green).frame(width: 50, alignment: .leading)
+          HStack {
+            Text("NonGui").foregroundColor(.green)
+              .font(.title)
+            Text("Api6000Tester").foregroundColor(.green)
+          }
 
           HStack(spacing: 5) {
             Text("Handle")

@@ -40,7 +40,7 @@ struct BottomButtonsView: View {
         Spacer()
         
         HStack {
-          Button("Save") { viewStore.send(.messagesSaveButton) }
+          Button("Save") { viewStore.send(.saveButton) }
         }
         Spacer()
         

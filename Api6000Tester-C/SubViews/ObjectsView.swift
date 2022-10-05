@@ -19,7 +19,14 @@ struct ObjectsView: View {
   @ObservedObject var packets: Packets
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
+
   
+//  @State var users = [
+//    User(id: 1, name: "Taylor Swift", score: 90, other: 200),
+//    User(id: 2, name: "Justin Bieber", score: 80, other: 300),
+//    User(id: 3, name: "Adele Adkins", score: 85, other: 400)
+//  ]
+
   var body: some View {
     WithViewStore(self.store) { viewStore in
       ScrollView([.horizontal, .vertical]) {
@@ -32,6 +39,7 @@ struct ObjectsView: View {
             if viewStore.isGui == false { NonGuiClientView(viewModel: viewModel) }
           }
         }
+        .frame(minWidth: 400, maxWidth: .infinity, alignment: .leading)
       }
       .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
       .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))

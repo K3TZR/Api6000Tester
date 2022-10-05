@@ -22,26 +22,28 @@ struct PanadapterView: View {
     
     if viewModel.panadapters.count == 0 {
       HStack(spacing: 5) {
-        Text("        PANADAPTERs")
+        Text("      PANADAPTERs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
       ForEach(viewModel.panadapters.filter { $0.clientHandle == handle }) { panadapter in
-        // Panadapter
-        PanadapterDetailView(panadapter: panadapter)
-        
-        // corresponding Waterfall
-        ForEach(viewModel.waterfalls.filter { $0.panadapterId == panadapter.id} ) { waterfall in
-          WaterfallDetailView(waterfall: waterfall)
-        }
-        
-        // corresponding Slice(s)
-        ForEach(viewModel.slices.filter { $0.panadapterId == panadapter.id}) { slice in
-          SliceDetailView(slice: slice)
+        VStack(alignment: .leading) {
+          // Panadapter
+          PanadapterDetailView(panadapter: panadapter)
           
-          // slice meter(s)
-          if showMeters { MeterView(viewModel: viewModel, sliceId: slice.id, sliceClientHandle: slice.clientHandle, handle: handle) }
+          // corresponding Waterfall
+          ForEach(viewModel.waterfalls.filter { $0.panadapterId == panadapter.id} ) { waterfall in
+            WaterfallDetailView(waterfall: waterfall)
+          }
+          
+          // corresponding Slice(s)
+          ForEach(viewModel.slices.filter { $0.panadapterId == panadapter.id}) { slice in
+            SliceDetailView(slice: slice)
+            
+            // slice meter(s)
+            if showMeters { MeterView(viewModel: viewModel, sliceId: slice.id, sliceClientHandle: slice.clientHandle, handle: handle) }
+          }
         }
       }
     }
@@ -52,27 +54,25 @@ private struct PanadapterDetailView: View {
   @ObservedObject var panadapter: Panadapter
   
   var body: some View {
-    VStack(alignment: .leading) {
-      HStack(spacing: 20) {
-        HStack(spacing: 5) {
-          Text("        PANADAPTER")
-          Text(panadapter.id.hex).foregroundColor(.secondary)
-        }
-        
-        HStack(spacing: 5) {
-          Text("Streaming")
-          Text(panadapter.isStreaming ? "Y" : "N").foregroundColor(panadapter.isStreaming ? .green : .red)
-        }
-        
-        HStack(spacing: 5) {
-          Text("Center")
-          Text("\(panadapter.center)").foregroundColor(.secondary)
-        }
-        
-        HStack(spacing: 5) {
-          Text("Bandwidth")
-          Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
-        }
+    HStack(spacing: 20) {
+      HStack(spacing: 5) {
+        Text("      PANADAPTER")
+        Text(panadapter.id.hex).foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Streaming")
+        Text(panadapter.isStreaming ? "Y" : "N").foregroundColor(panadapter.isStreaming ? .green : .red)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Center")
+        Text("\(panadapter.center)").foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Bandwidth")
+        Text("\(panadapter.bandwidth)").foregroundColor(.secondary)
       }
     }
   }
@@ -84,7 +84,7 @@ private struct WaterfallDetailView: View {
   var body: some View {
     HStack(spacing: 20) {
       HStack(spacing: 5) {
-        Text("        WATERFALL ")
+        Text("      WATERFALL ")
         Text(waterfall.id.hex).foregroundColor(.secondary)
       }
       HStack(spacing: 5) {
@@ -123,7 +123,7 @@ private struct SliceDetailView: View {
       HStack(spacing: 20) {
         
         HStack(spacing: 5) {
-          Text("        SLICE     ")
+          Text("      SLICE     ")
           Text(String(format: "%02d", slice.id)).foregroundColor(.green)
         }
         

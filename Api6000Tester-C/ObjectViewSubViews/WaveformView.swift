@@ -10,20 +10,20 @@ import SwiftUI
 import Api6000
 
 struct WaveformView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var waveform: Waveform
   
   var body: some View {
     
-    if viewModel.waveform.waveformList.isEmpty {
+    if waveform.waveformList.isEmpty {
       HStack(spacing: 5) {
-        Text("        WAVEFORMs")
+        Text("      WAVEFORMs")
         Text("None present").foregroundColor(.red)
       }
       
     } else {
       HStack(spacing: 10) {
-        Text("        WAVEFORMS -> ")
-        Text(viewModel.waveform.waveformList)
+        Text("      WAVEFORMS -> ")
+        Text(waveform.waveformList)
       }
     }
   }
@@ -34,7 +34,7 @@ struct WaveformView: View {
 
 struct WaveformView_Previews: PreviewProvider {
   static var previews: some View {
-    WaveformView(viewModel: ViewModel.shared)
+    WaveformView(waveform: Waveform.shared)
     .frame(minWidth: 1000)
     .padding()
   }

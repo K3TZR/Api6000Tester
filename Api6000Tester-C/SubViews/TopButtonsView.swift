@@ -36,18 +36,19 @@ public struct TopButtonsView: View {
 
         Spacer()
         ControlGroup {
-          Toggle(isOn: viewStore.binding(get: \.rxAudio, send: { .rxAudioCheckbox($0)} )) {
+          Toggle(isOn: viewStore.binding(get: \.rxAudio, send: { .rxAudioButton($0)} )) {
             Text("Rx Audio") }
-          Toggle(isOn: viewStore.binding(get: \.txAudio, send: { .txAudioCheckbox($0)} )) {
+          Toggle(isOn: viewStore.binding(get: \.txAudio, send: { .txAudioButton($0)} )) {
             Text("Tx Audio") }
-        }.frame(width: 50)
+        }
+        .frame(width: 100)
 
         Spacer()
         ControlGroup {
           Toggle("Local", isOn: viewStore.binding(get: \.local, send: { .localButton($0) } ))
           Toggle("Smartlink", isOn: viewStore.binding(get: \.smartlink, send: { .smartlinkButton($0) } ))
         }
-        .frame(width: 75)
+        .frame(width: 100)
         .disabled(viewModel.radio != nil)
 
         Spacer()

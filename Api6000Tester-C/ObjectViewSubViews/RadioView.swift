@@ -18,6 +18,8 @@ struct RadioView: View {
   let store: Store<ApiState, ApiAction>
   @ObservedObject var viewModel: ViewModel
   
+  @State var showSubView = true
+  
   var body: some View {
     
     WithViewStore(store) { viewStore in
@@ -25,18 +27,21 @@ struct RadioView: View {
         
         let packet = viewModel.activePacket!
         VStack(alignment: .leading) {
-          HStack(spacing: 10) {
+          HStack(spacing: 20) {
             Group {
               
               HStack(spacing: 0) {
                 Text("RADIO   ").foregroundColor(.blue)
-                Text(packet.source.rawValue)
-                  .foregroundColor(.secondary)
+                  .font(.title)
+                  .help("          Tap to toggle details")
+                  .onTapGesture(perform: { showSubView.toggle() })
+                Text(packet.nickname)
+                  .foregroundColor(.blue)
               }
               
               HStack(spacing: 5) {
-                Text("Name")
-                Text(packet.nickname)
+                Text("Connection")
+                Text(packet.source.rawValue)
                   .foregroundColor(.secondary)
               }
               
@@ -68,7 +73,7 @@ struct RadioView: View {
             }
           }
         }
-        RadioSubView(store: store, viewModel: viewModel)
+        if showSubView { RadioSubView(store: store, viewModel: viewModel) }
       }
     }
   }
@@ -77,16 +82,19 @@ struct RadioView: View {
 struct RadioSubView: View {
   let store: Store<ApiState, ApiAction>
   @ObservedObject var viewModel: ViewModel
-  
+
+  let pre = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 5)
+
   var body: some View {
     
     WithViewStore(store) { viewStore in
-      AtuView(viewModel: viewModel)
-      GpsView(viewModel: viewModel)
+      AtuView(atu: Atu.shared)
+      GpsView(gps: Gps.shared)
 
       if let radio = viewModel.radio {
-        HStack(spacing: 10) {
-          Text("        TNFs ")
+        HStack(spacing: 0) {
+          Text(pre + "TNFs" + post)
           HStack(spacing: 5) {
             Text("Enabled")
             Text(radio.tnfsEnabled ? "Y" : "N").foregroundColor(radio.tnfsEnabled ? .green : .red)
@@ -95,6 +103,7 @@ struct RadioSubView: View {
       }
 
       TnfView(viewModel: viewModel)
+      TransmitView(transmit: Transmit.shared)
       MeterStreamView(viewModel: viewModel)
     }
   }

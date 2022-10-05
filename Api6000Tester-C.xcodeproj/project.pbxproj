@@ -42,6 +42,7 @@
 		9F29E85628B011A5009BE31C /* TransmitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E84F28B011A5009BE31C /* TransmitView.swift */; };
 		9F29E85728B011A5009BE31C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85028B011A5009BE31C /* WaveformView.swift */; };
 		9F29E85828B011A5009BE31C /* WanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85128B011A5009BE31C /* WanView.swift */; };
+		9F3A3C1428EB590D001C9E25 /* NetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3A3C1328EB590D001C9E25 /* NetworkView.swift */; };
 		9F5F4F02283321C5000E8145 /* Api6000TesterCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */; };
 		9F5F4F06283321C5000E8145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F05283321C5000E8145 /* Assets.xcassets */; };
 		9F5F4F09283321C5000E8145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */; };
@@ -78,6 +79,7 @@
 		9F29E84F28B011A5009BE31C /* TransmitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransmitView.swift; sourceTree = "<group>"; };
 		9F29E85028B011A5009BE31C /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		9F29E85128B011A5009BE31C /* WanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
+		9F3A3C1328EB590D001C9E25 /* NetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkView.swift; sourceTree = "<group>"; };
 		9F4286F428C2A7830030C091 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
 		9F4286F528C434280030C091 /* UtilityComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UtilityComponents; path = ../Packages/UtilityComponents; sourceTree = "<group>"; };
 		9F4286F628C78DB80030C091 /* ViewComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ViewComponents; path = ../Packages/ViewComponents; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				9F29E84528B00F7B009BE31C /* MemoryView.swift */,
 				9F7B060C28DE2DDD00BD867B /* MeterStreamView.swift */,
 				9F29E83B28B009F5009BE31C /* MeterView.swift */,
+				9F3A3C1328EB590D001C9E25 /* NetworkView.swift */,
 				9F29E83D28B00D4B009BE31C /* NonGuiClientView.swift */,
 				9F29E83528B0095E009BE31C /* PanadapterView.swift */,
 				9F29E84B28B011A5009BE31C /* ProfileView.swift */,
@@ -313,6 +316,7 @@
 				9F29E85828B011A5009BE31C /* WanView.swift in Sources */,
 				9F29E85728B011A5009BE31C /* WaveformView.swift in Sources */,
 				9F29E85528B011A5009BE31C /* UsbCableView.swift in Sources */,
+				9F3A3C1428EB590D001C9E25 /* NetworkView.swift in Sources */,
 				9F29E84828B00F7B009BE31C /* CwxView.swift in Sources */,
 				9F7B060D28DE2DDD00BD867B /* MeterStreamView.swift in Sources */,
 				9F29E83028AFE61C009BE31C /* GpsView.swift in Sources */,
@@ -471,7 +475,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.7;
+				MARKETING_VERSION = 4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -502,7 +506,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.7;
+				MARKETING_VERSION = 4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -13,41 +13,42 @@ import Api6000
 // MARK: - View
 
 struct AtuView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var atu: Atu
   
+  let pre = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 6)
+
   var body: some View {
-    if let radio = viewModel.radio {
-      HStack(spacing: 10) {
-        Text("        ATU  ")
-        if radio.atuPresent {
-          let atu = viewModel.atu
-          
-          HStack(spacing: 5) {
-            Text("Enabled")
-            Text(atu.enabled ? "Y" : "N")
-              .foregroundColor(atu.enabled ? .green : .red)
-          }
-          HStack(spacing: 5) {
-            Text("Status")
-            Text(atu.status == "" ? "none" : atu.status)
-              .foregroundColor(atu.status == "" ? .red : .secondary)
-          }
-          
-          HStack(spacing: 5) {
-            Text("Memories_enabled")
-            Text(atu.memoriesEnabled ? "Y" : "N")
-              .foregroundColor(atu.memoriesEnabled ? .green : .red)
-          }
-          HStack(spacing: 5) {
-            Text("Using_memories")
-            Text(atu.usingMemory ? "Y" : "N")
-              .foregroundColor(atu.usingMemory ? .green : .red)
-          }
-        } else {
-          Text("NOT Installed").foregroundColor(.red)
+    
+    HStack(spacing: 20) {
+      if atu.isPresent {
+        
+        HStack(spacing: 5) {
+          Text(pre + "ATU" + post + "Enabled")
+          Text(atu.enabled ? "Y" : "N")
+            .foregroundColor(atu.enabled ? .green : .red)
         }
+        HStack(spacing: 5) {
+          Text("Status")
+          Text(atu.status == "" ? "none" : atu.status)
+            .foregroundColor(atu.status == "" ? .red : .secondary)
+        }
+        
+        HStack(spacing: 5) {
+          Text("Memories_enabled")
+          Text(atu.memoriesEnabled ? "Y" : "N")
+            .foregroundColor(atu.memoriesEnabled ? .green : .red)
+        }
+        HStack(spacing: 5) {
+          Text("Using_memories")
+          Text(atu.usingMemory ? "Y" : "N")
+            .foregroundColor(atu.usingMemory ? .green : .red)
+        }
+      } else {
+        Text(pre + "ATU" + post + "NOT Installed").foregroundColor(.red)
       }
     }
+    //    }
   }
 }
 
@@ -58,7 +59,7 @@ struct AtuView_Previews: PreviewProvider {
   
   static var previews: some View {
     
-    AtuView(viewModel: ViewModel.shared)
+    AtuView(atu: Atu.shared)
       .frame(minWidth: 1000)
       .padding()
   }

@@ -13,18 +13,18 @@ import Api6000
 // MARK: - View
 
 struct GpsView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var gps: Gps
   
+  let pre = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 6)
+
   var body: some View {
     
-    if let radio = viewModel.radio {
-      HStack(spacing: 10) {
-        Text("        GPS  ")
-        if radio.gpsPresent {
-          Text("NOT IMPLEMENTED").foregroundColor(.red)
-        } else {
-          Text("NOT Installed").foregroundColor(.red)
-        }
+    HStack(spacing: 20) {
+      if gps.isPresent {
+        Text(pre + "GPS" + post + "NOT IMPLEMENTED").foregroundColor(.red)
+      } else {
+        Text(pre + "GPS" + post + "NOT Installed").foregroundColor(.red)
       }
     }
   }
@@ -35,7 +35,7 @@ struct GpsView: View {
 
 struct GpsView_Previews: PreviewProvider {
   static var previews: some View {
-    GpsView(viewModel: ViewModel.shared)
+    GpsView(gps: Gps.shared)
     .frame(minWidth: 1000)
     .padding()
   }
