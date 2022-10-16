@@ -36,9 +36,8 @@ struct Api6000TesterCApp: App {
 
     WindowGroup("Api6000Tester-C  (v" + Version().string + ")") {
       ApiView(store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment())
+        initialState: ApiModule.State(),
+        reducer: ApiModule())
       )
         .toolbar {
           Button("Log View") { OpenWindows.LogView.open() }

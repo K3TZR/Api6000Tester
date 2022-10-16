@@ -19,9 +19,9 @@ import Shared
 // MARK: - View
 
 public struct ApiView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   
-  public init(store: Store<ApiState, ApiAction>) {
+  public init(store: StoreOf<ApiModule>) {
     self.store = store
   }
   
@@ -31,8 +31,8 @@ public struct ApiView: View {
 
   public var body: some View {
     
-    WithViewStore(self.store) { viewStore in
-      
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+
       VStack(alignment: .leading) {
         TopButtonsView(store: store, viewModel: viewModel)
         SendView(store: store, viewModel: viewModel)
@@ -65,10 +65,10 @@ public struct ApiView: View {
       .sheet(
         isPresented: viewStore.binding(
           get: { $0.pickerState != nil },
-          send: ApiAction.picker(.cancelButton)),
+          send: ApiModule.Action.picker(.cancelButton)),
         content: {
           IfLetStore(
-            store.scope(state: \.pickerState, action: ApiAction.picker),
+            store.scope(state: \.pickerState, action: ApiModule.Action.picker),
             then: PickerView.init(store:)
           )
         }
@@ -78,10 +78,10 @@ public struct ApiView: View {
       .sheet(
         isPresented: viewStore.binding(
           get: { $0.loginState != nil },
-          send: ApiAction.login(.cancelButton)),
+          send: ApiModule.Action.login(.cancelButton)),
         content: {
           IfLetStore(
-            store.scope(state: \.loginState, action: ApiAction.login),
+            store.scope(state: \.loginState, action: ApiModule.Action.login),
             then: LoginView.init(store:)
           )
         }
@@ -91,10 +91,10 @@ public struct ApiView: View {
       .sheet(
         isPresented: viewStore.binding(
           get: { $0.clientState != nil },
-          send: ApiAction.client(.cancelButton)),
+          send: ApiModule.Action.client(.cancelButton)),
         content: {
           IfLetStore(
-            store.scope(state: \.clientState, action: ApiAction.client),
+            store.scope(state: \.clientState, action: ApiModule.Action.client),
             then: ClientView.init(store:)
           )
         }
@@ -110,9 +110,8 @@ struct ApiView_Previews: PreviewProvider {
   static var previews: some View {
     ApiView(
       store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(),
+        reducer: ApiModule()
       )
     )
     .frame(minWidth: 975, minHeight: 400)

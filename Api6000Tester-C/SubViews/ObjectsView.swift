@@ -15,7 +15,7 @@ import Shared
 // MARK: - View
 
 struct ObjectsView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
 //  @ObservedObject var packets: Packets
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
@@ -28,7 +28,7 @@ struct ObjectsView: View {
 //  ]
 
   var body: some View {
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       ScrollView([.horizontal, .vertical]) {
         VStack(alignment: .leading) {
           if viewModel.radio == nil {
@@ -56,9 +56,8 @@ struct ObjectsView_Previews: PreviewProvider {
   static var previews: some View {
     ObjectsView(
       store: Store(
-        initialState: ApiState(isGui: false),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(isGui: false),
+        reducer: ApiModule()
       ),
 //      packets: Packets.shared,
       viewModel: ViewModel.shared,

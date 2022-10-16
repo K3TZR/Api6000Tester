@@ -15,7 +15,7 @@ import Shared
 // MARK: - View
 
 struct RadioView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
   
   var body: some View {
@@ -26,14 +26,14 @@ struct RadioView: View {
 }
 
 private struct DetailView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
   
   @State var showSubView = true
 
   var body: some View {
     
-    WithViewStore(store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       if viewModel.activePacket != nil {
         
         let packet = viewModel.activePacket!
@@ -93,14 +93,14 @@ private struct DetailView: View {
 }
           
 private struct DetailSubView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
 
   let post = String(repeating: " ", count: 7)
 
   var body: some View {
     
-    WithViewStore(store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       VStack(alignment: .leading) {
         AtuView(atu: Atu.shared)
         GpsView(gps: Gps.shared)
@@ -131,9 +131,8 @@ private struct DetailSubView: View {
 struct RadioView_Previews: PreviewProvider {
   static var previews: some View {
     RadioView(store: Store(
-      initialState: ApiState(),
-      reducer: apiReducer,
-      environment: ApiEnvironment()
+      initialState: ApiModule.State(),
+      reducer: ApiModule()
     ),
               viewModel: ViewModel.shared)
     .frame(minWidth: 1000)

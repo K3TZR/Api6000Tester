@@ -14,12 +14,12 @@ import Api6000
 // MARK: - View
 
 struct SendView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
 
   var body: some View {
 
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       HStack(spacing: 25) {
         Group {
           Button("Send") { viewStore.send(.sendButton( viewStore.commandToSend )) }
@@ -58,9 +58,8 @@ struct SendView_Previews: PreviewProvider {
   static var previews: some View {
     SendView(
       store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(),
+        reducer: ApiModule()
       ), viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)

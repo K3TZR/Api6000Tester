@@ -15,12 +15,12 @@ import Shared
 // MARK: - View
 
 public struct TopButtonsView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
 
  public  var body: some View {
 
-    WithViewStore(self.store) { viewStore in
+   WithViewStore(self.store, observe: { $0 }) { viewStore in
       HStack(spacing: 20) {
         Button(viewStore.isStopped ? "Start" : "Stop") {
           viewStore.send(.startStopButton(viewModel.radio == nil))
@@ -28,10 +28,10 @@ public struct TopButtonsView: View {
         .keyboardShortcut(viewModel.radio == nil ? .defaultAction : .cancelAction)
 
         HStack(spacing: 20) {
-          Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\.isGui)))
+          Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\ApiModule.State.isGui)))
             .disabled(viewModel.radio != nil)
-          Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\.showTimes)))
-          Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\.showPings)))
+          Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\ApiModule.State.showTimes)))
+          Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\ApiModule.State.showPings)))
         }
 
         Spacer()
@@ -54,7 +54,7 @@ public struct TopButtonsView: View {
         Spacer()
         Toggle("Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
           .disabled(viewModel.radio != nil || viewStore.smartlink == false )
-        Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\.useDefault)))
+        Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\ApiModule.State.useDefault)))
           .disabled(viewModel.radio != nil)
       }
     }
@@ -68,9 +68,8 @@ struct TopButtonsView_Previews: PreviewProvider {
   static var previews: some View {
     TopButtonsView(
       store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(),
+        reducer: ApiModule()
       ), viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)

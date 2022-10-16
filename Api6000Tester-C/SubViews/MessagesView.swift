@@ -12,7 +12,7 @@ import SwiftUI
 // MARK: - View
 
 struct MessagesView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var messagesModel: MessagesModel
   
   @Namespace var topID
@@ -34,7 +34,7 @@ struct MessagesView: View {
   
   var body: some View {
     
-    WithViewStore(store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
 //      ZStack {
 //        if viewStore.filteredMessages.count == 0 { Text("Tcp Messages will be displayed here") }
         ScrollViewReader { proxy in
@@ -80,9 +80,8 @@ struct MessagesView_Previews: PreviewProvider {
   static var previews: some View {
     MessagesView(
       store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(),
+        reducer: ApiModule()
       ),
       messagesModel: MessagesModel.shared
     )

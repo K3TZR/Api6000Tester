@@ -14,11 +14,11 @@ import Api6000
 // MARK: - View
 
 struct BottomButtonsView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
 
   var body: some View {
 
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       HStack {
         Stepper("Font Size",
                 value: viewStore.binding(
@@ -61,9 +61,8 @@ struct BottomButtonsView_Previews: PreviewProvider {
   static var previews: some View {
     BottomButtonsView(
       store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(),
+        reducer: ApiModule()
       )
     )
       .frame(minWidth: 975)

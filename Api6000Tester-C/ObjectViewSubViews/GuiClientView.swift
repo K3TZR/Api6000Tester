@@ -15,7 +15,7 @@ import Shared
 // MARK: - View
 
 struct GuiClientView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
 //  @ObservedObject var guiClients: [GuiClient]
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
@@ -34,7 +34,7 @@ struct GuiClientView: View {
 }
 
 private struct DetailView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var guiClient: GuiClient
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
@@ -82,14 +82,14 @@ private struct DetailView: View {
 }
 
 struct GuiClientSubView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
   let handle: Handle
   
   var body: some View {
     
-    WithViewStore(store) {viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       switch viewStore.objectFilter {
         
       case ObjectFilter.core:
@@ -123,9 +123,8 @@ struct GuiClientSubView: View {
 struct GuiClientView_Previews: PreviewProvider {
   static var previews: some View {
     GuiClientView( store:
-                    Store(initialState: ApiState(),
-                          reducer: apiReducer,
-                          environment: ApiEnvironment()),
+                    Store(initialState: ApiModule.State(),
+                          reducer: ApiModule()),
 //                   packets: Packets.shared,
                    viewModel: ViewModel.shared,
                    streamModel: StreamModel.shared)

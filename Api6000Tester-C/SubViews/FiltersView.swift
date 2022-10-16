@@ -9,7 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct FiltersView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   
   var body: some View {
     HStack(spacing: 100) {
@@ -20,11 +20,11 @@ struct FiltersView: View {
 }
 
 struct FilterObjectsView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
   
   var body: some View {
     
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       HStack {
         Picker("Show Radio Objects of type", selection: viewStore.binding(
           get: \.objectFilter,
@@ -41,11 +41,11 @@ struct FilterObjectsView: View {
 }
 
 struct FilterMessagesView: View {
-  let store: Store<ApiState, ApiAction>
+  let store: StoreOf<ApiModule>
 
   var body: some View {
 
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       HStack {
         Picker("Show Tcp Messages of type", selection: viewStore.binding(
           get: \.messageFilter,
@@ -61,7 +61,7 @@ struct FilterMessagesView: View {
           }
         TextField("filter text", text: viewStore.binding(
           get: \.messageFilterText,
-          send: { value in ApiAction.messagesFilterTextField(value) }))
+          send: { value in ApiModule.Action.messagesFilterTextField(value) }))
       }
     }
     .pickerStyle(MenuPickerStyle())
@@ -73,9 +73,8 @@ struct FiltersView_Previews: PreviewProvider {
   static var previews: some View {
     FiltersView(
       store: Store(
-        initialState: ApiState(),
-        reducer: apiReducer,
-        environment: ApiEnvironment()
+        initialState: ApiModule.State(),
+        reducer: ApiModule()
       )
     )
     .frame(minWidth: 975)
