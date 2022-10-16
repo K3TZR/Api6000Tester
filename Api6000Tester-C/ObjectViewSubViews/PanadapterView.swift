@@ -5,6 +5,7 @@
 //  Created by Douglas Adams on 1/24/22.
 //
 
+import IdentifiedCollections
 import SwiftUI
 
 import Api6000
@@ -22,9 +23,10 @@ struct PanadapterView: View {
     
     if viewModel.panadapters.count == 0 {
       HStack(spacing: 5) {
-        Text("      PANADAPTERs")
+        Text("PANADAPTERs")
         Text("None present").foregroundColor(.red)
       }
+      .padding(.leading, 40)
       
     } else {
       ForEach(viewModel.panadapters.filter { $0.clientHandle == handle }) { panadapter in
@@ -46,6 +48,7 @@ struct PanadapterView: View {
           }
         }
       }
+      .padding(.leading, 40)
     }
   }
 }
@@ -56,7 +59,7 @@ private struct PanadapterDetailView: View {
   var body: some View {
     HStack(spacing: 20) {
       HStack(spacing: 5) {
-        Text("      PANADAPTER")
+        Text("PANADAPTER")
         Text(panadapter.id.hex).foregroundColor(.secondary)
       }
       
@@ -84,7 +87,7 @@ private struct WaterfallDetailView: View {
   var body: some View {
     HStack(spacing: 20) {
       HStack(spacing: 5) {
-        Text("      WATERFALL ")
+        Text("WATERFALL ")
         Text(waterfall.id.hex).foregroundColor(.secondary)
       }
       HStack(spacing: 5) {
@@ -123,7 +126,7 @@ private struct SliceDetailView: View {
       HStack(spacing: 20) {
         
         HStack(spacing: 5) {
-          Text("      SLICE     ")
+          Text("SLICE     ")
           Text(String(format: "%02d", slice.id)).foregroundColor(.green)
         }
         

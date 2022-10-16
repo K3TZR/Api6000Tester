@@ -48,14 +48,14 @@ public struct ApiState: Equatable {
   var clearNow = false
   var clientState: ClientState?
   var commandToSend = ""
-  var filteredMessages = IdentifiedArrayOf<TcpMessage>()
+//  var filteredMessages = IdentifiedArrayOf<TcpMessage>()
   var loginRequired = false
   var forceUpdate = false
   var gotoFirst = false
   var initialized = false
   var isStopped = true
   var loginState: LoginState? = nil
-  var messages = IdentifiedArrayOf<TcpMessage>()
+//  var messages = IdentifiedArrayOf<TcpMessage>()
   var opusPlayer: OpusPlayer? = nil
   var pickables = IdentifiedArrayOf<Pickable>()
   var pickerState: PickerState? = nil
@@ -122,7 +122,7 @@ public enum ApiAction: Equatable {
   case localButton(Bool)
   case loginRequiredButton(Bool)
   case messagesFilterTextField(String)
-  case messagesPicker(MessageFilter)
+  case messagesFilterPicker(MessageFilter)
   case objectsPicker(ObjectFilter)
   case rxAudioButton(Bool)
   case saveButton
@@ -210,7 +210,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         return .merge(
           subscribeToPackets(),
           subscribeToClients(),
-          subscribeToMessages(),
+//          subscribeToMessages(),
           subscribeToLogAlerts(),
           subscribeToSmartlinkTest(),
           initializeMode(state)
@@ -222,9 +222,11 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // MARK: - Actions: ApiView UI controls
       
     case .clearNowButton:
-      state.messages.removeAll()
-      state.filteredMessages.removeAll()
-      return .none
+//      state.messages.removeAll()
+//      state.filteredMessages.removeAll()
+      return .run { send in
+        await MessagesModel.shared.clear()
+      }
       
     case .commandTextField(let text):
       state.commandToSend = text
@@ -247,16 +249,22 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       return .none
       
     case .messagesFilterTextField(let text):
-      state.messageFilterText = text
-      // re-filter
-      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
-      return .none
+//      state.messageFilterText = text
+//      // re-filter
+//      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
+      return .run { _ in
+        await MessagesModel.shared.setFilterText(text)
+        await MessagesModel.shared.filterMessages()
+      }
       
-    case .messagesPicker(let filter):
-      state.messageFilter = filter
-      // re-filter
-      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
-      return .none
+    case .messagesFilterPicker(let filter):
+//      state.messageFilter = filter
+//      // re-filter
+//      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText)
+      return .run { _ in
+        await MessagesModel.shared.setFilter(filter)
+        await MessagesModel.shared.filterMessages()
+      }
       
     case .objectsPicker(let newFilter):
       let prevObjectFilter = state.objectFilter
@@ -302,11 +310,17 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       savePanel.title = "Save the Log"
 
       let response = savePanel.runModal()
-      if response == .OK {
-        let textArray = state.filteredMessages.map { String(format: "%.6f", $0.timeInterval ?? 0) + " " + $0.text }
-        let fileTextArray = textArray.joined(separator: "\n")
-        try? fileTextArray.write(to: savePanel.url!, atomically: true, encoding: .utf8)
-      }
+      
+      
+      // FIXME:
+      
+      
+      
+//      if response == .OK {
+//        let textArray = MessagesModel.shared.filteredMessages.map { String(format: "%.6f", $0.timeInterval ?? 0) + " " + $0.text }
+//        let fileTextArray = textArray.joined(separator: "\n")
+//        try? fileTextArray.write(to: savePanel.url!, atomically: true, encoding: .utf8)
+//      }
       return .none
       
     case .sendButton(let command):
@@ -354,12 +368,13 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       if state.isStopped {
         // ----- START -----
         state.isStopped = false
-        if state.clearOnStart {
-          state.messages.removeAll()
-          state.filteredMessages.removeAll()
-        }
         // use the Default?
         return .run { [state] send in
+          if state.clearOnStart {
+            //          state.messages.removeAll()
+            //          state.filteredMessages.removeAll()
+            await MessagesModel.shared.clear()
+          }
           // get the Pickables
           let pickables = await Packets.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
           // if using default, is there a default?
@@ -375,20 +390,26 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       } else {
         // ----- STOP -----
         state.isStopped = true
-        if state.clearOnStop {
-          state.messages.removeAll()
-          state.filteredMessages.removeAll()
-        }
         if state.rxAudio {
           // Audio is started, stop it
           state.opusPlayer?.stop()
           state.opusPlayer = nil
-          return .run { send in
+          return .run { [state] send in
+            if state.clearOnStop {
+              //          state.messages.removeAll()
+              //          state.filteredMessages.removeAll()
+              await MessagesModel.shared.clear()
+            }
             await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
             await Api.shared.disconnect()
           }
         } else {
-          return .run { send in
+          return .run {[state] send in
+            if state.clearOnStop {
+              //          state.messages.removeAll()
+              //          state.filteredMessages.removeAll()
+              await MessagesModel.shared.clear()
+            }
             await Api.shared.disconnect()
           }
         }
@@ -457,7 +478,7 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
         // show the client chooser, let the user choose
         state.clientState = ClientState(selection: selection, stations: stations, handles: handles)
         return .none
-        
+
       } else {
         // not Gui connection or Gui without other stations, attempt to connect
         return connectTo(&state, selection, nil)
@@ -491,12 +512,24 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       // a GuiClient change occurred
       switch event.action {
       case .added:      break
-      case .deleted:    break   // FIXME:
+      
+      case .removed:
+        // if nonGui, is it our connected Station?
+        if state.isGui == false && event.client.station == state.station {
+          // YES, unbind
+          return .run { _ in
+            await ViewModel.shared.setActiveStation( nil )
+            await ViewModel.shared.radio?.bindToGuiClient(nil) }
+        }
+
       case .completed:
         // if nonGui, is there a clientId for our connected Station?
         if state.isGui == false && event.client.station == state.station {
           // YES, bind to it
-          return .run { _ in await ViewModel.shared.radio?.bindToGuiClient(event.client.clientId) }
+          return .run { _ in
+            print("----->", event.client.station)
+            await ViewModel.shared.setActiveStation( event.client.station )
+            await ViewModel.shared.radio?.bindToGuiClient(event.client.clientId) }
         }
       }
       return .none
@@ -528,15 +561,15 @@ public let apiReducer = Reducer<ApiState, ApiAction, ApiEnvironment>.combine(
       return .none
       
     case .tcpMessage(var tcpMessage):
-      // a Tcp Message was sent or received
-      // ignore sent "ping" messages unless showPings is true
-      if tcpMessage.direction == .sent && tcpMessage.text.contains("ping") && state.showPings == false { return .none }
-      // set the time interval
-      tcpMessage.timeInterval = tcpMessage.timeStamp.timeIntervalSince(state.startTime!)
-      // add the message to the collection
-      state.messages.append(tcpMessage)
-      // re-filter
-      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText, partial: true, tcpMessage: tcpMessage)
+//      // a Tcp Message was sent or received
+//      // ignore sent "ping" messages unless showPings is true
+//      if tcpMessage.direction == .sent && tcpMessage.text.contains("ping") && state.showPings == false { return .none }
+//      // set the time interval
+//      tcpMessage.timeInterval = tcpMessage.timeStamp.timeIntervalSince(state.startTime!)
+//      // add the message to the collection
+//      state.messages.append(tcpMessage)
+//      // re-filter
+//      state.filteredMessages = filterMessages(state, state.messageFilter, state.messageFilterText, partial: true, tcpMessage: tcpMessage)
       return .none
 
     case .testResult(let result):
@@ -666,6 +699,7 @@ func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandl
   state.startTime = Date()
   return .run { [state] send in
     do {
+      await MessagesModel.shared.start(state.startTime!)
       // try to connect
       try await Api.shared.connectTo(selection: selection,
                                      isGui: state.isGui,
@@ -691,45 +725,45 @@ func connectTo(_ state: inout ApiState, _ selection: Pickable, _ disconnectHandl
 ///   - filterBy:      the selected filter choice
 ///   - filterText:    the current filter text
 /// - Returns:         a filtered array
-func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: String, partial: Bool = false, tcpMessage: TcpMessage? = nil) -> IdentifiedArrayOf<TcpMessage> {
-  var filteredMessages = IdentifiedArrayOf<TcpMessage>()
-  
-  if partial, let tcpMessage = tcpMessage {
-    filteredMessages = state.filteredMessages
-    // filter the latest entry
-    switch (filter, filterText) {
-      
-    case (.all, _):        filteredMessages.append(tcpMessage)
-    case (.prefix, ""):    filteredMessages.append(tcpMessage)
-    case (.prefix, _):     if tcpMessage.text.localizedCaseInsensitiveContains("|" + filterText) { filteredMessages.append(tcpMessage) }
-    case (.includes, _):   if tcpMessage.text.localizedCaseInsensitiveContains(filterText) { filteredMessages.append(tcpMessage) }
-    case (.excludes, ""):  filteredMessages.append(tcpMessage)
-    case (.excludes, _):   if !tcpMessage.text.localizedCaseInsensitiveContains(filterText) { filteredMessages.append(tcpMessage) }
-    case (.command, _):    if tcpMessage.text.prefix(1) == "C" { filteredMessages.append(tcpMessage) }
-    case (.S0, _):         if tcpMessage.text.prefix(3) == "S0|" { filteredMessages.append(tcpMessage) }
-    case (.status, _):     if tcpMessage.text.prefix(1) == "S0|" && tcpMessage.text.prefix(3) != "S0|" { filteredMessages.append(tcpMessage) }
-    case (.reply, _):      if tcpMessage.text.prefix(1) == "R" { filteredMessages.append(tcpMessage) }
-    }
-    return filteredMessages
-    
-  } else {
-    // re-filter the entire messages array
-    switch (filter, filterText) {
-      
-    case (.all, _):        filteredMessages = state.messages
-    case (.prefix, ""):    filteredMessages = state.messages
-    case (.prefix, _):     filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains("|" + filterText) }
-    case (.includes, _):   filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains(filterText) }
-    case (.excludes, ""):  filteredMessages = state.messages
-    case (.excludes, _):   filteredMessages = state.messages.filter { !$0.text.localizedCaseInsensitiveContains(filterText) }
-    case (.command, _):    filteredMessages = state.messages.filter { $0.text.prefix(1) == "C" }
-    case (.S0, _):         filteredMessages = state.messages.filter { $0.text.prefix(3) == "S0|" }
-    case (.status, _):     filteredMessages = state.messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
-    case (.reply, _):      filteredMessages = state.messages.filter { $0.text.prefix(1) == "R" }
-    }
-  }
-  return filteredMessages
-}
+//func filterMessages(_ state: ApiState, _ filter: MessageFilter, _ filterText: String, partial: Bool = false, tcpMessage: TcpMessage? = nil) -> IdentifiedArrayOf<TcpMessage> {
+//  var filteredMessages = IdentifiedArrayOf<TcpMessage>()
+//
+//  if partial, let tcpMessage = tcpMessage {
+//    filteredMessages = state.filteredMessages
+//    // filter the latest entry
+//    switch (filter, filterText) {
+//
+//    case (.all, _):        filteredMessages.append(tcpMessage)
+//    case (.prefix, ""):    filteredMessages.append(tcpMessage)
+//    case (.prefix, _):     if tcpMessage.text.localizedCaseInsensitiveContains("|" + filterText) { filteredMessages.append(tcpMessage) }
+//    case (.includes, _):   if tcpMessage.text.localizedCaseInsensitiveContains(filterText) { filteredMessages.append(tcpMessage) }
+//    case (.excludes, ""):  filteredMessages.append(tcpMessage)
+//    case (.excludes, _):   if !tcpMessage.text.localizedCaseInsensitiveContains(filterText) { filteredMessages.append(tcpMessage) }
+//    case (.command, _):    if tcpMessage.text.prefix(1) == "C" { filteredMessages.append(tcpMessage) }
+//    case (.S0, _):         if tcpMessage.text.prefix(3) == "S0|" { filteredMessages.append(tcpMessage) }
+//    case (.status, _):     if tcpMessage.text.prefix(1) == "S0|" && tcpMessage.text.prefix(3) != "S0|" { filteredMessages.append(tcpMessage) }
+//    case (.reply, _):      if tcpMessage.text.prefix(1) == "R" { filteredMessages.append(tcpMessage) }
+//    }
+//    return filteredMessages
+//
+//  } else {
+//    // re-filter the entire messages array
+//    switch (filter, filterText) {
+//
+//    case (.all, _):        filteredMessages = state.messages
+//    case (.prefix, ""):    filteredMessages = state.messages
+//    case (.prefix, _):     filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains("|" + filterText) }
+//    case (.includes, _):   filteredMessages = state.messages.filter { $0.text.localizedCaseInsensitiveContains(filterText) }
+//    case (.excludes, ""):  filteredMessages = state.messages
+//    case (.excludes, _):   filteredMessages = state.messages.filter { !$0.text.localizedCaseInsensitiveContains(filterText) }
+//    case (.command, _):    filteredMessages = state.messages.filter { $0.text.prefix(1) == "C" }
+//    case (.S0, _):         filteredMessages = state.messages.filter { $0.text.prefix(3) == "S0|" }
+//    case (.status, _):     filteredMessages = state.messages.filter { $0.text.prefix(1) == "S" && $0.text.prefix(3) != "S0|"}
+//    case (.reply, _):      filteredMessages = state.messages.filter { $0.text.prefix(1) == "R" }
+//    }
+//  }
+//  return filteredMessages
+//}
 
 //
 // ----------------------------------------------------------------------------
@@ -753,25 +787,26 @@ private func subscribeToClients() -> Effect<ApiAction, Never> {
   }
 }
 
-private func subscribeToMessages() -> Effect<ApiAction, Never> {
-  Effect.run { send in
-    func ignoreReply(_ text: String) -> Bool {
-      if text.first != "R" { return false }     // not a Reply
-      let parts = text.components(separatedBy: "|")
-      if parts.count < 3 { return false }       // incomplete
-      if parts[1] != kNoError { return false }  // error of some type
-      if parts[2] != "" { return false }        // additional data present
-      return true                               // otherwise, ignore it
-    }
-
-    for await tcpMessage in Tcp.shared.testerInbound{
-      // a TCP message was sent or received
-      // ignore reply unless it is non-zero or contains additional data
-      if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
-      await send(.tcpMessage(tcpMessage))
-    }
-  }
-}
+//private func subscribeToMessages(start: Date) -> Effect<ApiAction, Never> {
+//  Effect.run { send in
+//    func ignoreReply(_ text: String) -> Bool {
+//      if text.first != "R" { return false }     // not a Reply
+//      let parts = text.components(separatedBy: "|")
+//      if parts.count < 3 { return false }       // incomplete
+//      if parts[1] != kNoError { return false }  // error of some type
+//      if parts[2] != "" { return false }        // additional data present
+//      return true                               // otherwise, ignore it
+//    }
+//
+//    for await tcpMessage in Tcp.shared.testerInbound{
+//      // a TCP message was sent or received
+//      // ignore reply unless it is non-zero or contains additional data
+//      if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
+//      await send(.tcpMessage(tcpMessage))
+//    }
+//      await MessagesModel.shared.start()
+//    }
+//}
 
 private func subscribeToSmartlinkTest() -> Effect<ApiAction, Never> {
   Effect.run { send in

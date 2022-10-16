@@ -13,13 +13,14 @@ import Api6000
 // MARK: - View
 
 struct WanView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var wan: Wan
   
+  let post = String(repeating: " ", count: 5)
+
   var body: some View {
     
-    let wan = viewModel.wan
     HStack(spacing: 20) {
-      Text("        WAN")
+      Text("WAN" + post)
       HStack(spacing: 5) {
         Text("Radio_Authenticated")
         Text(wan.radioAuthenticated ? "Y" : "N").foregroundColor(wan.radioAuthenticated ? .green : .red)
@@ -29,6 +30,7 @@ struct WanView: View {
         Text(wan.serverConnected ? "Y" : "N").foregroundColor(wan.serverConnected ? .green : .red)
       }
     }
+    .padding(.leading, 40)
   }
 }
 
@@ -37,7 +39,7 @@ struct WanView: View {
 
 struct WanView_Previews: PreviewProvider {
   static var previews: some View {
-    WanView(viewModel: ViewModel.shared)
+    WanView(wan: Wan.shared)
     .frame(minWidth: 1000)
     .padding()
   }

@@ -13,11 +13,12 @@ import SwiftUI
 
 struct MessagesView: View {
   let store: Store<ApiState, ApiAction>
+  @ObservedObject var messagesModel: MessagesModel
   
   @Namespace var topID
   @Namespace var bottomID
   
-  func chooseColor(_ text: String) -> Color {
+  func messageColor(_ text: String) -> Color {
     if text.prefix(1) == "C" { return Color(.systemGreen) }                         // Commands
     if text.prefix(1) == "R" && text.contains("|0|") { return Color(.systemGray) }  // Replies no error
     if text.prefix(1) == "R" && !text.contains("|0|") { return Color(.systemRed) }  // Replies w/error
@@ -26,23 +27,28 @@ struct MessagesView: View {
     return Color(.textColor)
   }
 
+  func interval(_ start: Date, _ timeStamp: Date) -> Double {
+    return timeStamp.timeIntervalSince(start)
+  }
+  
+  
   var body: some View {
     
     WithViewStore(store) { viewStore in
-      ZStack {
-        if viewStore.filteredMessages.count == 0 { Text("Tcp Messages will be displayed here") }
+//      ZStack {
+//        if viewStore.filteredMessages.count == 0 { Text("Tcp Messages will be displayed here") }
         ScrollViewReader { proxy in
           ScrollView([.vertical, .horizontal]) {
             VStack(alignment: .leading) {
               Text("Top").hidden()
                 .id(topID)
-              ForEach(viewStore.filteredMessages.reversed(), id: \.id) { message in
+              ForEach(messagesModel.filteredMessages.reversed(), id: \.id) { message in
                 HStack {
-                  if viewStore.showTimes { Text("\(message.timeInterval ?? 0)") }
+                  if viewStore.showTimes { Text("\(interval(viewStore.startTime!, message.timeStamp))") }
                   Text(message.text)
                 }
                 .tag(message.id)
-                .foregroundColor( chooseColor(message.text) )
+                .foregroundColor( messageColor(message.text) )
               }
               Text("Bottom").hidden()
                 .id(bottomID)
@@ -52,7 +58,7 @@ struct MessagesView: View {
               let id = viewStore.gotoFirst ? bottomID : topID
               proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
             })
-            .onChange(of: viewStore.filteredMessages.count, perform: { _ in
+            .onChange(of: messagesModel.filteredMessages.count, perform: { _ in
               let id = viewStore.gotoFirst ? bottomID : topID
               proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
             })
@@ -62,7 +68,7 @@ struct MessagesView: View {
             .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
           }
         }
-      }
+//      }
     }
   }
 }
@@ -77,7 +83,8 @@ struct MessagesView_Previews: PreviewProvider {
         initialState: ApiState(),
         reducer: apiReducer,
         environment: ApiEnvironment()
-      )
+      ),
+      messagesModel: MessagesModel.shared
     )
     .frame(minWidth: 975)
     .padding()

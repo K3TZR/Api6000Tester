@@ -12,19 +12,23 @@ import Api6000
 struct WaveformView: View {
   @ObservedObject var waveform: Waveform
   
+  let post = String(repeating: " ", count: 2)
+
   var body: some View {
     
     if waveform.waveformList.isEmpty {
-      HStack(spacing: 5) {
-        Text("      WAVEFORMs")
+      HStack(spacing: 0) {
+        Text("WAVEFORMs" + post)
         Text("None present").foregroundColor(.red)
       }
+      .padding(.leading, 40)
       
     } else {
       HStack(spacing: 10) {
-        Text("      WAVEFORMS -> ")
+        Text("WAVEFORMS" + post)
         Text(waveform.waveformList)
       }
+      .padding(.leading, 40)
     }
   }
 }

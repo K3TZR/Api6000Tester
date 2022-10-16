@@ -20,7 +20,7 @@ struct MeterView: View {
   let sliceClientHandle: UInt32?
   let handle: Handle
 
-  @StateObject var metersModel = Meters.shared
+//  @StateObject var metersModel = Meters.shared
   
   func showMeter(_ id: UInt32?, _ clientHandle: UInt32?, _ source: String, _ group: String) -> Bool {
     if id == nil { return true }
@@ -33,15 +33,43 @@ struct MeterView: View {
   var body: some View {
     
     VStack(alignment: .leading) {
-      ForEach(metersModel.meters ) { meter in
+      HeadingView(sliceId: sliceId)
+      ForEach(viewModel.meters ) { meter in
         if showMeter(sliceId, sliceClientHandle, meter.source, meter.group) {
           DetailView(meter: meter, sliceId: sliceId)
         }
       }
       .foregroundColor(.secondary)
     }
+    .padding(.leading, 40)
   }
 }
+
+private struct HeadingView: View {
+  let sliceId: UInt32?
+
+  var body: some View {
+    HStack(spacing: 10) {
+      Text("METER").frame(width: 60, alignment: .leading)
+      Group {
+        Text("Number")
+        if sliceId == nil {
+          Text("Group")
+          Text("Source")
+        }
+      }.frame(width: 60)
+      Text("Name").frame(width: 110)
+      Group {
+        Text("Value")
+        Text("Units")
+        Text("Fps")
+      }.frame(width: 70)
+      Text("Description")
+    }
+    Text("")
+  }
+}
+
 
 private struct DetailView: View {
   @ObservedObject var meter: Meter
@@ -57,24 +85,22 @@ private struct DetailView: View {
     
     HStack(spacing: 10) {
       Group {
-        Text("Meter").padding(.leading, sliceId == nil ? 0 : 80)
-        Text(String(format: "% 3d", meter.id)).frame(width: 40, alignment: .trailing)
+        Text(String(format: "% 3d", meter.id))
         if sliceId == nil {
-          Text(meter.group).frame(width: 30, alignment: .trailing)
-          Text(meter.source).frame(width: 40, alignment: .leading)
+          Text(meter.group)
+          Text(meter.source)
         }
-        Text(meter.name).frame(width: 110, alignment: .leading)
-      }
-      Group {
-        Text(String(format: "%-4.2f", meter.value))
-          .help("        range: \(String(format: "%-4.2f", meter.low)) to \(String(format: "%-4.2f", meter.high))")
-          .foregroundColor(valueColor(meter.value, meter.low, meter.high))
-          .frame(width: 75, alignment: .trailing)
-        Text(meter.units).frame(width: 50, alignment: .leading)
-        Text(String(format: "% 2d", meter.fps) + " fps").frame(width: 70, alignment: .leading)
-        Text(meter.desc).foregroundColor(.primary)
-      }
+      }.frame(width: 60, alignment: .trailing)
+      Text(meter.name).frame(width: 110, alignment: .leading)
+      Text(String(format: "%-4.2f", meter.value))
+        .help("        range: \(String(format: "%-4.2f", meter.low)) to \(String(format: "%-4.2f", meter.high))")
+        .foregroundColor(valueColor(meter.value, meter.low, meter.high))
+        .frame(width: 70, alignment: .trailing)
+      Text(meter.units).frame(width: 70, alignment: .trailing)
+      Text(String(format: "% 2d", meter.fps)).frame(width: 70, alignment: .trailing)
+      Text(meter.desc).foregroundColor(.primary)
     }
+    .padding(.leading, 60)
   }
 }
 

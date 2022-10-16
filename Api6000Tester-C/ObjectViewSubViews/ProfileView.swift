@@ -16,17 +16,35 @@ struct ProfileView: View {
     
     if viewModel.profiles.count == 0 {
       HStack(spacing: 5) {
-        Text("           PROFILEs")
+        Text("PROFILEs")
         Text("None present").foregroundColor(.red)
       }
+      .padding(.leading, 40)
       
     } else {
-      ForEach(viewModel.profiles) { profile in
-        VStack(spacing: 0) {
+      VStack(alignment: .leading) {
+        HeadingView()
+        ForEach(viewModel.profiles) { profile in
           DetailView(profile: profile)
         }
       }
+      .padding(.leading, 40)
     }
+  }
+}
+
+private struct HeadingView: View {
+  
+  var body: some View {
+    HStack(spacing: 10) {
+      Group {
+        Text("PROFILE")
+        Text("Type")
+        Text("Current")
+        Text("List")
+      }.frame(width: 60, alignment: .leading)
+    }
+    Text("")
   }
 }
 
@@ -35,28 +53,11 @@ private struct DetailView: View {
   
   var body: some View {
     HStack(spacing: 10) {
-      HStack(spacing: 5) {
-        Text("        PROFILE")
-        Text(profile.id)
-          .frame(width: 50, alignment: .leading)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("Current")
-        Text(profile.current)
-          .frame(width: 100, alignment: .leading)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("List")
-        Text(profile.list.reduce("", { item1, item2 in item1 + item2 + ","}))
-          .fixedSize(horizontal: false, vertical: true)
-          .foregroundColor(.secondary)
-      }
+      Text(profile.id.uppercased()).frame(width: 60, alignment: .leading)
+      Text(profile.current).frame(width: 60, alignment: .leading)
+      Text(profile.list.reduce("", { item1, item2 in item1 + item2 + ","}))
     }
-
+    .padding(.leading, 70)
   }
 }
 

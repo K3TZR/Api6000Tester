@@ -15,19 +15,23 @@ import Api6000
 struct XvtrView: View {
   @ObservedObject var viewModel: ViewModel
   
+  let post = String(repeating: " ", count: 6)
+
   var body: some View {
     
     if viewModel.xvtrs.count == 0 {
-      HStack(spacing: 5) {
-        Text("        XVTRs")
+      HStack(spacing: 0) {
+        Text("XVTRs" + post)
         Text("None present").foregroundColor(.red)
       }
+      .padding(.leading, 40)
       
     } else {
       HStack(spacing: 10) {
-        Text("        XVTR -> ")
+        Text("XVTR " + post)
         Text("NOT IMPLEMENTED").foregroundColor(.red)
       }
+      .padding(.leading, 40)
     }
   }
 }

@@ -16,25 +16,22 @@ import Shared
 
 struct GuiClientView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var packets: Packets
+//  @ObservedObject var guiClients: [GuiClient]
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
-
+  
   var body: some View {
     if viewModel.activePacket == nil {
       EmptyView()
     } else {
       VStack(alignment: .leading) {
-        ForEach(packets.guiClients, id: \.id) { guiClient in
+        ForEach(viewModel.activePacket!.guiClients, id: \.id) { guiClient in
           DetailView(store: store, guiClient: guiClient, viewModel: viewModel, streamModel: streamModel)
         }
-//        .padding(.bottom, 10)
       }
-//      .padding()
     }
   }
 }
-
 
 private struct DetailView: View {
   let store: Store<ApiState, ApiAction>
@@ -48,8 +45,11 @@ private struct DetailView: View {
     Divider().background(Color(.red))
     HStack(spacing: 10) {
       
-      HStack {
-        Text("Gui").foregroundColor(.yellow)
+      HStack(spacing: 0) {
+        Image(systemName: showSubView ? "chevron.down" : "chevron.right")
+          .help("          Tap to toggle details")
+          .onTapGesture(perform: { showSubView.toggle() })
+        Text(" Gui   ").foregroundColor(.yellow)
           .font(.title)
           .help("          Tap to toggle details")
           .onTapGesture(perform: { showSubView.toggle() })
@@ -100,16 +100,16 @@ struct GuiClientSubView: View {
         
       case ObjectFilter.amplifiers:        AmplifierView(viewModel: viewModel)
       case ObjectFilter.bandSettings:      BandSettingView(viewModel: viewModel)
-      case ObjectFilter.cwx:               CwxView(viewModel: viewModel)
+      case ObjectFilter.cwx:               CwxView(cwx: Cwx.shared)
       case ObjectFilter.equalizers:        EqualizerView(viewModel: viewModel)
-      case ObjectFilter.interlock:         InterlockView(viewModel: viewModel)
+      case ObjectFilter.interlock:         InterlockView(interlock: Interlock.shared)
       case ObjectFilter.memories:          MemoryView(viewModel: viewModel)
       case ObjectFilter.meters:            MeterView(viewModel: viewModel, sliceId: nil, sliceClientHandle: nil, handle: handle)
-      case ObjectFilter.network:           NetworkView()
+      case ObjectFilter.network:           NetworkView(streamModel: streamModel)
       case ObjectFilter.profiles:          ProfileView(viewModel: viewModel)
       case ObjectFilter.streams:           StreamView(viewModel: viewModel, streamModel: streamModel, handle: handle)
       case ObjectFilter.usbCable:          UsbCableView(viewModel: viewModel)
-      case ObjectFilter.wan:               WanView(viewModel: viewModel)
+      case ObjectFilter.wan:               WanView(wan: Wan.shared)
       case ObjectFilter.waveforms:         WaveformView(waveform: Waveform.shared)
       case ObjectFilter.xvtrs:             XvtrView(viewModel: viewModel)
       }
@@ -126,7 +126,7 @@ struct GuiClientView_Previews: PreviewProvider {
                     Store(initialState: ApiState(),
                           reducer: apiReducer,
                           environment: ApiEnvironment()),
-                   packets: Packets.shared,
+//                   packets: Packets.shared,
                    viewModel: ViewModel.shared,
                    streamModel: StreamModel.shared)
     .frame(minWidth: 1000)

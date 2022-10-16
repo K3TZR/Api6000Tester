@@ -16,7 +16,7 @@ import Shared
 
 struct ObjectsView: View {
   let store: Store<ApiState, ApiAction>
-  @ObservedObject var packets: Packets
+//  @ObservedObject var packets: Packets
   @ObservedObject var viewModel: ViewModel
   @ObservedObject var streamModel: StreamModel
 
@@ -35,8 +35,9 @@ struct ObjectsView: View {
             Text("Radio objects will be displayed here")
           } else {
             RadioView(store: store, viewModel: viewModel)
-            GuiClientView(store: store, packets: packets, viewModel: viewModel, streamModel: streamModel)
-            if viewStore.isGui == false { NonGuiClientView(viewModel: viewModel) }
+//            GuiClientView(store: store, packets: packets, viewModel: viewModel, streamModel: streamModel)
+            GuiClientView(store: store, viewModel: viewModel, streamModel: streamModel)
+            if viewStore.isGui == false { TesterView(viewModel: viewModel) }
           }
         }
         .frame(minWidth: 400, maxWidth: .infinity, alignment: .leading)
@@ -59,7 +60,7 @@ struct ObjectsView_Previews: PreviewProvider {
         reducer: apiReducer,
         environment: ApiEnvironment()
       ),
-      packets: Packets.shared,
+//      packets: Packets.shared,
       viewModel: ViewModel.shared,
       streamModel: StreamModel.shared
     )

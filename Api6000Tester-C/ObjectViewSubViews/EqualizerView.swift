@@ -16,11 +16,34 @@ struct EqualizerView: View {
   @ObservedObject var viewModel: ViewModel
   
   var body: some View {
-    ForEach(viewModel.equalizers) { eq in
-      VStack (alignment: .leading) {
+    VStack(alignment: .leading) {
+      HeadingView()
+      ForEach(viewModel.equalizers) { eq in
         DetailView(eq: eq)
       }
     }
+    .padding(.leading, 40)
+  }
+}
+
+private struct HeadingView: View {
+  
+  var body: some View {
+    HStack(spacing: 10) {
+      Text("EQUALIZER").frame(width: 80, alignment: .leading)
+      Group {
+        Text("Enabled")
+        Text("63 Hz")
+        Text("125 Hz")
+        Text("250 Hz")
+        Text("500 Hz")
+        Text("1000 Hz")
+        Text("2000 Hz")
+        Text("4000 Hz")
+        Text("8000 Hz")
+      }.frame(width: 60)
+    }
+    Text("")
   }
 }
 
@@ -28,76 +51,24 @@ private struct DetailView: View {
   @ObservedObject var eq: Equalizer
   
   var body: some View {
-    HStack(spacing: 20) {
-      
-      HStack(spacing: 5) {
-        Text("        EQUALIZER")
-        Text(eq.id).foregroundColor(.green)
-      }
-      
-      HStack(spacing: 5) {
-        Text("Enabled")
+    HStack(spacing: 10) {
+      Text(eq.id).foregroundColor(.green).frame(width: 80, alignment: .leading)
+      Group {
         Text(eq.eqEnabled ? "Y" : "N").foregroundColor(eq.eqEnabled ? .green : .red)
-      }
-      
-      HStack(spacing: 5) {
-        Text("63_Hz")
         Text(String(format: "%+2.0f", eq.level63Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-
-      HStack(spacing: 5) {
-        Text("125_Hz")
         Text(String(format: "%+2.0f", eq.level125Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("250_Hz")
         Text(String(format: "%+2.0f", eq.level250Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("500_Hz")
         Text(String(format: "%+2.0f", eq.level500Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("1000_Hz")
         Text(String(format: "%+2.0f", eq.level1000Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("2000_Hz")
         Text(String(format: "%+2.0f", eq.level2000Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("4000_Hz")
         Text(String(format: "%+2.0f", eq.level4000Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack(spacing: 5) {
-        Text("8000_Hz")
         Text(String(format: "%+2.0f", eq.level8000Hz))
-          .frame(width: 40)
-          .foregroundColor(.secondary)
-      }
+      }.frame(width: 60)
     }
+    .foregroundColor(.secondary)
   }
 }
+
 
 
 // ----------------------------------------------------------------------------

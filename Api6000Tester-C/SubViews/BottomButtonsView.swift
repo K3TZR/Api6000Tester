@@ -33,7 +33,7 @@ struct BottomButtonsView: View {
           Text(viewStore.gotoFirst ? "Goto Last" : "Goto First")
           Image(systemName: viewStore.gotoFirst ? "arrow.up.square" : "arrow.down.square").font(.title)
             .onTapGesture { viewStore.send(.toggle(\.gotoFirst)) }
-            .disabled(viewStore.filteredMessages.count == 0)
+//            .disabled(viewStore.filteredMessages.count == 0)
         }
         .frame(width: 120, alignment: .trailing)
 

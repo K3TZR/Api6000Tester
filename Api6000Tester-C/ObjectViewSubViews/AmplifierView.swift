@@ -18,16 +18,16 @@ struct AmplifierView: View {
   var body: some View {
     if viewModel.amplifiers.count == 0 {
       HStack(spacing: 5) {
-        Text("        AMPLIFIERs")
+        Text("AMPLIFIERs")
         Text("None present").foregroundColor(.red)
       }
+      .padding(.leading, 40)
       
     } else {
       ForEach(viewModel.amplifiers) { amplifier in
-        VStack (alignment: .leading) {
-          DetailView(amplifier: amplifier)
-        }
+        DetailView(amplifier: amplifier)
       }
+      .padding(.leading, 40)
     }
   }
 }
@@ -37,13 +37,14 @@ private struct DetailView: View {
   
   var body: some View {
     HStack(spacing: 20) {
-      Text("       AMPLIFIER -> ")
+      Text("AMPLIFIER")
       Text(amplifier.id.hex)
       Text(amplifier.model)
       Text(amplifier.ip)
       Text("Port \(amplifier.port)")
       Text(amplifier.state)
     }
+    .padding(.leading, 40)
   }
 }
 

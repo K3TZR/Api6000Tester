@@ -9,70 +9,65 @@ import SwiftUI
 
 import Api6000
 
-struct User: Identifiable {
-  let id: Int
-  var name: String
-  var score: Int
-  var other: Int
-}
-
-
 public struct NetworkView: View {
-  
-  @State private var users = [
-    User(id: 1, name: "Taylor Swift", score: 90, other: 200),
-    User(id: 2, name: "Justin Bieber", score: 80, other: 300),
-    User(id: 3, name: "Adele Adkins", score: 85, other: 400)
-  ]
-  
-  @State private var sortOrder = [KeyPathComparator(\User.name)]
-  @State private var selection: User.ID?
+  @ObservedObject var streamModel: StreamModel
   
   public var body: some View {
     
-//    let _ = Self._printChanges()
+    //    let _ = Self._printChanges()
     
-    VStack {
-      Text("Top")
-      
-      Table(users) {
-          TableColumn("Name", value: \.name)
-          TableColumn("Score") { user in
-              Text(String(user.score))
-          }
+    VStack(alignment: .leading) {
+      HeadingView()
+      ForEach(streamModel.streamStatus) { status in
+        DetailView(status: status)
       }
-      .border(.red)
-      Text("Bottom")
     }
-    .frame(width: 400, height: 200)
-    .border(.green)
+    .padding(.leading, 40)
   }
-
-  
-//  let streamModel: StreamModel
-//
-//  public var body: some View {
-//
-//    let _ = Self._printChanges()
-//
-//    VStack {
-//      Text("Top")
-//      HStack {
-//        Text("Panadapter")
-//        Text("\(streamModel.packetsPanadapter)")
-//      }
-//      HStack {
-//        Text("Waterfall")
-//        Text("\(streamModel.packetsWaterfall)")
-//      }
-//      Text("Bottom")
-//    }
-//  }
 }
 
+private struct HeadingView: View {
+  
+  var body: some View {
+    HStack(spacing: 10) {
+      Text("NETWORK").frame(width: 80, alignment: .leading)
+      Text("Stream").frame(width: 100, alignment: .leading)
+      Group {
+        Text("Packets")
+        Text("Errors")
+      }.frame(width: 80, alignment: .trailing)
+    }
+    Text("")
+  }
+}
+
+private struct DetailView: View {
+  @ObservedObject var status: VitaStatus
+  
+  @State var throttledPackets: Int = 0
+    
+  var errorPerCent: Float {
+    if status.errors == 0 { return 0 }
+    return Float(status.errors) / Float(throttledPackets)
+  }
+  
+  var body: some View {
+    HStack(spacing: 10) {
+      Text(status.type.description()).frame(width: 100, alignment: .leading)
+      Group {
+        Text(throttledPackets.formatted(.number))
+        Text(status.errors.formatted(.number))
+        Text(errorPerCent.formatted(.percent.precision(.fractionLength(4))))
+      }.frame(width: 80, alignment: .trailing)
+    }
+    .padding(.leading, 90)
+    .onReceive(status.$packets.throttle(for: 1, scheduler: RunLoop.main, latest: true))
+    { value in throttledPackets = value }
+  }
+}
 
 struct NetworkView_Previews: PreviewProvider {
   static var previews: some View {
-    NetworkView()
+    NetworkView(streamModel: StreamModel.shared)
   }
 }

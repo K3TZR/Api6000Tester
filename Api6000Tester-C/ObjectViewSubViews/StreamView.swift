@@ -25,7 +25,7 @@ struct StreamView: View {
         if handle == panadapter.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        PANADAPTER Stream").foregroundColor(.blue)
+              Text("PANADAPTER Stream")
               Text(panadapter.id.hex).foregroundColor(.secondary)
             }
             
@@ -47,7 +47,7 @@ struct StreamView: View {
         if handle == waterfall.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        WATERFALL  Stream").foregroundColor(.blue)
+              Text("WATERFALL  Stream")
               Text(waterfall.id.hex).foregroundColor(.secondary)
             }
             
@@ -69,7 +69,7 @@ struct StreamView: View {
         if handle == stream.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        REMOTE Rx  Stream").foregroundColor(.blue)
+              Text("REMOTE Rx  Stream")
               Text(stream.id.hex).foregroundColor(.secondary)
             }
             
@@ -101,7 +101,7 @@ struct StreamView: View {
         if handle == stream.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        REMOTE Tx  Stream").foregroundColor(.blue)
+              Text("REMOTE Tx  Stream")
               Text(stream.id.hex).foregroundColor(.secondary)
             }
             
@@ -128,7 +128,7 @@ struct StreamView: View {
         if handle == stream.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        DAX MIC    Stream").foregroundColor(.blue)
+              Text("DAX MIC    Stream")
               Text(stream.id.hex).foregroundColor(.secondary)
             }
             
@@ -160,7 +160,7 @@ struct StreamView: View {
         if handle == stream.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        DAX RX     Stream").foregroundColor(.blue)
+              Text("DAX RX     Stream")
               Text(stream.id.hex).foregroundColor(.secondary)
             }
             
@@ -193,7 +193,7 @@ struct StreamView: View {
         if handle == stream.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        DAX TX     Stream").foregroundColor(.blue)
+              Text("DAX TX     Stream")
               Text("\(stream.id.hex)").foregroundColor(.secondary)
             }
             
@@ -220,7 +220,7 @@ struct StreamView: View {
         if handle == stream.clientHandle {
           HStack(spacing: 20) {
             HStack(spacing: 5) {
-              Text("        DAX IQ     Stream").foregroundColor(.blue)
+              Text("DAX IQ     Stream")
               Text(stream.id.hex).foregroundColor(.secondary)
             }
             
@@ -252,6 +252,7 @@ struct StreamView: View {
         }
       }
     }
+    .padding(.leading, 40)
   }
 }
 

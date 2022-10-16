@@ -13,13 +13,14 @@ import Api6000
 // MARK: - View
 
 struct CwxView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var cwx: Cwx
   
+  let post = String(repeating: " ", count: 5)
+
   var body: some View {
     
-    let cwx = viewModel.cwx
     HStack(spacing: 20) {
-      Text("        CWX")
+      Text("CWX" + post)
       
       HStack(spacing: 5) {
         Text("Breakin_Delay")
@@ -36,6 +37,7 @@ struct CwxView: View {
         Text("\(cwx.wpm)").foregroundColor(.secondary)
       }
     }
+    .padding(.leading, 40)
   }
 }
 
@@ -44,7 +46,7 @@ struct CwxView: View {
 
 struct CwxView_Previews: PreviewProvider {
   static var previews: some View {
-    CwxView(viewModel: ViewModel.shared)
+    CwxView(cwx: Cwx.shared)
     .frame(minWidth: 1000)
     .padding()
   }

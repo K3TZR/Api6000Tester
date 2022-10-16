@@ -15,16 +15,15 @@ import Api6000
 struct AtuView: View {
   @ObservedObject var atu: Atu
   
-  let pre = String(repeating: " ", count: 6)
-  let post = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 8)
 
   var body: some View {
     
     HStack(spacing: 20) {
-      if atu.isPresent {
+      if atu.status != "NONE" {
         
         HStack(spacing: 5) {
-          Text(pre + "ATU" + post + "Enabled")
+          Text("ATU" + post + "Enabled")
           Text(atu.enabled ? "Y" : "N")
             .foregroundColor(atu.enabled ? .green : .red)
         }
@@ -45,10 +44,10 @@ struct AtuView: View {
             .foregroundColor(atu.usingMemory ? .green : .red)
         }
       } else {
-        Text(pre + "ATU" + post + "NOT Installed").foregroundColor(.red)
+        Text("ATU" + post + "NOT Installed").foregroundColor(.red)
       }
     }
-    //    }
+    .padding(.leading, 40)
   }
 }
 

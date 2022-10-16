@@ -49,7 +49,7 @@ struct FilterMessagesView: View {
       HStack {
         Picker("Show Tcp Messages of type", selection: viewStore.binding(
           get: \.messageFilter,
-          send: { value in .messagesPicker(value) } )) {
+          send: { value in .messagesFilterPicker(value) } )) {
             ForEach(MessageFilter.allCases, id: \.self) {
               Text($0.rawValue)
             }

@@ -18,8 +18,19 @@ struct RadioView: View {
   let store: Store<ApiState, ApiAction>
   @ObservedObject var viewModel: ViewModel
   
-  @State var showSubView = true
+  var body: some View {
+    VStack(alignment: .leading) {
+      DetailView(store: store, viewModel: viewModel)
+    }
+  }
+}
+
+private struct DetailView: View {
+  let store: Store<ApiState, ApiAction>
+  @ObservedObject var viewModel: ViewModel
   
+  @State var showSubView = true
+
   var body: some View {
     
     WithViewStore(store) { viewStore in
@@ -29,9 +40,11 @@ struct RadioView: View {
         VStack(alignment: .leading) {
           HStack(spacing: 20) {
             Group {
-              
               HStack(spacing: 0) {
-                Text("RADIO   ").foregroundColor(.blue)
+                Image(systemName: showSubView ? "chevron.down" : "chevron.right")
+                  .help("          Tap to toggle details")
+                  .onTapGesture(perform: { showSubView.toggle() })
+                 Text(" RADIO   ").foregroundColor(.blue)
                   .font(.title)
                   .help("          Tap to toggle details")
                   .onTapGesture(perform: { showSubView.toggle() })
@@ -65,7 +78,7 @@ struct RadioView: View {
                 Text("Serial")
                 Text(packet.serial).foregroundColor(.secondary)
               }
-
+              
               HStack(spacing: 5) {
                 Text("Stations")
                 Text(packet.guiClientStations).foregroundColor(.secondary)
@@ -73,38 +86,40 @@ struct RadioView: View {
             }
           }
         }
-        if showSubView { RadioSubView(store: store, viewModel: viewModel) }
+        if showSubView { DetailSubView(store: store, viewModel: viewModel) }
       }
     }
   }
 }
-
-struct RadioSubView: View {
+          
+private struct DetailSubView: View {
   let store: Store<ApiState, ApiAction>
   @ObservedObject var viewModel: ViewModel
 
-  let pre = String(repeating: " ", count: 6)
-  let post = String(repeating: " ", count: 5)
+  let post = String(repeating: " ", count: 7)
 
   var body: some View {
     
     WithViewStore(store) { viewStore in
-      AtuView(atu: Atu.shared)
-      GpsView(gps: Gps.shared)
-
-      if let radio = viewModel.radio {
-        HStack(spacing: 0) {
-          Text(pre + "TNFs" + post)
-          HStack(spacing: 5) {
-            Text("Enabled")
-            Text(radio.tnfsEnabled ? "Y" : "N").foregroundColor(radio.tnfsEnabled ? .green : .red)
+      VStack(alignment: .leading) {
+        AtuView(atu: Atu.shared)
+        GpsView(gps: Gps.shared)
+        
+        if let radio = viewModel.radio {
+          HStack(spacing: 0) {
+            Text("TNFs" + post)
+            HStack(spacing: 5) {
+              Text("Enabled")
+              Text(radio.tnfsEnabled ? "Y" : "N").foregroundColor(radio.tnfsEnabled ? .green : .red)
+            }
           }
+          .padding(.leading, 40)
         }
+        
+        TnfView(viewModel: viewModel)
+        TransmitView(transmit: Transmit.shared)
+        MeterStreamView(viewModel: viewModel)
       }
-
-      TnfView(viewModel: viewModel)
-      TransmitView(transmit: Transmit.shared)
-      MeterStreamView(viewModel: viewModel)
     }
   }
 }

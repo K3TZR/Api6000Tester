@@ -12,7 +12,7 @@ import Api6000
 // ----------------------------------------------------------------------------
 // MARK: - View
 
-struct NonGuiClientView: View {
+struct TesterView: View {
   @ObservedObject var viewModel: ViewModel
     
   var body: some View {
@@ -28,31 +28,41 @@ struct NonGuiClientView: View {
           }
 
           HStack(spacing: 5) {
-            Text("Handle")
-            Text(viewModel.radio!.connectionHandle?.hex ?? "").foregroundColor(.secondary)
-          }
-
-          HStack(spacing: 5) {
             Text("Bound_to_Station")
             Text("\(viewModel.activeStation ?? "none")").foregroundColor(.secondary)
           }
-          
-          HStack(spacing: 5) {
-            Text("Client_Id")
-            Text("\(viewModel.radio!.boundClientId ?? "none")").foregroundColor(.secondary)
-          }
+          if viewModel.radio != nil { TesterRadioViewView(radio: viewModel.radio!) }
         }
       }
     }
   }
 }
-                 
+
+struct TesterRadioViewView: View {
+  @ObservedObject var radio: Radio
+  
+  var body: some View {
+    HStack(spacing: 10) {
+      
+      HStack(spacing: 5) {
+        Text("Handle")
+        Text(radio.connectionHandle?.hex ?? "").foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Client_Id")
+        Text("\(radio.boundClientId ?? "none")").foregroundColor(.secondary)
+      }
+    }
+  }
+}
+
 // ----------------------------------------------------------------------------
 // MARK: - Preview
 
 struct NonGuiClientView_Previews: PreviewProvider {
   static var previews: some View {
-    NonGuiClientView(viewModel: ViewModel.shared)
+    TesterView(viewModel: ViewModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

@@ -15,18 +15,18 @@ import Api6000
 struct GpsView: View {
   @ObservedObject var gps: Gps
   
-  let pre = String(repeating: " ", count: 6)
-  let post = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 8)
 
   var body: some View {
     
     HStack(spacing: 20) {
-      if gps.isPresent {
-        Text(pre + "GPS" + post + "NOT IMPLEMENTED").foregroundColor(.red)
+      if gps.installed {
+        Text("GPS" + post + "NOT IMPLEMENTED").foregroundColor(.red)
       } else {
-        Text(pre + "GPS" + post + "NOT Installed").foregroundColor(.red)
+        Text("GPS" + post + "NOT Installed").foregroundColor(.red)
       }
     }
+    .padding(.leading, 40)
   }
 }
 

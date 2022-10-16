@@ -15,22 +15,23 @@ import Api6000
 struct TnfView: View {
   @ObservedObject var viewModel: ViewModel
 
-  let pre = String(repeating: " ", count: 6)
-  let post = String(repeating: " ", count: 6)
+  let post = String(repeating: " ", count: 8)
 
   var body: some View {
     if viewModel.tnfs.count == 0 {
       HStack(spacing: 0) {
-        Text(pre + "TNF" + post)
+        Text("TNF" + post)
         Text("None present").foregroundColor(.red)
       }
+      .padding(.leading, 40)
       
     } else {
       ForEach(viewModel.tnfs) { tnf in
-        VStack (alignment: .leading) {
+//        VStack (alignment: .leading) {
           DetailView(tnf: tnf)
-        }
+//        }
       }
+      .padding(.leading, 40)
     }
   }
 }
@@ -51,7 +52,7 @@ private struct DetailView: View {
     HStack(spacing: 10) {
       
       HStack(spacing: 10) {
-        Text("        TNF  ")
+        Text("TNF  ")
         Text(String(format: "%02d", tnf.id)).foregroundColor(.green)
       }
       
@@ -78,6 +79,7 @@ private struct DetailView: View {
       }
       .frame(width: 100)
     }
+    .padding(.leading, 40)
   }
 }
 

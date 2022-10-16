@@ -22,7 +22,7 @@ struct MemoryView: View {
     
     if viewModel.memories.count == 0 {
       HStack(spacing: 5) {
-        Text("        MEMORYs")
+        Text("        MEMORYs ")
         Text("None present").foregroundColor(.red)
       }
     
@@ -44,7 +44,7 @@ private struct DetailView1: View {
     HStack(spacing: 10) {
       Group {
         HStack(spacing: 5) {
-          Text("         MEMORY")
+          Text("         MEMORY ")
           Text("\(memory.id)").foregroundColor(.secondary)
         }
         

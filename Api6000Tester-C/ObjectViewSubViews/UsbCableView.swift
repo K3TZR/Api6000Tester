@@ -15,12 +15,14 @@ import Api6000
 struct UsbCableView: View {
   @ObservedObject var viewModel: ViewModel
   
+  let post = String(repeating: " ", count: 1)
+
   var body: some View {
     if viewModel.usbCables.count == 0 {
       HStack(spacing: 5) {
-        Text("        USBCABLEs")
+        Text("USBCABLEs" + post)
         Text("None present").foregroundColor(.red)
-      }
+      }.padding(.leading, 40)
       
     } else {
       ForEach(viewModel.usbCables) { cable in
@@ -28,6 +30,7 @@ struct UsbCableView: View {
           DetailView1(cable: cable)
           DetailView2(cable: cable)
         }
+        .padding(.leading, 40)
       }
     }
   }
@@ -36,10 +39,12 @@ struct UsbCableView: View {
 private struct DetailView1: View {
   @ObservedObject var cable: UsbCable
   
+  let post = String(repeating: " ", count: 2)
+
   var body: some View {
     HStack(spacing: 20) {
-      HStack(spacing: 5) {
-        Text("        USBCABLE")
+      HStack(spacing: 0) {
+        Text("USBCABLE" + post)
         Text(cable.id).foregroundColor(.secondary)
       }
       

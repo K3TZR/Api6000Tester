@@ -22,13 +22,14 @@
 		9F256C1B28B1B468009BDE76 /* LogView in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1A28B1B468009BDE76 /* LogView */; };
 		9F256C1D28B1B468009BDE76 /* PickerView in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1C28B1B468009BDE76 /* PickerView */; };
 		9F256C1F28B1B468009BDE76 /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1E28B1B468009BDE76 /* Api6000 */; };
+		9F27BA1B28FB12A20097E1FE /* MessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F27BA1A28FB12A20097E1FE /* MessagesModel.swift */; };
 		9F29E82E28AFE585009BE31C /* AtuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82D28AFE585009BE31C /* AtuView.swift */; };
 		9F29E83028AFE61C009BE31C /* GpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82F28AFE61C009BE31C /* GpsView.swift */; };
 		9F29E83228AFE657009BE31C /* TnfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83128AFE657009BE31C /* TnfView.swift */; };
 		9F29E83428B00657009BE31C /* GuiClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83328B00657009BE31C /* GuiClientView.swift */; };
 		9F29E83628B0095E009BE31C /* PanadapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83528B0095E009BE31C /* PanadapterView.swift */; };
 		9F29E83C28B009F5009BE31C /* MeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83B28B009F5009BE31C /* MeterView.swift */; };
-		9F29E83E28B00D4B009BE31C /* NonGuiClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83D28B00D4B009BE31C /* NonGuiClientView.swift */; };
+		9F29E83E28B00D4B009BE31C /* TesterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83D28B00D4B009BE31C /* TesterView.swift */; };
 		9F29E84128B00E4E009BE31C /* BandSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83F28B00E4E009BE31C /* BandSettingView.swift */; };
 		9F29E84228B00E4E009BE31C /* AmplifierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E84028B00E4E009BE31C /* AmplifierView.swift */; };
 		9F29E84728B00F7B009BE31C /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E84328B00F7B009BE31C /* EqualizerView.swift */; };
@@ -59,13 +60,14 @@
 		9F24CFDF28AD798A0048A9FE /* MessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		9F24CFE128AD7A720048A9FE /* SendView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendView.swift; sourceTree = "<group>"; };
 		9F24CFE328AD7CD80048A9FE /* FiltersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersView.swift; sourceTree = "<group>"; };
+		9F27BA1A28FB12A20097E1FE /* MessagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesModel.swift; sourceTree = "<group>"; };
 		9F29E82D28AFE585009BE31C /* AtuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtuView.swift; sourceTree = "<group>"; };
 		9F29E82F28AFE61C009BE31C /* GpsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GpsView.swift; sourceTree = "<group>"; };
 		9F29E83128AFE657009BE31C /* TnfView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TnfView.swift; sourceTree = "<group>"; };
 		9F29E83328B00657009BE31C /* GuiClientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GuiClientView.swift; path = "Api6000Tester-C/ObjectViewSubViews/GuiClientView.swift"; sourceTree = SOURCE_ROOT; };
 		9F29E83528B0095E009BE31C /* PanadapterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanadapterView.swift; sourceTree = "<group>"; };
 		9F29E83B28B009F5009BE31C /* MeterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeterView.swift; sourceTree = "<group>"; };
-		9F29E83D28B00D4B009BE31C /* NonGuiClientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonGuiClientView.swift; sourceTree = "<group>"; };
+		9F29E83D28B00D4B009BE31C /* TesterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TesterView.swift; sourceTree = "<group>"; };
 		9F29E83F28B00E4E009BE31C /* BandSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BandSettingView.swift; sourceTree = "<group>"; };
 		9F29E84028B00E4E009BE31C /* AmplifierView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmplifierView.swift; sourceTree = "<group>"; };
 		9F29E84328B00F7B009BE31C /* EqualizerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				9F5F4F05283321C5000E8145 /* Assets.xcassets */,
 				9F5F4F0A283321C5000E8145 /* Api6000Tester-C.entitlements */,
 				9F5F4F07283321C5000E8145 /* Preview Content */,
+				9F27BA1A28FB12A20097E1FE /* MessagesModel.swift */,
 			);
 			path = "Api6000Tester-C";
 			sourceTree = "<group>";
@@ -189,7 +192,7 @@
 				9F7B060C28DE2DDD00BD867B /* MeterStreamView.swift */,
 				9F29E83B28B009F5009BE31C /* MeterView.swift */,
 				9F3A3C1328EB590D001C9E25 /* NetworkView.swift */,
-				9F29E83D28B00D4B009BE31C /* NonGuiClientView.swift */,
+				9F29E83D28B00D4B009BE31C /* TesterView.swift */,
 				9F29E83528B0095E009BE31C /* PanadapterView.swift */,
 				9F29E84B28B011A5009BE31C /* ProfileView.swift */,
 				9F8B9B4F28AD1CBB008E761F /* RadioView.swift */,
@@ -303,8 +306,9 @@
 				9F29E85228B011A5009BE31C /* ProfileView.swift in Sources */,
 				9F5F4F5928334322000E8145 /* TopButtonsView.swift in Sources */,
 				9F24CFDE28AD78D20048A9FE /* BottomButtonsView.swift in Sources */,
+				9F27BA1B28FB12A20097E1FE /* MessagesModel.swift in Sources */,
 				9F24CFE028AD798A0048A9FE /* MessagesView.swift in Sources */,
-				9F29E83E28B00D4B009BE31C /* NonGuiClientView.swift in Sources */,
+				9F29E83E28B00D4B009BE31C /* TesterView.swift in Sources */,
 				9F29E84728B00F7B009BE31C /* EqualizerView.swift in Sources */,
 				9F29E83428B00657009BE31C /* GuiClientView.swift in Sources */,
 				9F29E85328B011A5009BE31C /* XvtrView.swift in Sources */,
@@ -475,9 +479,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.8;
+				MARKETING_VERSION = 5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -506,9 +513,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 4.8;
+				MARKETING_VERSION = 5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};

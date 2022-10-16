@@ -15,15 +15,14 @@ import Api6000
 struct TransmitView: View {
   @ObservedObject var transmit: Transmit
   
-  let pre = String(repeating: " ", count: 6)
-  let post = String(repeating: " ", count: 1)
+  let post = String(repeating: " ", count: 3)
   
   var body: some View {
     
     VStack(alignment: .leading) {
       HStack(spacing: 20){
         HStack(spacing: 0) {
-          Text(pre + "TRANSMIT" + post)
+          Text("TRANSMIT" + post)
           Text("RF_Power")
           Text("\(transmit.rfPower)").padding(.leading, 5).foregroundColor(.green)
         }
@@ -53,10 +52,12 @@ struct TransmitView: View {
         }
       }
     }
+    .padding(.leading, 40)
+
     VStack(alignment: .leading) {
       HStack(spacing: 20){
         HStack(spacing: 0) {
-          Text(pre + "        " + post)
+          Text("        " + post)
           Text("Proc")
           Text(transmit.speechProcessorEnabled ? "ON" : "OFF")
             .padding(.leading, 5)
@@ -97,6 +98,7 @@ struct TransmitView: View {
         }
       }
     }
+    .padding(.leading, 40)
   }
 }
 //      }
