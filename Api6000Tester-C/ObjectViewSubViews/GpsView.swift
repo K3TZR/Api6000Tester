@@ -16,17 +16,23 @@ struct GpsView: View {
   @ObservedObject var gps: Gps
   
   let post = String(repeating: " ", count: 8)
-
+  
   var body: some View {
     
-    HStack(spacing: 20) {
-      if gps.installed {
-        Text("GPS" + post + "NOT IMPLEMENTED").foregroundColor(.red)
-      } else {
-        Text("GPS" + post + "NOT Installed").foregroundColor(.red)
+    if gps.installed {
+      HStack(spacing: 20) {
+        Text("GPS").frame(width: 80, alignment: .leading)
+        Text("NOT IMPLEMENTED").foregroundColor(.red)
       }
+      .padding(.leading, 40)
+
+    } else {
+      HStack(spacing: 20) {
+        Text("GPS").frame(width: 80, alignment: .leading)
+        Text("NOT INSTALLED").foregroundColor(.red)
+      }
+      .padding(.leading, 40)
     }
-    .padding(.leading, 40)
   }
 }
 

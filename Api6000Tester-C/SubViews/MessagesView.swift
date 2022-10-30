@@ -14,7 +14,7 @@ import SwiftUI
 struct MessagesView: View {
   let store: StoreOf<ApiModule>
   @ObservedObject var messagesModel: MessagesModel
-  
+
   @Namespace var topID
   @Namespace var bottomID
   
@@ -26,49 +26,56 @@ struct MessagesView: View {
     
     return Color(.textColor)
   }
-
-  func interval(_ start: Date, _ timeStamp: Date) -> Double {
-    return timeStamp.timeIntervalSince(start)
-  }
   
+  func intervalFormat(_ interval: Double) -> String {
+    let formatter = NumberFormatter()
+    formatter.minimumFractionDigits = 6
+    formatter.positiveFormat = " * ##0.000000"
+    return formatter.string(from: NSNumber(value: interval))!
+  }
   
   var body: some View {
     
     WithViewStore(self.store, observe: { $0 }) { viewStore in
-//      ZStack {
-//        if viewStore.filteredMessages.count == 0 { Text("Tcp Messages will be displayed here") }
-        ScrollViewReader { proxy in
-          ScrollView([.vertical, .horizontal]) {
-            VStack(alignment: .leading) {
-              Text("Top").hidden()
-                .id(topID)
-              ForEach(messagesModel.filteredMessages.reversed(), id: \.id) { message in
-                HStack {
-                  if viewStore.showTimes { Text("\(interval(viewStore.startTime!, message.timeStamp))") }
-                  Text(message.text)
-                }
-                .tag(message.id)
-                .foregroundColor( messageColor(message.text) )
+      ScrollViewReader { proxy in
+        ScrollView([.vertical, .horizontal]) {
+          VStack(alignment: .center) {
+            if messagesModel.filteredMessages.count == 0 {
+              VStack(alignment: .center) {
+                Text("Tcp Messages will be displayed here")
               }
-              Text("Bottom").hidden()
-                .id(bottomID)
+              .frame(minWidth: 900, maxWidth: .infinity, alignment: .center)
+              
+            } else {
+              VStack(alignment: .leading) {
+                Text("Top").hidden()
+                  .id(topID)
+                ForEach(messagesModel.filteredMessages.reversed(), id: \.id) { message in
+                  HStack {
+                    if viewStore.showTimes { Text(intervalFormat(message.interval)) }
+                    Text(message.text)
+                  }
+                  .tag(message.id)
+                  .foregroundColor( messageColor(message.text) )
+                }
+                Text("Bottom").hidden()
+                  .id(bottomID)
+              }
+              .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
+              .textSelection(.enabled)
+              .onChange(of: viewStore.gotoFirst, perform: { _ in
+                let id = viewStore.gotoFirst ? bottomID : topID
+                proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+              })
+              .onChange(of: messagesModel.filteredMessages.count, perform: { _ in
+                let id = viewStore.gotoFirst ? bottomID : topID
+                proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+              })
             }
-            .textSelection(.enabled)
-            .onChange(of: viewStore.gotoFirst, perform: { _ in
-              let id = viewStore.gotoFirst ? bottomID : topID
-              proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
-            })
-            .onChange(of: messagesModel.filteredMessages.count, perform: { _ in
-              let id = viewStore.gotoFirst ? bottomID : topID
-              proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
-            })
-            //            }
-            //          .frame(alignment: .leading)
-            .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
-            .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
           }
+          .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
         }
-//      }
+      }
     }
   }
 }
@@ -77,12 +84,14 @@ struct MessagesView: View {
 // MARK: - Preview
 
 struct MessagesView_Previews: PreviewProvider {
+  
   static var previews: some View {
     MessagesView(
       store: Store(
         initialState: ApiModule.State(),
         reducer: ApiModule()
-      ),
+      )
+      ,
       messagesModel: MessagesModel.shared
     )
     .frame(minWidth: 975)

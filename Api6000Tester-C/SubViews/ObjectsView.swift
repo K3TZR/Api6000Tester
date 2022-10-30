@@ -16,33 +16,32 @@ import Shared
 
 struct ObjectsView: View {
   let store: StoreOf<ApiModule>
-//  @ObservedObject var packets: Packets
   @ObservedObject var viewModel: ViewModel
-  @ObservedObject var streamModel: StreamModel
 
+  @Dependency(\.packetModel) var packetModel
   
-//  @State var users = [
-//    User(id: 1, name: "Taylor Swift", score: 90, other: 200),
-//    User(id: 2, name: "Justin Bieber", score: 80, other: 300),
-//    User(id: 3, name: "Adele Adkins", score: 85, other: 400)
-//  ]
-
   var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
       ScrollView([.horizontal, .vertical]) {
-        VStack(alignment: .leading) {
-          if viewModel.radio == nil {
+        if viewModel.radio == nil {
+          VStack(alignment: .center) {
             Text("Radio objects will be displayed here")
-          } else {
-            RadioView(store: store, viewModel: viewModel)
-//            GuiClientView(store: store, packets: packets, viewModel: viewModel, streamModel: streamModel)
-            GuiClientView(store: store, viewModel: viewModel, streamModel: streamModel)
-            if viewStore.isGui == false { TesterView(viewModel: viewModel) }
+          }
+          .frame(minWidth: 900, maxWidth: .infinity, alignment: .center)
+          
+        } else {
+          VStack(alignment: .leading) {
+            if viewModel.activePacket == nil {
+              EmptyView()
+            } else {
+              RadioView(store: store, viewModel: viewModel)
+              GuiClientView(store: store, packetModel: packetModel)
+              if viewStore.isGui == false { TesterView(viewModel: viewModel) }
+            }
           }
         }
-        .frame(minWidth: 400, maxWidth: .infinity, alignment: .leading)
       }
-      .frame(minWidth: 400, maxWidth: .infinity, alignment: .topLeading)
+      .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
       .font(.system(size: viewStore.fontSize, weight: .regular, design: .monospaced))
     }
   }
@@ -59,9 +58,7 @@ struct ObjectsView_Previews: PreviewProvider {
         initialState: ApiModule.State(isGui: false),
         reducer: ApiModule()
       ),
-//      packets: Packets.shared,
-      viewModel: ViewModel.shared,
-      streamModel: StreamModel.shared
+      viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)
       .padding()

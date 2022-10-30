@@ -16,34 +16,32 @@ import Shared
 
 struct GuiClientView: View {
   let store: StoreOf<ApiModule>
-//  @ObservedObject var guiClients: [GuiClient]
-  @ObservedObject var viewModel: ViewModel
-  @ObservedObject var streamModel: StreamModel
+  @ObservedObject var packetModel: PacketModel
   
+//  @Dependency(\.packetModel) var packetModel
+
   var body: some View {
-    if viewModel.activePacket == nil {
-      EmptyView()
-    } else {
+//    if viewModel.activePacket == nil {
+//      EmptyView()
+//    } else {
       VStack(alignment: .leading) {
-        ForEach(viewModel.activePacket!.guiClients, id: \.id) { guiClient in
-          DetailView(store: store, guiClient: guiClient, viewModel: viewModel, streamModel: streamModel)
+        ForEach(packetModel.guiClients, id: \.id) { guiClient in
+          DetailView(store: store, guiClient: guiClient)
         }
       }
-    }
+//    }
   }
 }
 
 private struct DetailView: View {
   let store: StoreOf<ApiModule>
   @ObservedObject var guiClient: GuiClient
-  @ObservedObject var viewModel: ViewModel
-  @ObservedObject var streamModel: StreamModel
   
   @State var showSubView = true
   
   var body: some View {
-    Divider().background(Color(.red))
-    HStack(spacing: 10) {
+    Divider().background(Color(.yellow))
+    HStack(spacing: 20) {
       
       HStack(spacing: 0) {
         Image(systemName: showSubView ? "chevron.down" : "chevron.right")
@@ -77,14 +75,16 @@ private struct DetailView: View {
         Text(guiClient.isLocalPtt ? "Y" : "N").foregroundColor(guiClient.isLocalPtt ? .green : .red)
       }
     }
-    if showSubView { GuiClientSubView(store: store, viewModel: viewModel, streamModel: streamModel, handle: guiClient.handle) }
+    if showSubView { GuiClientSubView(store: store, handle: guiClient.handle) }
   }
 }
 
 struct GuiClientSubView: View {
   let store: StoreOf<ApiModule>
-  @ObservedObject var viewModel: ViewModel
-  @ObservedObject var streamModel: StreamModel
+  
+  @Dependency(\.viewModel) var viewModel
+  @Dependency(\.streamModel) var streamModel
+  
   let handle: Handle
   
   var body: some View {
@@ -105,6 +105,12 @@ struct GuiClientSubView: View {
       case ObjectFilter.interlock:         InterlockView(interlock: Interlock.shared)
       case ObjectFilter.memories:          MemoryView(viewModel: viewModel)
       case ObjectFilter.meters:            MeterView(viewModel: viewModel, sliceId: nil, sliceClientHandle: nil, handle: handle)
+      case ObjectFilter.misc:
+        if viewModel.radio != nil {
+          MiscView(radio: viewModel.radio!)
+        } else {
+          EmptyView()
+        }
       case ObjectFilter.network:           NetworkView(streamModel: streamModel)
       case ObjectFilter.profiles:          ProfileView(viewModel: viewModel)
       case ObjectFilter.streams:           StreamView(viewModel: viewModel, streamModel: streamModel, handle: handle)
@@ -125,9 +131,7 @@ struct GuiClientView_Previews: PreviewProvider {
     GuiClientView( store:
                     Store(initialState: ApiModule.State(),
                           reducer: ApiModule()),
-//                   packets: Packets.shared,
-                   viewModel: ViewModel.shared,
-                   streamModel: StreamModel.shared)
+                   packetModel: PacketModel.shared)
     .frame(minWidth: 1000)
     .padding()
   }

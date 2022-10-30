@@ -28,10 +28,13 @@ public struct TopButtonsView: View {
         .keyboardShortcut(viewModel.radio == nil ? .defaultAction : .cancelAction)
 
         HStack(spacing: 20) {
-          Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\ApiModule.State.isGui)))
-            .disabled(viewModel.radio != nil)
-          Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\ApiModule.State.showTimes)))
-          Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\ApiModule.State.showPings)))
+          Group {
+            Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\ApiModule.State.isGui)))
+              .disabled(viewModel.radio != nil)
+            Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\ApiModule.State.showTimes)))
+            Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\ApiModule.State.showPings)))
+          }
+          .frame(width: 60)
         }
 
         Spacer()
@@ -41,14 +44,14 @@ public struct TopButtonsView: View {
           Toggle(isOn: viewStore.binding(get: \.txAudio, send: { .txAudioButton($0)} )) {
             Text("Tx Audio") }
         }
-        .frame(width: 100)
+        .frame(width: 150)
 
         Spacer()
         ControlGroup {
           Toggle("Local", isOn: viewStore.binding(get: \.local, send: { .localButton($0) } ))
           Toggle("Smartlink", isOn: viewStore.binding(get: \.smartlink, send: { .smartlinkButton($0) } ))
         }
-        .frame(width: 100)
+        .frame(width: 150)
         .disabled(viewModel.radio != nil)
 
         Spacer()

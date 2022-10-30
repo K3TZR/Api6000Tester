@@ -18,7 +18,7 @@ struct TesterView: View {
   var body: some View {
     if viewModel.radio != nil {
       VStack(alignment: .leading) {
-        Divider().background(Color(.red))
+        Divider().background(Color(.green))
         HStack(spacing: 10) {
           
           HStack {
@@ -28,7 +28,7 @@ struct TesterView: View {
           }
 
           HStack(spacing: 5) {
-            Text("Bound_to_Station")
+            Text("Bound to Station")
             Text("\(viewModel.activeStation ?? "none")").foregroundColor(.secondary)
           }
           if viewModel.radio != nil { TesterRadioViewView(radio: viewModel.radio!) }
@@ -50,7 +50,7 @@ struct TesterRadioViewView: View {
       }
       
       HStack(spacing: 5) {
-        Text("Client_Id")
+        Text("Client Id")
         Text("\(radio.boundClientId ?? "none")").foregroundColor(.secondary)
       }
     }

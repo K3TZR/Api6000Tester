@@ -50,7 +50,7 @@ private struct HeadingView: View {
 
   var body: some View {
     HStack(spacing: 10) {
-      Text("METER").frame(width: 60, alignment: .leading)
+      Text("METERS").frame(width: 60, alignment: .leading)
       Group {
         Text("Number")
         if sliceId == nil {

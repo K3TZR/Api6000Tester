@@ -37,6 +37,7 @@ private struct DetailView: View {
       if viewModel.activePacket != nil {
         
         let packet = viewModel.activePacket!
+        
         VStack(alignment: .leading) {
           HStack(spacing: 20) {
             Group {
@@ -44,18 +45,18 @@ private struct DetailView: View {
                 Image(systemName: showSubView ? "chevron.down" : "chevron.right")
                   .help("          Tap to toggle details")
                   .onTapGesture(perform: { showSubView.toggle() })
-                 Text(" RADIO   ").foregroundColor(.blue)
+                Text(" RADIO   ").foregroundColor(viewModel.activePacket!.source == .local ? .blue : .red)
                   .font(.title)
                   .help("          Tap to toggle details")
                   .onTapGesture(perform: { showSubView.toggle() })
                 Text(packet.nickname)
-                  .foregroundColor(.blue)
+                  .foregroundColor(viewModel.activePacket!.source == .local ? .blue : .red)
               }
               
               HStack(spacing: 5) {
                 Text("Connection")
                 Text(packet.source.rawValue)
-                  .foregroundColor(.secondary)
+                  .foregroundColor(viewModel.activePacket?.source == .local ? .blue : .red)
               }
               
               HStack(spacing: 5) {
@@ -69,56 +70,81 @@ private struct DetailView: View {
               }
               
               HStack(spacing: 5) {
+                Text("HW")
+                Text(viewModel.radio?.hardwareVersion ?? "Unknown").foregroundColor(.secondary)
+              }
+              
+              HStack(spacing: 5) {
                 Text("Model")
                 Text(packet.model).foregroundColor(.secondary)
               }
-            }
-            Group {
+              
               HStack(spacing: 5) {
                 Text("Serial")
                 Text(packet.serial).foregroundColor(.secondary)
               }
-              
-              HStack(spacing: 5) {
-                Text("Stations")
-                Text(packet.guiClientStations).foregroundColor(.secondary)
-              }.frame(width: 150, alignment: .leading)
             }
+            .frame(alignment: .leading)
           }
+          Line2View(viewModel: viewModel)
         }
-        if showSubView { DetailSubView(store: store, viewModel: viewModel) }
+      }
+      if showSubView { DetailSubView(store: store, viewModel: viewModel) }
+    }
+  }
+}
+
+private struct Line2View: View {
+  @ObservedObject var viewModel: ViewModel
+
+  func stringArrayToString( _ list: [String]?) -> String {
+    
+    guard list != nil else { return "Unknown"}
+    let str = list!.reduce("") {$0 + $1 + ", "}
+    return String(str.dropLast(2))
+  }
+  
+  func uint32ArrayToString( _ list: [UInt32]) -> String {
+    let str = list.reduce("") {String($0) + String($1) + ", "}
+    return String(str.dropLast(2))
+  }
+  
+  var body: some View {
+    HStack(spacing: 20) {
+      Text("").frame(width: 165)
+      
+      HStack(spacing: 5) {
+        Text("Ant List")
+        Text(stringArrayToString(viewModel.radio?.antennaList)).foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Mic List")
+        Text(stringArrayToString(viewModel.radio?.micList)).foregroundColor(.secondary)
+      }
+      
+      HStack(spacing: 5) {
+        Text("Tnf Enabled")
+        Text(viewModel.radio?.tnfsEnabled ?? false ? "Y" : "N").foregroundColor(viewModel.radio?.tnfsEnabled ?? false ? .green : .red)
       }
     }
   }
 }
-          
+
 private struct DetailSubView: View {
   let store: StoreOf<ApiModule>
   @ObservedObject var viewModel: ViewModel
 
-  let post = String(repeating: " ", count: 7)
-
   var body: some View {
     
     WithViewStore(self.store, observe: { $0 }) { viewStore in
+      Divider().background(viewModel.activePacket?.source == .local ? .blue : .red)
       VStack(alignment: .leading) {
         AtuView(atu: Atu.shared)
         GpsView(gps: Gps.shared)
-        
-        if let radio = viewModel.radio {
-          HStack(spacing: 0) {
-            Text("TNFs" + post)
-            HStack(spacing: 5) {
-              Text("Enabled")
-              Text(radio.tnfsEnabled ? "Y" : "N").foregroundColor(radio.tnfsEnabled ? .green : .red)
-            }
-          }
-          .padding(.leading, 40)
-        }
-        
-        TnfView(viewModel: viewModel)
-        TransmitView(transmit: Transmit.shared)
         MeterStreamView(viewModel: viewModel)
+        TransmitView(transmit: Transmit.shared)
+        TnfView(viewModel: viewModel)
       }
     }
   }

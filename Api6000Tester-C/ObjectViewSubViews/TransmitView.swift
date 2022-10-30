@@ -15,87 +15,90 @@ import Api6000
 struct TransmitView: View {
   @ObservedObject var transmit: Transmit
   
-  let post = String(repeating: " ", count: 3)
-  
   var body: some View {
     
     VStack(alignment: .leading) {
-      HStack(spacing: 20){
-        HStack(spacing: 0) {
-          Text("TRANSMIT" + post)
-          Text("RF_Power")
-          Text("\(transmit.rfPower)").padding(.leading, 5).foregroundColor(.green)
-        }
-        HStack(spacing: 5) {
-          Text("Tune_Power")
-          Text("\(transmit.tunePower)").foregroundColor(.green)
-        }
-        HStack(spacing: 5) {
-          Text("Frequency")
-          Text("\(transmit.frequency)").foregroundColor(.secondary)
-        }
-        HStack(spacing: 5) {
-          Text("Mon_Level")
-          Text("\(transmit.txMonitorGainSb)").foregroundColor(.green)
-        }
-        HStack(spacing: 5) {
-          Text("Comp_Level")
-          Text("\(transmit.companderLevel)").foregroundColor(.green)
-        }
-        HStack(spacing: 5) {
-          Text("Mic")
-          Text("\(transmit.micSelection)").foregroundColor(.secondary)
-        }
-        HStack(spacing: 5) {
-          Text("Mic_Level")
-          Text("\(transmit.micLevel)").foregroundColor(.green)
-        }
+      HStack(spacing: 20) {
+        Text("TRANSMIT").frame(width: 80, alignment: .leading)
+        
+        Group {
+          HStack(spacing: 5) {
+            Text("RF_Power")
+            Text("\(transmit.rfPower)").foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("Tune_Power")
+            Text("\(transmit.tunePower)").foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("Frequency")
+            Text("\(transmit.frequency)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("Mon_Level")
+            Text("\(transmit.txMonitorGainSb)").foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("Comp_Level")
+            Text("\(transmit.companderLevel)").foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("Mic")
+            Text("\(transmit.micSelection)").foregroundColor(.secondary)
+          }
+          HStack(spacing: 5) {
+            Text("Mic_Level")
+            Text("\(transmit.micLevel)").foregroundColor(.green)
+          }
+        }.frame(width: 100, alignment: .leading)
       }
-    }
-    .padding(.leading, 40)
+      
+      
 
-    VStack(alignment: .leading) {
       HStack(spacing: 20){
-        HStack(spacing: 0) {
-          Text("        " + post)
-          Text("Proc")
-          Text(transmit.speechProcessorEnabled ? "ON" : "OFF")
-            .padding(.leading, 5)
-            .foregroundColor(transmit.speechProcessorEnabled ? .green : .red)
+        Text("").frame(width: 80, alignment: .leading)
+
+        Group {
+          HStack(spacing: 5) {
+            Text("Proc")
+            Text(transmit.speechProcessorEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.speechProcessorEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Comp")
+            Text(transmit.companderEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.companderEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Mon")
+            Text(transmit.txMonitorEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.txMonitorEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Acc")
+            Text(transmit.micAccEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.micAccEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Dax")
+            Text(transmit.daxEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.daxEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Vox")
+            Text(transmit.voxEnabled ? "ON" : "OFF")
+              .foregroundColor(transmit.voxEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Vox_Delay")
+            Text("\(transmit.voxDelay)").foregroundColor(.green)
+          }
+          HStack(spacing: 5) {
+            Text("Vox_Level")
+            Text("\(transmit.voxLevel)").foregroundColor(.green)
+          }
         }
-        HStack(spacing: 5) {
-          Text("Comp")
-          Text(transmit.companderEnabled ? "ON" : "OFF")
-            .foregroundColor(transmit.companderEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Mon")
-          Text(transmit.txMonitorEnabled ? "ON" : "OFF")
-            .foregroundColor(transmit.txMonitorEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Acc")
-          Text(transmit.micAccEnabled ? "ON" : "OFF")
-            .foregroundColor(transmit.micAccEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Dax")
-          Text(transmit.daxEnabled ? "ON" : "OFF")
-            .foregroundColor(transmit.daxEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Vox")
-          Text(transmit.voxEnabled ? "ON" : "OFF")
-            .foregroundColor(transmit.voxEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Vox_Delay")
-          Text("\(transmit.voxDelay)").foregroundColor(.green)
-        }
-        HStack(spacing: 5) {
-          Text("Vox_Level")
-          Text("\(transmit.voxLevel)").foregroundColor(.green)
-        }
+        .frame(width: 100, alignment: .leading)
       }
     }
     .padding(.leading, 40)

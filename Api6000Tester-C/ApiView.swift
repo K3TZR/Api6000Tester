@@ -9,10 +9,10 @@ import ComposableArchitecture
 import SwiftUI
 
 import Api6000
-import ClientView
-import LoginView
-import LogView
-import PickerView
+import ClientFeature
+import LoginFeature
+import LogFeature
+import PickerFeature
 import Shared
 
 // ----------------------------------------------------------------------------
@@ -20,15 +20,14 @@ import Shared
 
 public struct ApiView: View {
   let store: StoreOf<ApiModule>
-  
+
+  @Dependency(\.messagesModel) var messagesModel
+  @Dependency(\.viewModel) var viewModel
+      
   public init(store: StoreOf<ApiModule>) {
     self.store = store
   }
   
-//  @StateObject var packets: Packets = Packets.shared
-  @StateObject var viewModel: ViewModel = ViewModel.shared
-  @StateObject var streamModel: StreamModel = StreamModel.shared
-
   public var body: some View {
     
     WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -41,11 +40,10 @@ public struct ApiView: View {
         Divider().background(Color(.gray))
 
         VSplitView {
-//          ObjectsView(store: store, packets: packets, viewModel: viewModel, streamModel: streamModel)
-          ObjectsView(store: store, viewModel: viewModel, streamModel: streamModel)
+          ObjectsView(store: store, viewModel: viewModel)
             .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
           Divider().background(Color(.cyan))
-          MessagesView(store: store, messagesModel: MessagesModel.shared)
+          MessagesView(store: store, messagesModel: messagesModel)
             .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
         }
         Spacer()

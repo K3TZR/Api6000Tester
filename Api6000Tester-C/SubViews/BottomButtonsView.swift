@@ -15,7 +15,9 @@ import Api6000
 
 struct BottomButtonsView: View {
   let store: StoreOf<ApiModule>
-
+  
+  @Dependency(\.messagesModel) var messagesModel
+  
   var body: some View {
 
     WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -33,7 +35,7 @@ struct BottomButtonsView: View {
           Text(viewStore.gotoFirst ? "Goto Last" : "Goto First")
           Image(systemName: viewStore.gotoFirst ? "arrow.up.square" : "arrow.down.square").font(.title)
             .onTapGesture { viewStore.send(.toggle(\.gotoFirst)) }
-//            .disabled(viewStore.filteredMessages.count == 0)
+            .disabled(messagesModel.filteredMessages.count == 0)
         }
         .frame(width: 120, alignment: .trailing)
 

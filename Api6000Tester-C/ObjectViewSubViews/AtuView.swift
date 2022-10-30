@@ -15,36 +15,37 @@ import Api6000
 struct AtuView: View {
   @ObservedObject var atu: Atu
   
-  let post = String(repeating: " ", count: 8)
-
   var body: some View {
     
     HStack(spacing: 20) {
+      Text("ATU").frame(width: 80, alignment: .leading)
+
       if atu.status != "NONE" {
+        Group {
+          HStack(spacing: 5) {
+            Text("Enabled")
+            Text(atu.enabled ? "Y" : "N").foregroundColor(atu.enabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Status")
+            Text(atu.status == "" ? "none" : atu.status)
+              .foregroundColor(atu.status == "" ? .red : .secondary)
+          }
+          
+          HStack(spacing: 5) {
+            Text("Mem enabled")
+            Text(atu.memoriesEnabled ? "Y" : "N")
+              .foregroundColor(atu.memoriesEnabled ? .green : .red)
+          }
+          HStack(spacing: 5) {
+            Text("Using Mem")
+            Text(atu.usingMemory ? "Y" : "N")
+              .foregroundColor(atu.usingMemory ? .green : .red)
+          }
+        }.frame(width: 100, alignment: .leading)
         
-        HStack(spacing: 5) {
-          Text("ATU" + post + "Enabled")
-          Text(atu.enabled ? "Y" : "N")
-            .foregroundColor(atu.enabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Status")
-          Text(atu.status == "" ? "none" : atu.status)
-            .foregroundColor(atu.status == "" ? .red : .secondary)
-        }
-        
-        HStack(spacing: 5) {
-          Text("Memories_enabled")
-          Text(atu.memoriesEnabled ? "Y" : "N")
-            .foregroundColor(atu.memoriesEnabled ? .green : .red)
-        }
-        HStack(spacing: 5) {
-          Text("Using_memories")
-          Text(atu.usingMemory ? "Y" : "N")
-            .foregroundColor(atu.usingMemory ? .green : .red)
-        }
       } else {
-        Text("ATU" + post + "NOT Installed").foregroundColor(.red)
+        Text("NOT Installed").foregroundColor(.red)
       }
     }
     .padding(.leading, 40)

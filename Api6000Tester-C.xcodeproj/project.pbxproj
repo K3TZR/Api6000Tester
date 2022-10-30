@@ -17,12 +17,9 @@
 		9F256C1128B1B468009BDE76 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1028B1B468009BDE76 /* Shared */; };
 		9F256C1328B1B468009BDE76 /* Vita in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1228B1B468009BDE76 /* Vita */; };
 		9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1428B1B468009BDE76 /* XCGWrapper */; };
-		9F256C1728B1B468009BDE76 /* ClientView in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1628B1B468009BDE76 /* ClientView */; };
-		9F256C1928B1B468009BDE76 /* LoginView in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1828B1B468009BDE76 /* LoginView */; };
-		9F256C1B28B1B468009BDE76 /* LogView in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1A28B1B468009BDE76 /* LogView */; };
-		9F256C1D28B1B468009BDE76 /* PickerView in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1C28B1B468009BDE76 /* PickerView */; };
 		9F256C1F28B1B468009BDE76 /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1E28B1B468009BDE76 /* Api6000 */; };
 		9F27BA1B28FB12A20097E1FE /* MessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F27BA1A28FB12A20097E1FE /* MessagesModel.swift */; };
+		9F27BA1D28FE1ED30097E1FE /* ClientFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F27BA1C28FE1ED30097E1FE /* ClientFeature */; };
 		9F29E82E28AFE585009BE31C /* AtuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82D28AFE585009BE31C /* AtuView.swift */; };
 		9F29E83028AFE61C009BE31C /* GpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82F28AFE61C009BE31C /* GpsView.swift */; };
 		9F29E83228AFE657009BE31C /* TnfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83128AFE657009BE31C /* TnfView.swift */; };
@@ -44,14 +41,18 @@
 		9F29E85728B011A5009BE31C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85028B011A5009BE31C /* WaveformView.swift */; };
 		9F29E85828B011A5009BE31C /* WanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85128B011A5009BE31C /* WanView.swift */; };
 		9F3A3C1428EB590D001C9E25 /* NetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3A3C1328EB590D001C9E25 /* NetworkView.swift */; };
+		9F4204492901B50900357312 /* MiscView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4204482901B50900357312 /* MiscView.swift */; };
 		9F5F4F02283321C5000E8145 /* Api6000TesterCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */; };
 		9F5F4F06283321C5000E8145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F05283321C5000E8145 /* Assets.xcassets */; };
 		9F5F4F09283321C5000E8145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */; };
 		9F5F4F3E28332543000E8145 /* ApiCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3A28332543000E8145 /* ApiCore.swift */; };
 		9F5F4F3F28332543000E8145 /* ApiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3B28332543000E8145 /* ApiView.swift */; };
 		9F5F4F5928334322000E8145 /* TopButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F5828334322000E8145 /* TopButtonsView.swift */; };
+		9F65A14428FE261000F9966A /* PickerFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F65A14328FE261000F9966A /* PickerFeature */; };
+		9F65A14628FE2C4900F9966A /* LoginFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F65A14528FE2C4900F9966A /* LoginFeature */; };
 		9F7B060D28DE2DDD00BD867B /* MeterStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F7B060C28DE2DDD00BD867B /* MeterStreamView.swift */; };
 		9F8B9B6628AD1CBB008E761F /* RadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8B9B4F28AD1CBB008E761F /* RadioView.swift */; };
+		9FF5E5C729074444000CE581 /* LogFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9FF5E5C629074444000CE581 /* LogFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,7 @@
 		9F29E85028B011A5009BE31C /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		9F29E85128B011A5009BE31C /* WanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
 		9F3A3C1328EB590D001C9E25 /* NetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkView.swift; sourceTree = "<group>"; };
+		9F4204482901B50900357312 /* MiscView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscView.swift; sourceTree = "<group>"; };
 		9F4286F428C2A7830030C091 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
 		9F4286F528C434280030C091 /* UtilityComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UtilityComponents; path = ../Packages/UtilityComponents; sourceTree = "<group>"; };
 		9F4286F628C78DB80030C091 /* ViewComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ViewComponents; path = ../Packages/ViewComponents; sourceTree = "<group>"; };
@@ -103,14 +105,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F256C1B28B1B468009BDE76 /* LogView in Frameworks */,
-				9F256C1728B1B468009BDE76 /* ClientView in Frameworks */,
 				9F256C1328B1B468009BDE76 /* Vita in Frameworks */,
 				9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */,
-				9F256C1D28B1B468009BDE76 /* PickerView in Frameworks */,
-				9F256C1928B1B468009BDE76 /* LoginView in Frameworks */,
+				9F27BA1D28FE1ED30097E1FE /* ClientFeature in Frameworks */,
 				9F24394F28D2021C00356E7D /* RingBuffer in Frameworks */,
 				9F256C1128B1B468009BDE76 /* Shared in Frameworks */,
+				9F65A14428FE261000F9966A /* PickerFeature in Frameworks */,
+				9FF5E5C729074444000CE581 /* LogFeature in Frameworks */,
+				9F65A14628FE2C4900F9966A /* LoginFeature in Frameworks */,
 				9F24395128D2591B00356E7D /* OpusPlayer in Frameworks */,
 				9F256C1F28B1B468009BDE76 /* Api6000 in Frameworks */,
 			);
@@ -188,15 +190,16 @@
 				9F29E82F28AFE61C009BE31C /* GpsView.swift */,
 				9F29E83328B00657009BE31C /* GuiClientView.swift */,
 				9F29E84628B00F7B009BE31C /* InterlockView.swift */,
+				9F4204482901B50900357312 /* MiscView.swift */,
 				9F29E84528B00F7B009BE31C /* MemoryView.swift */,
 				9F7B060C28DE2DDD00BD867B /* MeterStreamView.swift */,
 				9F29E83B28B009F5009BE31C /* MeterView.swift */,
 				9F3A3C1328EB590D001C9E25 /* NetworkView.swift */,
-				9F29E83D28B00D4B009BE31C /* TesterView.swift */,
 				9F29E83528B0095E009BE31C /* PanadapterView.swift */,
 				9F29E84B28B011A5009BE31C /* ProfileView.swift */,
 				9F8B9B4F28AD1CBB008E761F /* RadioView.swift */,
 				9F29E84D28B011A5009BE31C /* StreamView.swift */,
+				9F29E83D28B00D4B009BE31C /* TesterView.swift */,
 				9F29E83128AFE657009BE31C /* TnfView.swift */,
 				9F29E84F28B011A5009BE31C /* TransmitView.swift */,
 				9F29E84E28B011A5009BE31C /* UsbCableView.swift */,
@@ -234,13 +237,13 @@
 				9F256C1028B1B468009BDE76 /* Shared */,
 				9F256C1228B1B468009BDE76 /* Vita */,
 				9F256C1428B1B468009BDE76 /* XCGWrapper */,
-				9F256C1628B1B468009BDE76 /* ClientView */,
-				9F256C1828B1B468009BDE76 /* LoginView */,
-				9F256C1A28B1B468009BDE76 /* LogView */,
-				9F256C1C28B1B468009BDE76 /* PickerView */,
 				9F256C1E28B1B468009BDE76 /* Api6000 */,
 				9F24394E28D2021C00356E7D /* RingBuffer */,
 				9F24395028D2591B00356E7D /* OpusPlayer */,
+				9F27BA1C28FE1ED30097E1FE /* ClientFeature */,
+				9F65A14328FE261000F9966A /* PickerFeature */,
+				9F65A14528FE2C4900F9966A /* LoginFeature */,
+				9FF5E5C629074444000CE581 /* LogFeature */,
 			);
 			productName = Api6000Tester;
 			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */;
@@ -312,6 +315,7 @@
 				9F29E84728B00F7B009BE31C /* EqualizerView.swift in Sources */,
 				9F29E83428B00657009BE31C /* GuiClientView.swift in Sources */,
 				9F29E85328B011A5009BE31C /* XvtrView.swift in Sources */,
+				9F4204492901B50900357312 /* MiscView.swift in Sources */,
 				9F24CFDC28AD73600048A9FE /* ObjectsView.swift in Sources */,
 				9F24CFE428AD7CD80048A9FE /* FiltersView.swift in Sources */,
 				9F29E83228AFE657009BE31C /* TnfView.swift in Sources */,
@@ -479,7 +483,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -513,7 +518,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -606,30 +612,26 @@
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
 			productName = XCGWrapper;
 		};
-		9F256C1628B1B468009BDE76 /* ClientView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = ClientView;
-		};
-		9F256C1828B1B468009BDE76 /* LoginView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = LoginView;
-		};
-		9F256C1A28B1B468009BDE76 /* LogView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = LogView;
-		};
-		9F256C1C28B1B468009BDE76 /* PickerView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = PickerView;
-		};
 		9F256C1E28B1B468009BDE76 /* Api6000 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */;
 			productName = Api6000;
+		};
+		9F27BA1C28FE1ED30097E1FE /* ClientFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ClientFeature;
+		};
+		9F65A14328FE261000F9966A /* PickerFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PickerFeature;
+		};
+		9F65A14528FE2C4900F9966A /* LoginFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LoginFeature;
+		};
+		9FF5E5C629074444000CE581 /* LogFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LogFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

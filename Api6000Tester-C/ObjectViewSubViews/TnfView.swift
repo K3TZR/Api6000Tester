@@ -15,21 +15,18 @@ import Api6000
 struct TnfView: View {
   @ObservedObject var viewModel: ViewModel
 
-  let post = String(repeating: " ", count: 8)
-
   var body: some View {
     if viewModel.tnfs.count == 0 {
-      HStack(spacing: 0) {
-        Text("TNF" + post)
+      HStack(spacing: 20) {
+        Text("TNF").frame(width: 80, alignment: .leading)
+        
         Text("None present").foregroundColor(.red)
       }
       .padding(.leading, 40)
       
     } else {
       ForEach(viewModel.tnfs) { tnf in
-//        VStack (alignment: .leading) {
-          DetailView(tnf: tnf)
-//        }
+        DetailView(tnf: tnf)
       }
       .padding(.leading, 40)
     }
@@ -49,17 +46,21 @@ private struct DetailView: View {
   }
 
   var body: some View {
-    HStack(spacing: 10) {
-      
-      HStack(spacing: 10) {
-        Text("TNF  ")
-        Text(String(format: "%02d", tnf.id)).foregroundColor(.green)
-      }
+
+    
+    HStack(spacing: 20) {
       
       HStack(spacing: 5) {
-        Text("Frequency").frame(width: 80, alignment: .leading)
-        Text("\(tnf.frequency)").foregroundColor(.secondary).frame(width: 80, alignment: .trailing)
+        Text("TNF")
+        Text(String(format: "%02d", tnf.id)).foregroundColor(.green)
       }
+      .frame(width: 80, alignment: .leading)
+      
+      HStack(spacing: 0) {
+        Text("Frequency").frame(width: 80, alignment: .leading)
+        Text("\(tnf.frequency)").foregroundColor(.secondary).frame(width: 120, alignment: .trailing)
+      }
+      .padding(.trailing, 20)
       
       Group {
         HStack(spacing: 5) {
@@ -76,10 +77,8 @@ private struct DetailView: View {
           Text("Permanent")
           Text(tnf.permanent ? "Y" : "N").foregroundColor(tnf.permanent ? .green : .red)
         }
-      }
-      .frame(width: 100)
+      }.frame(width: 100, alignment: .leading)
     }
-    .padding(.leading, 40)
   }
 }
 
