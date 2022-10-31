@@ -7,19 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9F24394F28D2021C00356E7D /* RingBuffer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F24394E28D2021C00356E7D /* RingBuffer */; };
-		9F24395128D2591B00356E7D /* OpusPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F24395028D2591B00356E7D /* OpusPlayer */; };
+		9F16F7CA290F0BE700C0700F /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7C9290F0BE700C0700F /* Api6000 */; };
+		9F16F7CC290F0BF600C0700F /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7CB290F0BF600C0700F /* Shared */; };
+		9F16F7CE290F0FE700C0700F /* ClientFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7CD290F0FE700C0700F /* ClientFeature */; };
+		9F16F7D0290F0FE800C0700F /* LogFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7CF290F0FE800C0700F /* LogFeature */; };
+		9F16F7D2290F0FE800C0700F /* LoginFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7D1290F0FE800C0700F /* LoginFeature */; };
+		9F16F7D4290F0FE800C0700F /* PickerFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7D3290F0FE800C0700F /* PickerFeature */; };
+		9F16F7D6290F101900C0700F /* OpusPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7D5290F101900C0700F /* OpusPlayer */; };
 		9F24CFDC28AD73600048A9FE /* ObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDB28AD73600048A9FE /* ObjectsView.swift */; };
 		9F24CFDE28AD78D20048A9FE /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDD28AD78D20048A9FE /* BottomButtonsView.swift */; };
 		9F24CFE028AD798A0048A9FE /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDF28AD798A0048A9FE /* MessagesView.swift */; };
 		9F24CFE228AD7A720048A9FE /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFE128AD7A720048A9FE /* SendView.swift */; };
 		9F24CFE428AD7CD80048A9FE /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFE328AD7CD80048A9FE /* FiltersView.swift */; };
-		9F256C1128B1B468009BDE76 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1028B1B468009BDE76 /* Shared */; };
 		9F256C1328B1B468009BDE76 /* Vita in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1228B1B468009BDE76 /* Vita */; };
 		9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1428B1B468009BDE76 /* XCGWrapper */; };
-		9F256C1F28B1B468009BDE76 /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1E28B1B468009BDE76 /* Api6000 */; };
 		9F27BA1B28FB12A20097E1FE /* MessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F27BA1A28FB12A20097E1FE /* MessagesModel.swift */; };
-		9F27BA1D28FE1ED30097E1FE /* ClientFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F27BA1C28FE1ED30097E1FE /* ClientFeature */; };
 		9F29E82E28AFE585009BE31C /* AtuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82D28AFE585009BE31C /* AtuView.swift */; };
 		9F29E83028AFE61C009BE31C /* GpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82F28AFE61C009BE31C /* GpsView.swift */; };
 		9F29E83228AFE657009BE31C /* TnfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E83128AFE657009BE31C /* TnfView.swift */; };
@@ -48,11 +50,8 @@
 		9F5F4F3E28332543000E8145 /* ApiCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3A28332543000E8145 /* ApiCore.swift */; };
 		9F5F4F3F28332543000E8145 /* ApiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F3B28332543000E8145 /* ApiView.swift */; };
 		9F5F4F5928334322000E8145 /* TopButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F5828334322000E8145 /* TopButtonsView.swift */; };
-		9F65A14428FE261000F9966A /* PickerFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F65A14328FE261000F9966A /* PickerFeature */; };
-		9F65A14628FE2C4900F9966A /* LoginFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F65A14528FE2C4900F9966A /* LoginFeature */; };
 		9F7B060D28DE2DDD00BD867B /* MeterStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F7B060C28DE2DDD00BD867B /* MeterStreamView.swift */; };
 		9F8B9B6628AD1CBB008E761F /* RadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8B9B4F28AD1CBB008E761F /* RadioView.swift */; };
-		9FF5E5C729074444000CE581 /* LogFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9FF5E5C629074444000CE581 /* LogFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,9 +83,6 @@
 		9F29E85128B011A5009BE31C /* WanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
 		9F3A3C1328EB590D001C9E25 /* NetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkView.swift; sourceTree = "<group>"; };
 		9F4204482901B50900357312 /* MiscView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscView.swift; sourceTree = "<group>"; };
-		9F4286F428C2A7830030C091 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
-		9F4286F528C434280030C091 /* UtilityComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UtilityComponents; path = ../Packages/UtilityComponents; sourceTree = "<group>"; };
-		9F4286F628C78DB80030C091 /* ViewComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ViewComponents; path = ../Packages/ViewComponents; sourceTree = "<group>"; };
 		9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Api6000Tester-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api6000TesterCApp.swift; sourceTree = "<group>"; };
 		9F5F4F05283321C5000E8145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -105,16 +101,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F16F7D2290F0FE800C0700F /* LoginFeature in Frameworks */,
 				9F256C1328B1B468009BDE76 /* Vita in Frameworks */,
+				9F16F7D6290F101900C0700F /* OpusPlayer in Frameworks */,
+				9F16F7CC290F0BF600C0700F /* Shared in Frameworks */,
+				9F16F7D0290F0FE800C0700F /* LogFeature in Frameworks */,
 				9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */,
-				9F27BA1D28FE1ED30097E1FE /* ClientFeature in Frameworks */,
-				9F24394F28D2021C00356E7D /* RingBuffer in Frameworks */,
-				9F256C1128B1B468009BDE76 /* Shared in Frameworks */,
-				9F65A14428FE261000F9966A /* PickerFeature in Frameworks */,
-				9FF5E5C729074444000CE581 /* LogFeature in Frameworks */,
-				9F65A14628FE2C4900F9966A /* LoginFeature in Frameworks */,
-				9F24395128D2591B00356E7D /* OpusPlayer in Frameworks */,
-				9F256C1F28B1B468009BDE76 /* Api6000 in Frameworks */,
+				9F16F7CA290F0BE700C0700F /* Api6000 in Frameworks */,
+				9F16F7CE290F0FE700C0700F /* ClientFeature in Frameworks */,
+				9F16F7D4290F0FE800C0700F /* PickerFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,9 +119,6 @@
 		9F5F4EF5283321C5000E8145 = {
 			isa = PBXGroup;
 			children = (
-				9F4286F628C78DB80030C091 /* ViewComponents */,
-				9F4286F528C434280030C091 /* UtilityComponents */,
-				9F4286F428C2A7830030C091 /* ApiComponents */,
 				9F5F4F00283321C5000E8145 /* Api6000Tester-C */,
 				9F5F4EFF283321C5000E8145 /* Products */,
 				9F8B9B2D28AD1C28008E761F /* Frameworks */,
@@ -234,16 +226,15 @@
 			);
 			name = "Api6000Tester-C";
 			packageProductDependencies = (
-				9F256C1028B1B468009BDE76 /* Shared */,
 				9F256C1228B1B468009BDE76 /* Vita */,
 				9F256C1428B1B468009BDE76 /* XCGWrapper */,
-				9F256C1E28B1B468009BDE76 /* Api6000 */,
-				9F24394E28D2021C00356E7D /* RingBuffer */,
-				9F24395028D2591B00356E7D /* OpusPlayer */,
-				9F27BA1C28FE1ED30097E1FE /* ClientFeature */,
-				9F65A14328FE261000F9966A /* PickerFeature */,
-				9F65A14528FE2C4900F9966A /* LoginFeature */,
-				9FF5E5C629074444000CE581 /* LogFeature */,
+				9F16F7C9290F0BE700C0700F /* Api6000 */,
+				9F16F7CB290F0BF600C0700F /* Shared */,
+				9F16F7CD290F0FE700C0700F /* ClientFeature */,
+				9F16F7CF290F0FE800C0700F /* LogFeature */,
+				9F16F7D1290F0FE800C0700F /* LoginFeature */,
+				9F16F7D3290F0FE800C0700F /* PickerFeature */,
+				9F16F7D5290F101900C0700F /* OpusPlayer */,
 			);
 			productName = Api6000Tester;
 			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */;
@@ -484,7 +475,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 6.1;
+				MARKETING_VERSION = 6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -519,7 +510,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 6.1;
+				MARKETING_VERSION = 6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -558,49 +549,71 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/K3TZR/UtilityComponents";
 			requirement = {
-				branch = "mainactors+comp";
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.1;
 			};
 		};
 		9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/K3TZR/ViewComponents.git";
 			requirement = {
-				branch = "mainactors+comp";
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.2;
 			};
 		};
 		9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/K3TZR/ApiComponents.git";
 			requirement = {
-				branch = "mainactors+comp";
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.3;
 			};
 		};
 		9F5F4F12283322E6000E8145 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.39.0;
+				kind = exactVersion;
+				version = 0.42.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9F24394E28D2021C00356E7D /* RingBuffer */ = {
+		9F16F7C9290F0BE700C0700F /* Api6000 */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = RingBuffer;
+			package = 9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */;
+			productName = Api6000;
 		};
-		9F24395028D2591B00356E7D /* OpusPlayer */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OpusPlayer;
-		};
-		9F256C1028B1B468009BDE76 /* Shared */ = {
+		9F16F7CB290F0BF600C0700F /* Shared */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
 			productName = Shared;
+		};
+		9F16F7CD290F0FE700C0700F /* ClientFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = ClientFeature;
+		};
+		9F16F7CF290F0FE800C0700F /* LogFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = LogFeature;
+		};
+		9F16F7D1290F0FE800C0700F /* LoginFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = LoginFeature;
+		};
+		9F16F7D3290F0FE800C0700F /* PickerFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = PickerFeature;
+		};
+		9F16F7D5290F101900C0700F /* OpusPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
+			productName = OpusPlayer;
 		};
 		9F256C1228B1B468009BDE76 /* Vita */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -611,27 +624,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
 			productName = XCGWrapper;
-		};
-		9F256C1E28B1B468009BDE76 /* Api6000 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */;
-			productName = Api6000;
-		};
-		9F27BA1C28FE1ED30097E1FE /* ClientFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ClientFeature;
-		};
-		9F65A14328FE261000F9966A /* PickerFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PickerFeature;
-		};
-		9F65A14528FE2C4900F9966A /* LoginFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LoginFeature;
-		};
-		9FF5E5C629074444000CE581 /* LogFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LogFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
