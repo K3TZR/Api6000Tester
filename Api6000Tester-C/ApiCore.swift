@@ -702,14 +702,10 @@ private func subscribeToClients() -> Effect<ApiModule.Action, Never> {
 
 private func subscribeToLogAlerts() -> Effect<ApiModule.Action, Never>  {
   Effect.run { send in
-#if DEBUG
     for await entry in logAlerts {
       // a Warning or Error has been logged.
       await send(.showLogAlert(entry))
     }
-#else
-    return .none
-#endif
   }
 }
 
