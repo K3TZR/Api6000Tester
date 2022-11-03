@@ -21,10 +21,29 @@ struct FiltersView: View {
 
 struct FilterObjectsView: View {
   let store: StoreOf<ApiModule>
+
   
+  
+  
+  
+  struct ViewState: Equatable {
+    let objectFilter: ObjectFilter
+    init(state: ApiModule.State) {
+      self.objectFilter = state.objectFilter
+    }
+  }
+
+  
+  
+  
+  
+  
+  
+  
+
   var body: some View {
     
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
       HStack {
         Picker("Show Radio Objects of type", selection: viewStore.binding(
           get: \.objectFilter,
@@ -43,9 +62,30 @@ struct FilterObjectsView: View {
 struct FilterMessagesView: View {
   let store: StoreOf<ApiModule>
 
+  
+  
+  
+  
+  struct ViewState: Equatable {
+    let messageFilter: MessageFilter
+    let messageFilterText: String
+    init(state: ApiModule.State) {
+      self.messageFilter = state.messageFilter
+      self.messageFilterText = state.messageFilterText
+    }
+  }
+
+  
+  
+  
+  
+  
+  
+  
+
   var body: some View {
 
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
       HStack {
         Picker("Show Tcp Messages of type", selection: viewStore.binding(
           get: \.messageFilter,

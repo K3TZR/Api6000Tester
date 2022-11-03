@@ -16,29 +16,36 @@ import Api6000
 struct BottomButtonsView: View {
   let store: StoreOf<ApiModule>
   
-  @Dependency(\.messagesModel) var messagesModel
-  
+  struct ViewState: Equatable {
+    let clearOnStart: Bool
+    let clearOnStop: Bool
+    let fontSize: CGFloat
+    let gotoLast: Bool
+    init(state: ApiModule.State) {
+      self.clearOnStart = state.clearOnStart
+      self.clearOnStop = state.clearOnStop
+      self.fontSize = state.fontSize
+      self.gotoLast = state.gotoLast
+    }
+  }
+
   var body: some View {
 
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
       HStack {
         Stepper("Font Size",
                 value: viewStore.binding(
                   get: \.fontSize,
                   send: { value in .fontSizeStepper(value) }),
-                in: 8...14)
+                in: 8...12)
         Text(String(format: "%2.0f", viewStore.fontSize)).frame(alignment: .leading)
         
         Spacer()
-        
         HStack {
-          Text(viewStore.gotoFirst ? "Goto Last" : "Goto First")
-          Image(systemName: viewStore.gotoFirst ? "arrow.up.square" : "arrow.down.square").font(.title)
-            .onTapGesture { viewStore.send(.toggle(\.gotoFirst)) }
-            .disabled(messagesModel.filteredMessages.count == 0)
+          Text("Go to \(viewStore.gotoLast ? "Last" : "First")")
+          Image(systemName: viewStore.gotoLast ? "arrow.up.square" : "arrow.down.square").font(.title)
+            .onTapGesture { viewStore.send(.toggle(\.gotoLast)) }
         }
-        .frame(width: 120, alignment: .trailing)
-
         Spacer()
         
         HStack {

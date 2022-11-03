@@ -20,8 +20,28 @@ struct ObjectsView: View {
 
   @Dependency(\.packetModel) var packetModel
   
+  
+  
+  
+  struct ViewState: Equatable {
+    let isGui: Bool
+    let fontSize: CGFloat
+    init(state: ApiModule.State) {
+      self.isGui = state.isGui
+      self.fontSize = state.fontSize
+    }
+  }
+
+  
+  
+  
+  
+  
+  
+  
   var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    
+    WithViewStore(self.store, observe: ViewState.init ) { viewStore in
       ScrollView([.horizontal, .vertical]) {
         if viewModel.radio == nil {
           VStack(alignment: .center) {
@@ -34,7 +54,7 @@ struct ObjectsView: View {
             if viewModel.activePacket == nil {
               EmptyView()
             } else {
-              RadioView(store: store, viewModel: viewModel)
+              RadioView(viewModel: viewModel)
               GuiClientView(store: store, packetModel: packetModel)
               if viewStore.isGui == false { TesterView(viewModel: viewModel) }
             }

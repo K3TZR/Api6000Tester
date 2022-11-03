@@ -17,6 +17,17 @@ struct MessagesView: View {
 
   @Namespace var topID
   @Namespace var bottomID
+
+  struct ViewState: Equatable {
+    let gotoLast: Bool
+    let showTimes: Bool
+    let fontSize: CGFloat
+    init(state: ApiModule.State) {
+      self.gotoLast = state.gotoLast
+      self.showTimes = state.showTimes
+      self.fontSize = state.fontSize
+    }
+  }
   
   func messageColor(_ text: String) -> Color {
     if text.prefix(1) == "C" { return Color(.systemGreen) }                         // Commands
@@ -36,7 +47,7 @@ struct MessagesView: View {
   
   var body: some View {
     
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
       ScrollViewReader { proxy in
         ScrollView([.vertical, .horizontal]) {
           VStack(alignment: .center) {
@@ -55,7 +66,6 @@ struct MessagesView: View {
                     if viewStore.showTimes { Text(intervalFormat(message.interval)) }
                     Text(message.text)
                   }
-                  .tag(message.id)
                   .foregroundColor( messageColor(message.text) )
                 }
                 Text("Bottom").hidden()
@@ -63,13 +73,14 @@ struct MessagesView: View {
               }
               .frame(minWidth: 900, maxWidth: .infinity, alignment: .leading)
               .textSelection(.enabled)
-              .onChange(of: viewStore.gotoFirst, perform: { _ in
-                let id = viewStore.gotoFirst ? bottomID : topID
-                proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+              
+              .onChange(of: viewStore.gotoLast, perform: { _ in
+                let id = viewStore.gotoLast ? bottomID : topID
+                proxy.scrollTo(id, anchor: viewStore.gotoLast ? .bottomLeading : .topLeading)
               })
               .onChange(of: messagesModel.filteredMessages.count, perform: { _ in
-                let id = viewStore.gotoFirst ? bottomID : topID
-                proxy.scrollTo(id, anchor: viewStore.gotoFirst ? .bottomLeading : .topLeading)
+                let id = viewStore.gotoLast ? bottomID : topID
+                proxy.scrollTo(id, anchor: viewStore.gotoLast ? .bottomLeading : .topLeading)
               })
             }
           }

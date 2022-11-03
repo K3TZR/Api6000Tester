@@ -15,11 +15,32 @@ import Api6000
 
 struct SendView: View {
   let store: StoreOf<ApiModule>
-  @ObservedObject var viewModel: ViewModel
+//  @ObservedObject var viewModel: ViewModel
+  
+  
+  
+  
+  struct ViewState: Equatable {
+    let clearOnSend: Bool
+    let commandToSend: String
+    let isStopped: Bool
+    init(state: ApiModule.State) {
+      self.clearOnSend = state.clearOnSend
+      self.commandToSend = state.commandToSend
+      self.isStopped = state.isStopped
+    }
+  }
 
+  
+  
+  
+  
+  
+  
+  
   var body: some View {
 
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
       HStack(spacing: 25) {
         Group {
           Button("Send") { viewStore.send(.sendButton( viewStore.commandToSend )) }
@@ -29,7 +50,7 @@ struct SendView: View {
             Image(systemName: "x.circle")
               .onTapGesture {
                 viewStore.send(.sendClearButton)
-              }.disabled(viewModel.radio == nil)
+              }
             
             Stepper("", onIncrement: {
               viewStore.send(.sendPreviousStepper)
@@ -42,7 +63,7 @@ struct SendView: View {
               send: { value in .commandTextField(value) } ))
           }
         }
-        .disabled(viewModel.radio == nil)
+        .disabled(viewStore.isStopped)
 
         Spacer()
         Toggle("Clear on Send", isOn: viewStore.binding(get: \.clearOnSend, send: .toggle(\ApiModule.State.clearOnSend)))
@@ -60,7 +81,8 @@ struct SendView_Previews: PreviewProvider {
       store: Store(
         initialState: ApiModule.State(),
         reducer: ApiModule()
-      ), viewModel: ViewModel.shared
+      )
+//      , viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)
       .padding()

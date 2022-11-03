@@ -12,8 +12,7 @@ import Foundation
 import Api6000
 import Shared
 
-@MainActor
-public final class MessagesModel: Equatable, ObservableObject {
+public final class MessagesModel: Equatable, ObservableObject, TesterDelegate {
   // ----------------------------------------------------------------------------
   // MARK: - Static Equality
   
@@ -45,32 +44,32 @@ public final class MessagesModel: Equatable, ObservableObject {
   // ----------------------------------------------------------------------------
   // MARK: - Public methods
   
-  public func start() {
-    _subscriptionTask = Task {
-      
-      // ignore routine replies (i.e. no error or attached data)
-      func ignoreReply(_ text: String) -> Bool {
-        if text.first != "R" { return false }     // not a Reply
-        let parts = text.components(separatedBy: "|")
-        if parts.count < 3 { return false }       // incomplete
-        if parts[1] != kNoError { return false }  // error of some type
-        if parts[2] != "" { return false }        // additional data present
-        return true                               // otherwise, ignore it
-      }
-      
-      // wait for a TCP message to be sent or received
-      for await tcpMessage in Tcp.shared.testerStream{
-        // ignore received replies unless they are non-zero or contain additional data
-        if tcpMessage.direction == .received && ignoreReply(tcpMessage.text) { continue }
-        // ignore sent "ping" messages unless showPings is true
-        if tcpMessage.direction == .sent && tcpMessage.text.contains("ping") && _ignorePings { continue }
-        addMessage(tcpMessage)
-      }
+  public func testerMessages(_ message: TcpMessage) {
+    // ignore routine replies (i.e. no error or attached data)
+    func ignoreReply(_ text: String) -> Bool {
+      if text.first != "R" { return false }     // not a Reply
+      let parts = text.components(separatedBy: "|")
+      if parts.count < 3 { return false }       // incomplete
+      if parts[1] != kNoError { return false }  // error of some type
+      if parts[2] != "" { return false }        // additional data present
+      return true                               // otherwise, ignore it
     }
+    
+    // ignore received replies unless they are non-zero or contain additional data
+    if message.direction == .received && ignoreReply(message.text) { return }
+    // ignore sent "ping" messages unless showPings is true
+    if message.direction == .sent && message.text.contains("ping") && _ignorePings { return }
+    addMessage(message)
+  }
+  
+  
+  
+  public func start() {
+    Tcp.shared.testerDelegate = self
   }
   
   public func stop() {
-    _subscriptionTask?.cancel()
+    Tcp.shared.testerDelegate = nil
   }
 
   /// FIlter a message
@@ -119,16 +118,20 @@ public final class MessagesModel: Equatable, ObservableObject {
   }
 
   public func clear() {
-    _messages.removeAll()
-    filteredMessages.removeAll()
+    DispatchQueue.main.async {
+      self._messages.removeAll()
+      self.filteredMessages.removeAll()
+    }
   }
 
   // ----------------------------------------------------------------------------
   // MARK: - Private methods
   
   private func addMessage(_ message: TcpMessage) {
-    _messages.append(message)
-    filterMessage(message)
+    DispatchQueue.main.async {
+      self._messages.append(message)
+      self.filterMessage(message)
+    }
   }
   
 }

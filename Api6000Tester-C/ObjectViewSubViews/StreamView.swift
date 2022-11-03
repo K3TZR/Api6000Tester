@@ -64,7 +64,7 @@ struct StreamView: View {
   }
 }
 
-struct PanadapterStreamView: View {
+private struct PanadapterStreamView: View {
   @ObservedObject var panadapter: Panadapter
   
   var body: some View {
@@ -86,7 +86,7 @@ struct PanadapterStreamView: View {
   }
 }
 
-struct WaterfallStreamView: View {
+private struct WaterfallStreamView: View {
   @ObservedObject var waterfall: Waterfall
   
   var body: some View {
@@ -108,7 +108,7 @@ struct WaterfallStreamView: View {
   }
 }
 
-struct RemoteRxStreamView: View {
+private struct RemoteRxStreamView: View {
   @ObservedObject var stream: RemoteRxAudioStream
   
   var body: some View {
@@ -147,7 +147,7 @@ struct RemoteRxStreamView: View {
   }
 }
 
-struct RemoteTxStreamView: View {
+private struct RemoteTxStreamView: View {
   @ObservedObject var stream: RemoteTxAudioStream
   
   var body: some View {
@@ -181,7 +181,7 @@ struct RemoteTxStreamView: View {
   }
 }
 
-struct DaxMicStreamView: View {
+private struct DaxMicStreamView: View {
   @ObservedObject var stream: DaxMicAudioStream
   
   var body: some View {
@@ -215,7 +215,7 @@ struct DaxMicStreamView: View {
   }
 }
 
-struct DaxRxStreamView: View {
+private struct DaxRxStreamView: View {
   @ObservedObject var stream: DaxRxAudioStream
   
   var body: some View {
@@ -254,7 +254,7 @@ struct DaxRxStreamView: View {
   }
 }
 
-struct DaxTxStreamView: View {
+private struct DaxTxStreamView: View {
   @ObservedObject var stream: DaxTxAudioStream
   
   var body: some View {
@@ -294,7 +294,7 @@ struct DaxTxStreamView: View {
   }
 }
 
-struct DaxIqStreamView: View {
+private struct DaxIqStreamView: View {
   @ObservedObject var stream: DaxIqStream
   
   var body: some View {

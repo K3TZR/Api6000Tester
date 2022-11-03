@@ -16,21 +16,55 @@ import Shared
 
 public struct TopButtonsView: View {
   let store: StoreOf<ApiModule>
-  @ObservedObject var viewModel: ViewModel
+//  @ObservedObject var viewModel: ViewModel
+  
+  
+  
+  struct ViewState: Equatable {
+    let isStopped: Bool
+    let isGui: Bool
+    let showTimes: Bool
+    let showPings: Bool
+    let rxAudio: Bool
+    let txAudio: Bool
+    let local: Bool
+    let smartlink: Bool
+    let loginRequired: Bool
+    let useDefault: Bool
+    init(state: ApiModule.State) {
+      self.isStopped = state.isStopped
+      self.isGui = state.isGui
+      self.showTimes = state.showTimes
+      self.showPings = state.showPings
+      self.rxAudio = state.rxAudio
+      self.txAudio = state.txAudio
+      self.local = state.local
+      self.smartlink = state.smartlink
+      self.loginRequired = state.loginRequired
+      self.useDefault = state.useDefault
+    }
+  }
+
+  
+  
+  
+  
+  
+  
 
  public  var body: some View {
 
-   WithViewStore(self.store, observe: { $0 }) { viewStore in
+   WithViewStore(self.store, observe: ViewState.init) { viewStore in
       HStack(spacing: 20) {
         Button(viewStore.isStopped ? "Start" : "Stop") {
-          viewStore.send(.startStopButton(viewModel.radio == nil))
+          viewStore.send(.startStopButton)
         }
-        .keyboardShortcut(viewModel.radio == nil ? .defaultAction : .cancelAction)
+        .keyboardShortcut(viewStore.isStopped ? .defaultAction : .cancelAction)
 
         HStack(spacing: 20) {
           Group {
             Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\ApiModule.State.isGui)))
-              .disabled(viewModel.radio != nil)
+              .disabled( !viewStore.isStopped )
             Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\ApiModule.State.showTimes)))
             Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\ApiModule.State.showPings)))
           }
@@ -52,13 +86,13 @@ public struct TopButtonsView: View {
           Toggle("Smartlink", isOn: viewStore.binding(get: \.smartlink, send: { .smartlinkButton($0) } ))
         }
         .frame(width: 150)
-        .disabled(viewModel.radio != nil)
+        .disabled( !viewStore.isStopped )
 
         Spacer()
         Toggle("Smartlink Login", isOn: viewStore.binding(get: \.loginRequired, send: { .loginRequiredButton($0) }))
-          .disabled(viewModel.radio != nil || viewStore.smartlink == false )
+          .disabled( !viewStore.isStopped || viewStore.smartlink == false )
         Toggle("Use Default", isOn: viewStore.binding(get: \.useDefault, send: .toggle(\ApiModule.State.useDefault)))
-          .disabled(viewModel.radio != nil)
+          .disabled( !viewStore.isStopped )
       }
     }
   }
@@ -73,7 +107,8 @@ struct TopButtonsView_Previews: PreviewProvider {
       store: Store(
         initialState: ApiModule.State(),
         reducer: ApiModule()
-      ), viewModel: ViewModel.shared
+      )
+//      , viewModel: ViewModel.shared
     )
       .frame(minWidth: 975)
       .padding()

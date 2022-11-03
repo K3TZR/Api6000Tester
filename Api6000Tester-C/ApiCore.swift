@@ -51,7 +51,7 @@ public struct ApiModule: ReducerProtocol {
     var commandToSend = ""
     var loginRequired = false
     var forceUpdate = false
-    var gotoFirst = false
+    var gotoLast = false
     var initialized = false
     var isStopped = true
     var opusPlayer: OpusPlayer? = nil
@@ -133,7 +133,7 @@ public struct ApiModule: ReducerProtocol {
     case sendNextStepper
     case sendPreviousStepper
     case smartlinkButton(Bool)
-    case startStopButton(Bool)
+    case startStopButton
     case toggle(WritableKeyPath<ApiModule.State, Bool>)
     case txAudioButton(Bool)
     
@@ -190,9 +190,8 @@ public struct ApiModule: ReducerProtocol {
         // MARK: - Actions: ApiView UI controls
         
       case .clearNowButton:
-        return .run { send in
-          await messagesModel.clear()
-        }
+        messagesModel.clear()
+        return .none
         
       case .commandTextField(let text):
         state.commandToSend = text
@@ -215,16 +214,14 @@ public struct ApiModule: ReducerProtocol {
         return .none
         
       case .messagesFilterTextField(let text):
-        return .run { _ in
-          await messagesModel.setFilterText(text)
-          await messagesModel.filterMessages()
-        }
+        messagesModel.setFilterText(text)
+        messagesModel.filterMessages()
+        return .none
         
       case .messagesFilterPicker(let filter):
-        return .run { _ in
-          await messagesModel.setFilter(filter)
-          await messagesModel.filterMessages()
-        }
+        messagesModel.setFilter(filter)
+        messagesModel.filterMessages()
+        return .none
         
       case .objectsPicker(let newFilter):
         state.objectFilter = newFilter
@@ -275,7 +272,7 @@ public struct ApiModule: ReducerProtocol {
             formatter.minimumFractionDigits = 6
             formatter.positiveFormat = " * ##0.000000"
 
-          let textArray = await messagesModel.filteredMessages.map { formatter.string(from: NSNumber(value: $0.interval))! + " " + $0.text }
+          let textArray = messagesModel.filteredMessages.map { formatter.string(from: NSNumber(value: $0.interval))! + " " + $0.text }
             let fileTextArray = textArray.joined(separator: "\n")
             try? await fileTextArray.write(to: savePanel.url!, atomically: true, encoding: .utf8)
           }
@@ -323,7 +320,7 @@ public struct ApiModule: ReducerProtocol {
         state.smartlink = newState
         return initializeMode(state)
         
-      case .startStopButton(_):
+      case .startStopButton:
         if state.isStopped {
           // ----- START -----
           state.isStopped = false
@@ -332,7 +329,7 @@ public struct ApiModule: ReducerProtocol {
             if state.clearOnStart {
               //          state.messages.removeAll()
               //          state.filteredMessages.removeAll()
-              await messagesModel.clear()
+              messagesModel.clear()
             }
             // get the Pickables
             let pickables = await PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
@@ -357,7 +354,7 @@ public struct ApiModule: ReducerProtocol {
               if state.clearOnStop {
                 //          state.messages.removeAll()
                 //          state.filteredMessages.removeAll()
-                await messagesModel.clear()
+                messagesModel.clear()
               }
               await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
               await Api.shared.disconnect()
@@ -367,7 +364,7 @@ public struct ApiModule: ReducerProtocol {
               if state.clearOnStop {
                 //          state.messages.removeAll()
                 //          state.filteredMessages.removeAll()
-                await messagesModel.clear()
+                messagesModel.clear()
               }
               await Api.shared.disconnect()
             }
@@ -439,7 +436,7 @@ public struct ApiModule: ReducerProtocol {
       case .connect(let selection, let disconnectHandle):
         state.clientState = nil
         return .run { [state] send in
-          await messagesModel.start()
+          messagesModel.start()
           // attempt to connect to the selected Radio / Station
           do {
             // try to connect
@@ -643,6 +640,7 @@ public struct ApiModule: ReducerProtocol {
         
       case .client(.cancelButton):
         state.clientState = nil
+        state.isStopped = true
         return .none
         
       case .client(.connect(let selection, let disconnectHandle)):

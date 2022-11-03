@@ -28,13 +28,28 @@ public struct ApiView: View {
     self.store = store
   }
   
+  
+  
+  struct ViewState: Equatable {
+    let loginState: LoginFeature.State?
+    let clientState: ClientFeature.State?
+    let pickerState: PickerFeature.State?
+    init(state: ApiModule.State) {
+      self.loginState = state.loginState
+      self.clientState = state.clientState
+      self.pickerState = state.pickerState
+    }
+  }
+
+  
+  
   public var body: some View {
     
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
 
       VStack(alignment: .leading) {
-        TopButtonsView(store: store, viewModel: viewModel)
-        SendView(store: store, viewModel: viewModel)
+        TopButtonsView(store: store)
+        SendView(store: store)
         FiltersView(store: store)
 
         Divider().background(Color(.gray))

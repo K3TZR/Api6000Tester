@@ -18,18 +18,12 @@ struct GuiClientView: View {
   let store: StoreOf<ApiModule>
   @ObservedObject var packetModel: PacketModel
   
-//  @Dependency(\.packetModel) var packetModel
-
   var body: some View {
-//    if viewModel.activePacket == nil {
-//      EmptyView()
-//    } else {
-      VStack(alignment: .leading) {
-        ForEach(packetModel.guiClients, id: \.id) { guiClient in
-          DetailView(store: store, guiClient: guiClient)
-        }
+    VStack(alignment: .leading) {
+      ForEach(packetModel.guiClients, id: \.id) { guiClient in
+        DetailView(store: store, guiClient: guiClient)
       }
-//    }
+    }
   }
 }
 
@@ -82,6 +76,21 @@ private struct DetailView: View {
 struct GuiClientSubView: View {
   let store: StoreOf<ApiModule>
   
+  
+  
+  
+  struct ViewState: Equatable {
+    let objectFilter: ObjectFilter
+    init(state: ApiModule.State) {
+      self.objectFilter = state.objectFilter
+    }
+  }
+  
+  
+  
+  
+  
+  
   @Dependency(\.viewModel) var viewModel
   @Dependency(\.streamModel) var streamModel
   
@@ -89,7 +98,7 @@ struct GuiClientSubView: View {
   
   var body: some View {
     
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(self.store, observe: ViewState.init) { viewStore in
       switch viewStore.objectFilter {
         
       case ObjectFilter.core:
