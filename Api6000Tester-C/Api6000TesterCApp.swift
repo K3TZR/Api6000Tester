@@ -98,17 +98,20 @@ struct Api6000TesterCApp: App {
         .padding()
     }
     
-    WindowGroup("Log View", id: "logview") {
+    Window("Log View", id: "logview") {
       LogView(store: Store(initialState: LogFeature.State(), reducer: LogFeature()) )
       .toolbar {
         Button("Close") { NSApplication.shared.keyWindow?.close()  }
         Button("Close All") { NSApplication.shared.terminate(self)  }
       }
       .frame(minWidth: 975)
-      .padding()
+//      .padding()
     }
+    .windowStyle(.hiddenTitleBar)
+    .defaultPosition(.bottomTrailing)
+
     
-    WindowGroup("Panadapter", id: "panadapter") {
+    Window("Panadapter", id: "panadapter") {
       VStack {
         Text("Pandapter goes here")
       }
@@ -119,9 +122,9 @@ struct Api6000TesterCApp: App {
       .frame(minWidth: 975)
       .padding()
     }
+    .windowStyle(.hiddenTitleBar)
+    .defaultPosition(.topTrailing)
 
-//    .handlesExternalEvents(matching: Set(arrayLiteral: "LogView"))
-    
     .commands {
       //remove the "New" menu item
       CommandGroup(replacing: CommandGroupPlacement.newItem) {}

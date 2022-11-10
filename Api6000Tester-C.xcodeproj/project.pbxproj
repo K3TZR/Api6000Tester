@@ -7,20 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9F16F7CA290F0BE700C0700F /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7C9290F0BE700C0700F /* Api6000 */; };
-		9F16F7CC290F0BF600C0700F /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7CB290F0BF600C0700F /* Shared */; };
-		9F16F7CE290F0FE700C0700F /* ClientFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7CD290F0FE700C0700F /* ClientFeature */; };
-		9F16F7D0290F0FE800C0700F /* LogFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7CF290F0FE800C0700F /* LogFeature */; };
-		9F16F7D2290F0FE800C0700F /* LoginFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7D1290F0FE800C0700F /* LoginFeature */; };
-		9F16F7D4290F0FE800C0700F /* PickerFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7D3290F0FE800C0700F /* PickerFeature */; };
-		9F16F7D6290F101900C0700F /* OpusPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F16F7D5290F101900C0700F /* OpusPlayer */; };
 		9F24CFDC28AD73600048A9FE /* ObjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDB28AD73600048A9FE /* ObjectsView.swift */; };
 		9F24CFDE28AD78D20048A9FE /* BottomButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDD28AD78D20048A9FE /* BottomButtonsView.swift */; };
 		9F24CFE028AD798A0048A9FE /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFDF28AD798A0048A9FE /* MessagesView.swift */; };
 		9F24CFE228AD7A720048A9FE /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFE128AD7A720048A9FE /* SendView.swift */; };
 		9F24CFE428AD7CD80048A9FE /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F24CFE328AD7CD80048A9FE /* FiltersView.swift */; };
-		9F256C1328B1B468009BDE76 /* Vita in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1228B1B468009BDE76 /* Vita */; };
-		9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 9F256C1428B1B468009BDE76 /* XCGWrapper */; };
 		9F27BA1B28FB12A20097E1FE /* MessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F27BA1A28FB12A20097E1FE /* MessagesModel.swift */; };
 		9F29E82E28AFE585009BE31C /* AtuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82D28AFE585009BE31C /* AtuView.swift */; };
 		9F29E83028AFE61C009BE31C /* GpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E82F28AFE61C009BE31C /* GpsView.swift */; };
@@ -44,6 +35,19 @@
 		9F29E85828B011A5009BE31C /* WanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29E85128B011A5009BE31C /* WanView.swift */; };
 		9F3A3C1428EB590D001C9E25 /* NetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3A3C1328EB590D001C9E25 /* NetworkView.swift */; };
 		9F4204492901B50900357312 /* MiscView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4204482901B50900357312 /* MiscView.swift */; };
+		9F573DB2291DA387001329ED /* OpusEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DB1291DA387001329ED /* OpusEncoder */; };
+		9F573DB4291DA387001329ED /* OpusPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DB3291DA387001329ED /* OpusPlayer */; };
+		9F573DB6291DA387001329ED /* RingBuffer in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DB5291DA387001329ED /* RingBuffer */; };
+		9F573DB8291DA387001329ED /* SecureStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DB7291DA387001329ED /* SecureStorage */; };
+		9F573DBA291DA387001329ED /* XCGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DB9291DA387001329ED /* XCGWrapper */; };
+		9F573DBC291DA387001329ED /* ClientFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DBB291DA387001329ED /* ClientFeature */; };
+		9F573DBE291DA387001329ED /* LogFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DBD291DA387001329ED /* LogFeature */; };
+		9F573DC0291DA387001329ED /* LoginFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DBF291DA387001329ED /* LoginFeature */; };
+		9F573DC2291DA387001329ED /* PickerFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC1291DA387001329ED /* PickerFeature */; };
+		9F573DC4291DA387001329ED /* ProgressFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC3291DA387001329ED /* ProgressFeature */; };
+		9F573DC6291DA387001329ED /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC5291DA387001329ED /* Api6000 */; };
+		9F573DC8291DA387001329ED /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC7291DA387001329ED /* Shared */; };
+		9F573DCA291DA387001329ED /* Vita in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC9291DA387001329ED /* Vita */; };
 		9F5F4F02283321C5000E8145 /* Api6000TesterCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */; };
 		9F5F4F06283321C5000E8145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F05283321C5000E8145 /* Assets.xcassets */; };
 		9F5F4F09283321C5000E8145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */; };
@@ -101,15 +105,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F16F7D2290F0FE800C0700F /* LoginFeature in Frameworks */,
-				9F256C1328B1B468009BDE76 /* Vita in Frameworks */,
-				9F16F7D6290F101900C0700F /* OpusPlayer in Frameworks */,
-				9F16F7CC290F0BF600C0700F /* Shared in Frameworks */,
-				9F16F7D0290F0FE800C0700F /* LogFeature in Frameworks */,
-				9F256C1528B1B468009BDE76 /* XCGWrapper in Frameworks */,
-				9F16F7CA290F0BE700C0700F /* Api6000 in Frameworks */,
-				9F16F7CE290F0FE700C0700F /* ClientFeature in Frameworks */,
-				9F16F7D4290F0FE800C0700F /* PickerFeature in Frameworks */,
+				9F573DBA291DA387001329ED /* XCGWrapper in Frameworks */,
+				9F573DC0291DA387001329ED /* LoginFeature in Frameworks */,
+				9F573DBE291DA387001329ED /* LogFeature in Frameworks */,
+				9F573DB6291DA387001329ED /* RingBuffer in Frameworks */,
+				9F573DC6291DA387001329ED /* Api6000 in Frameworks */,
+				9F573DC8291DA387001329ED /* Shared in Frameworks */,
+				9F573DC4291DA387001329ED /* ProgressFeature in Frameworks */,
+				9F573DBC291DA387001329ED /* ClientFeature in Frameworks */,
+				9F573DB8291DA387001329ED /* SecureStorage in Frameworks */,
+				9F573DCA291DA387001329ED /* Vita in Frameworks */,
+				9F573DC2291DA387001329ED /* PickerFeature in Frameworks */,
+				9F573DB4291DA387001329ED /* OpusPlayer in Frameworks */,
+				9F573DB2291DA387001329ED /* OpusEncoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,15 +234,19 @@
 			);
 			name = "Api6000Tester-C";
 			packageProductDependencies = (
-				9F256C1228B1B468009BDE76 /* Vita */,
-				9F256C1428B1B468009BDE76 /* XCGWrapper */,
-				9F16F7C9290F0BE700C0700F /* Api6000 */,
-				9F16F7CB290F0BF600C0700F /* Shared */,
-				9F16F7CD290F0FE700C0700F /* ClientFeature */,
-				9F16F7CF290F0FE800C0700F /* LogFeature */,
-				9F16F7D1290F0FE800C0700F /* LoginFeature */,
-				9F16F7D3290F0FE800C0700F /* PickerFeature */,
-				9F16F7D5290F101900C0700F /* OpusPlayer */,
+				9F573DB1291DA387001329ED /* OpusEncoder */,
+				9F573DB3291DA387001329ED /* OpusPlayer */,
+				9F573DB5291DA387001329ED /* RingBuffer */,
+				9F573DB7291DA387001329ED /* SecureStorage */,
+				9F573DB9291DA387001329ED /* XCGWrapper */,
+				9F573DBB291DA387001329ED /* ClientFeature */,
+				9F573DBD291DA387001329ED /* LogFeature */,
+				9F573DBF291DA387001329ED /* LoginFeature */,
+				9F573DC1291DA387001329ED /* PickerFeature */,
+				9F573DC3291DA387001329ED /* ProgressFeature */,
+				9F573DC5291DA387001329ED /* Api6000 */,
+				9F573DC7291DA387001329ED /* Shared */,
+				9F573DC9291DA387001329ED /* Vita */,
 			);
 			productName = Api6000Tester;
 			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */;
@@ -269,6 +281,7 @@
 				9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */,
 				9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */,
 				9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */,
+				9F573DAC291DA2C6001329ED /* XCRemoteSwiftPackageReference "SharedComponents" */,
 			);
 			productRefGroup = 9F5F4EFF283321C5000E8145 /* Products */;
 			projectDirPath = "";
@@ -475,7 +488,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 6.4;
+				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -510,7 +523,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 6.4;
+				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -550,7 +563,7 @@
 			repositoryURL = "https://github.com/K3TZR/UtilityComponents";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.10.1;
+				minimumVersion = 2.12.1;
 			};
 		};
 		9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */ = {
@@ -558,7 +571,7 @@
 			repositoryURL = "https://github.com/K3TZR/ViewComponents.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.1.2;
+				minimumVersion = 4.2.2;
 			};
 		};
 		9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */ = {
@@ -566,7 +579,15 @@
 			repositoryURL = "https://github.com/K3TZR/ApiComponents.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.1;
+				minimumVersion = 6.3.1;
+			};
+		};
+		9F573DAC291DA2C6001329ED /* XCRemoteSwiftPackageReference "SharedComponents" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/K3TZR/SharedComponents.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
 			};
 		};
 		9F5F4F12283322E6000E8145 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
@@ -580,50 +601,70 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9F16F7C9290F0BE700C0700F /* Api6000 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */;
-			productName = Api6000;
-		};
-		9F16F7CB290F0BF600C0700F /* Shared */ = {
+		9F573DB1291DA387001329ED /* OpusEncoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
-			productName = Shared;
+			productName = OpusEncoder;
 		};
-		9F16F7CD290F0FE700C0700F /* ClientFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = ClientFeature;
-		};
-		9F16F7CF290F0FE800C0700F /* LogFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = LogFeature;
-		};
-		9F16F7D1290F0FE800C0700F /* LoginFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = LoginFeature;
-		};
-		9F16F7D3290F0FE800C0700F /* PickerFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
-			productName = PickerFeature;
-		};
-		9F16F7D5290F101900C0700F /* OpusPlayer */ = {
+		9F573DB3291DA387001329ED /* OpusPlayer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
 			productName = OpusPlayer;
 		};
-		9F256C1228B1B468009BDE76 /* Vita */ = {
+		9F573DB5291DA387001329ED /* RingBuffer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
-			productName = Vita;
+			productName = RingBuffer;
 		};
-		9F256C1428B1B468009BDE76 /* XCGWrapper */ = {
+		9F573DB7291DA387001329ED /* SecureStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
+			productName = SecureStorage;
+		};
+		9F573DB9291DA387001329ED /* XCGWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9F24CFAC28AD48980048A9FE /* XCRemoteSwiftPackageReference "UtilityComponents" */;
 			productName = XCGWrapper;
+		};
+		9F573DBB291DA387001329ED /* ClientFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = ClientFeature;
+		};
+		9F573DBD291DA387001329ED /* LogFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = LogFeature;
+		};
+		9F573DBF291DA387001329ED /* LoginFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = LoginFeature;
+		};
+		9F573DC1291DA387001329ED /* PickerFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = PickerFeature;
+		};
+		9F573DC3291DA387001329ED /* ProgressFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = ProgressFeature;
+		};
+		9F573DC5291DA387001329ED /* Api6000 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */;
+			productName = Api6000;
+		};
+		9F573DC7291DA387001329ED /* Shared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F573DAC291DA2C6001329ED /* XCRemoteSwiftPackageReference "SharedComponents" */;
+			productName = Shared;
+		};
+		9F573DC9291DA387001329ED /* Vita */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F573DAC291DA2C6001329ED /* XCRemoteSwiftPackageReference "SharedComponents" */;
+			productName = Vita;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

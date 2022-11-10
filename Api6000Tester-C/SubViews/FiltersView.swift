@@ -21,10 +21,6 @@ struct FiltersView: View {
 
 struct FilterObjectsView: View {
   let store: StoreOf<ApiModule>
-
-  
-  
-  
   
   struct ViewState: Equatable {
     let objectFilter: ObjectFilter
@@ -32,14 +28,6 @@ struct FilterObjectsView: View {
       self.objectFilter = state.objectFilter
     }
   }
-
-  
-  
-  
-  
-  
-  
-  
 
   var body: some View {
     
@@ -62,10 +50,6 @@ struct FilterObjectsView: View {
 struct FilterMessagesView: View {
   let store: StoreOf<ApiModule>
 
-  
-  
-  
-  
   struct ViewState: Equatable {
     let messageFilter: MessageFilter
     let messageFilterText: String
@@ -74,14 +58,6 @@ struct FilterMessagesView: View {
       self.messageFilterText = state.messageFilterText
     }
   }
-
-  
-  
-  
-  
-  
-  
-  
 
   var body: some View {
 

@@ -15,12 +15,10 @@ import Api6000
 struct WanView: View {
   @ObservedObject var wan: Wan
   
-  let post = String(repeating: " ", count: 5)
-
   var body: some View {
     
     HStack(spacing: 20) {
-      Text("WAN" + post)
+      Text("WAN").frame(width: 80, alignment: .leading)
       HStack(spacing: 5) {
         Text("Radio_Authenticated")
         Text(wan.radioAuthenticated ? "Y" : "N").foregroundColor(wan.radioAuthenticated ? .green : .red)

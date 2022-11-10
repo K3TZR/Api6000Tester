@@ -28,8 +28,6 @@ public struct ApiView: View {
     self.store = store
   }
   
-  
-  
   struct ViewState: Equatable {
     let loginState: LoginFeature.State?
     let clientState: ClientFeature.State?
@@ -40,8 +38,6 @@ public struct ApiView: View {
       self.pickerState = state.pickerState
     }
   }
-
-  
   
   public var body: some View {
     

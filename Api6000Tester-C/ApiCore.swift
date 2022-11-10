@@ -21,7 +21,7 @@ import XCGWrapper
 public struct ApiModule: ReducerProtocol {
   
   @Dependency(\.messagesModel) var messagesModel
-
+  
   public init() {}
   
   public struct State: Equatable {
@@ -57,13 +57,13 @@ public struct ApiModule: ReducerProtocol {
     var opusPlayer: OpusPlayer? = nil
     var pickables = IdentifiedArrayOf<Pickable>()
     var station: String? = nil
-
+    
     // subview state
     var alertState: AlertState<ApiModule.Action>?
     var clientState: ClientFeature.State?
     var loginState: LoginFeature.State? = nil
     var pickerState: PickerFeature.State? = nil
-
+    
     
     var previousCommand = ""
     var commandsIndex = 0
@@ -112,7 +112,7 @@ public struct ApiModule: ReducerProtocol {
       self.useDefault = useDefault
     }
   }
-    
+  
   public enum Action: Equatable {
     // initialization
     case onAppear
@@ -132,6 +132,7 @@ public struct ApiModule: ReducerProtocol {
     case sendClearButton
     case sendNextStepper
     case sendPreviousStepper
+    case showPingsToggle
     case smartlinkButton(Bool)
     case startStopButton
     case toggle(WritableKeyPath<ApiModule.State, Bool>)
@@ -155,7 +156,7 @@ public struct ApiModule: ReducerProtocol {
     case showLogAlert(LogEntry)
     case showLoginSheet
     case showPickerSheet(IdentifiedArrayOf<Pickable>)
-
+    
     // Subscription related
     case clientEvent(ClientEvent)
     case packetEvent(PacketEvent)
@@ -190,8 +191,9 @@ public struct ApiModule: ReducerProtocol {
         // MARK: - Actions: ApiView UI controls
         
       case .clearNowButton:
-        messagesModel.clear()
-        return .none
+        return .run { _ in
+          await messagesModel.clearAll()
+        }
         
       case .commandTextField(let text):
         state.commandToSend = text
@@ -214,14 +216,16 @@ public struct ApiModule: ReducerProtocol {
         return .none
         
       case .messagesFilterTextField(let text):
-        messagesModel.setFilterText(text)
-        messagesModel.filterMessages()
-        return .none
+        state.messageFilterText = text
+        return .run { [state] send in
+          await messagesModel.setFilter(state.messageFilter, state.messageFilterText)
+        }
         
       case .messagesFilterPicker(let filter):
-        messagesModel.setFilter(filter)
-        messagesModel.filterMessages()
-        return .none
+        state.messageFilter = filter
+        return .run { [state] send in
+          await messagesModel.setFilter(state.messageFilter, state.messageFilterText)
+        }
         
       case .objectsPicker(let newFilter):
         state.objectFilter = newFilter
@@ -250,7 +254,7 @@ public struct ApiModule: ReducerProtocol {
           if state.isStopped == false {
             return .run {send in
               // request removal of the stream
-              await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
+              StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
             }
           } else {
             return .none
@@ -271,8 +275,8 @@ public struct ApiModule: ReducerProtocol {
             let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 6
             formatter.positiveFormat = " * ##0.000000"
-
-          let textArray = messagesModel.filteredMessages.map { formatter.string(from: NSNumber(value: $0.interval))! + " " + $0.text }
+            
+            let textArray = await messagesModel.filteredMessages.map { formatter.string(from: NSNumber(value: $0.interval))! + " " + $0.text }
             let fileTextArray = textArray.joined(separator: "\n")
             try? await fileTextArray.write(to: savePanel.url!, atomically: true, encoding: .utf8)
           }
@@ -290,7 +294,7 @@ public struct ApiModule: ReducerProtocol {
           state.commandsIndex = 0
         }
         return .run { send in
-          _ = await ViewModel.shared.radio?.send(command)
+          _ = ViewModel.shared.radio?.send(command)
         }
         
       case .sendClearButton:
@@ -316,6 +320,12 @@ public struct ApiModule: ReducerProtocol {
         state.commandToSend = state.commandsArray[state.commandsIndex]
         return .none
         
+      case .showPingsToggle:
+        state.showPings.toggle()
+        return .run { [state] send in
+          await messagesModel.setShowPings(state.showPings)
+        }
+        
       case .smartlinkButton(let newState):
         state.smartlink = newState
         return initializeMode(state)
@@ -329,10 +339,10 @@ public struct ApiModule: ReducerProtocol {
             if state.clearOnStart {
               //          state.messages.removeAll()
               //          state.filteredMessages.removeAll()
-              messagesModel.clear()
+              await messagesModel.clearAll()
             }
             // get the Pickables
-            let pickables = await PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+            let pickables = PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
             // if using default, is there a default?
             if state.useDefault, let selection = pickables.first(where: { $0.isDefault} ) {
               // YES, default found, check for existing connections
@@ -354,9 +364,9 @@ public struct ApiModule: ReducerProtocol {
               if state.clearOnStop {
                 //          state.messages.removeAll()
                 //          state.filteredMessages.removeAll()
-                messagesModel.clear()
+                await messagesModel.clearAll()
               }
-              await StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
+              StreamModel.shared.removeRemoteRxAudioStream(ViewModel.shared.radio!.connectionHandle)
               await Api.shared.disconnect()
             }
           } else {
@@ -364,7 +374,7 @@ public struct ApiModule: ReducerProtocol {
               if state.clearOnStop {
                 //          state.messages.removeAll()
                 //          state.filteredMessages.removeAll()
-                messagesModel.clear()
+                await messagesModel.clearAll()
               }
               await Api.shared.disconnect()
             }
@@ -402,7 +412,7 @@ public struct ApiModule: ReducerProtocol {
           if state.isStopped == false {
             return .run { send in
               // request removal of the stream
-              await StreamModel.shared.removeRemoteTxAudioStream(ViewModel.shared.radio!.connectionHandle)
+              StreamModel.shared.removeRemoteTxAudioStream(ViewModel.shared.radio!.connectionHandle)
             }
           } else {
             return .none
@@ -411,16 +421,16 @@ public struct ApiModule: ReducerProtocol {
         
         // ----------------------------------------------------------------------------
         // MARK: - Actions: invoked by other actions
-                
+        
       case .checkConnectionStatus(let selection):
         return .run { [state] send in
           // Gui connection with othe stations?
-          let count = await PacketModel.shared.guiClients.count
+          let count = PacketModel.shared.guiClients.count
           if state.isGui && count > 0 {
             // YES, may need a disconnect
             var stations = [String]()
             var handles = [Handle]()
-            for client in await PacketModel.shared.guiClients {
+            for client in PacketModel.shared.guiClients {
               stations.append(client.station)
               handles.append(client.handle)
             }
@@ -436,7 +446,7 @@ public struct ApiModule: ReducerProtocol {
       case .connect(let selection, let disconnectHandle):
         state.clientState = nil
         return .run { [state] send in
-          messagesModel.start()
+          await messagesModel.start(state.messageFilter, state.messageFilterText)
           // attempt to connect to the selected Radio / Station
           do {
             // try to connect
@@ -456,7 +466,7 @@ public struct ApiModule: ReducerProtocol {
             await send(.showErrorAlert( error as! ConnectionError ))
           }
         }
-
+        
       case .loginStatus(let success, let user):
         // a smartlink login was completed
         if success {
@@ -504,30 +514,29 @@ public struct ApiModule: ReducerProtocol {
       case .clientEvent(let event):
         // a GuiClient change occurred
         switch event.action {
-        case .added:      break
+        case .added:
+          return .none
           
         case .removed:
           // if nonGui, is it our connected Station?
           if state.isGui == false && event.client.station == state.station {
             // YES, unbind
-            return .run { _ in
-              await ViewModel.shared.setActiveStation( nil )
-              await ViewModel.shared.radio?.bindToGuiClient(nil) }
+            ViewModel.shared.setActiveStation( nil )
+            ViewModel.shared.radio?.bindToGuiClient(nil)
           }
+          return .none
           
         case .completed:
           // if nonGui, is there a clientId for our connected Station?
           if state.isGui == false && event.client.station == state.station {
             // YES, bind to it
-            return .run { _ in
-              print("----->", event.client.station)
-              await ViewModel.shared.setActiveStation( event.client.station )
-              await ViewModel.shared.radio?.bindToGuiClient(event.client.clientId) }
+            ViewModel.shared.setActiveStation( event.client.station )
+            ViewModel.shared.radio?.bindToGuiClient(event.client.clientId)
           }
+          return .none
         }
-        return .none
         
-      case .packetEvent(_):
+      case .packetEvent:
         // a packet change occurred
         // is the Picker open?
         if state.pickerState == nil {
@@ -537,7 +546,7 @@ public struct ApiModule: ReducerProtocol {
           // YES, update it
           return .run { [state] send in
             // reload the Pickables
-            let pickables = await PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+            let pickables = PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
             await send(.showPickerSheet(pickables))
           }
         }
@@ -570,7 +579,7 @@ public struct ApiModule: ReducerProtocol {
         state.loginState = nil
         // try a Smartlink login
         return .run { send in
-          let success = await Api.shared.smartlinkLogin(user, pwd)
+          let success = Api.shared.smartlinkLogin(user, pwd)
           if success {
             let secureStore = SecureStore(service: "Api6000Tester-C")
             _ = secureStore.set(account: "user", data: user)
@@ -620,7 +629,7 @@ public struct ApiModule: ReducerProtocol {
         }
         // redo the Pickables
         return .run { [state] send in
-          let pickables = await PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
+          let pickables = PacketModel.shared.getPickables(state.isGui, state.guiDefault, state.nonGuiDefault)
           await send(.showPickerSheet(pickables))
         }
         
@@ -628,7 +637,7 @@ public struct ApiModule: ReducerProtocol {
         state.pickerState?.testResult = false
         return .run { send in
           // send a Test request
-          await Api.shared.smartlinkTest(for: selection.packet.serial)
+          Api.shared.smartlinkTest(for: selection.packet.serial)
         }
         
       case .picker(_):
@@ -671,7 +680,7 @@ public struct ApiModule: ReducerProtocol {
     }
   }
 }
-  
+
 // ----------------------------------------------------------------------------
 // MARK: - Effects
 
@@ -693,7 +702,7 @@ func initializeMode(_ state: ApiModule.State) -> Effect<ApiModule.Action, Never>
 
 private func subscribeToClients() -> Effect<ApiModule.Action, Never> {
   Effect.run { send in
-    for await event in await PacketModel.shared.clientStream {
+    for await event in PacketModel.shared.clientStream {
       // a guiClient has been added / updated or deleted
       await send(.clientEvent(event))
     }
@@ -711,7 +720,7 @@ private func subscribeToLogAlerts() -> Effect<ApiModule.Action, Never>  {
 
 private func subscribeToPackets() -> Effect<ApiModule.Action, Never> {
   Effect.run { send in
-    for await event in await PacketModel.shared.packetStream {
+    for await event in PacketModel.shared.packetStream {
       // a packet has been added / updated or deleted
       await send(.packetEvent(event))
     }
@@ -720,7 +729,7 @@ private func subscribeToPackets() -> Effect<ApiModule.Action, Never> {
 
 private func subscribeToSmartlinkTest() -> Effect<ApiModule.Action, Never> {
   Effect.run { send in
-    for await result in await Api.shared.testStream {
+    for await result in Api.shared.testStream {
       // the result of a Smartlink Test has been received
       await send(.testResult(result))
     }

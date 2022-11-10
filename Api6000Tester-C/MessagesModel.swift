@@ -5,22 +5,14 @@
 //  Created by Douglas Adams on 10/15/22.
 //
 
-import ComposableArchitecture
 import IdentifiedCollections
 import Foundation
 
 import Api6000
 import Shared
 
-public final class MessagesModel: Equatable, ObservableObject, TesterDelegate {
-  // ----------------------------------------------------------------------------
-  // MARK: - Static Equality
-  
-  public nonisolated static func == (lhs: MessagesModel, rhs: MessagesModel) -> Bool {
-    // object equality since it is a "sharedInstance"
-    lhs === rhs
-  }
-  
+@MainActor
+public final class MessagesModel: ObservableObject, TesterDelegate {
   // ----------------------------------------------------------------------------
   // MARK: - Initialization (Singleton)
   
@@ -29,7 +21,7 @@ public final class MessagesModel: Equatable, ObservableObject, TesterDelegate {
   
   // ----------------------------------------------------------------------------
   // MARK: - Public properties
-    
+  
   @Published var filteredMessages = IdentifiedArrayOf<TcpMessage>()
   
   // ----------------------------------------------------------------------------
@@ -37,42 +29,27 @@ public final class MessagesModel: Equatable, ObservableObject, TesterDelegate {
   
   private var _filter: MessageFilter = .all
   private var _filterText: String = ""
-  private var _ignorePings = true
   private var _messages = IdentifiedArrayOf<TcpMessage>()
-  private var _subscriptionTask: Task<(), Never>?
-
+  private var _showPings = false
+  
   // ----------------------------------------------------------------------------
   // MARK: - Public methods
   
-  public func testerMessages(_ message: TcpMessage) {
-    // ignore routine replies (i.e. no error or attached data)
-    func ignoreReply(_ text: String) -> Bool {
-      if text.first != "R" { return false }     // not a Reply
-      let parts = text.components(separatedBy: "|")
-      if parts.count < 3 { return false }       // incomplete
-      if parts[1] != kNoError { return false }  // error of some type
-      if parts[2] != "" { return false }        // additional data present
-      return true                               // otherwise, ignore it
-    }
-    
-    // ignore received replies unless they are non-zero or contain additional data
-    if message.direction == .received && ignoreReply(message.text) { return }
-    // ignore sent "ping" messages unless showPings is true
-    if message.direction == .sent && message.text.contains("ping") && _ignorePings { return }
-    addMessage(message)
+  /// Append a TcpMessage to the messages array and re-filter the filteredMessages pulished value
+  /// - Parameter message: a TcpMessage struct
+  public func addMessage(_ message: TcpMessage) {
+    self._messages.append(message)
+    self.filterMessage(message)
   }
   
-  
-  
-  public func start() {
-    Tcp.shared.testerDelegate = self
+  /// Clear all messages
+  public func clearAll() {
+    self._messages.removeAll()
+    self.filteredMessages.removeAll()
   }
   
-  public func stop() {
-    Tcp.shared.testerDelegate = nil
-  }
-
-  /// FIlter a message
+  /// FIlter a TcpMessage, optionally placing it in the filteredMessages array
+  /// - Parameter message: a TcpMessage struct
   public func filterMessage(_ message: TcpMessage) {
     
     // append to the messages array
@@ -90,8 +67,8 @@ public final class MessagesModel: Equatable, ObservableObject, TesterDelegate {
     case (.reply, _):      if message.text.prefix(1) == "R" { filteredMessages.append(message) }
     }
   }
-      
-  /// Filter the entire messages array
+  
+  /// Rebuild the entire filteredMessages array
   public func filterMessages() {
     // re-filter the entire messages array
     switch (_filter, _filterText) {
@@ -109,29 +86,60 @@ public final class MessagesModel: Equatable, ObservableObject, TesterDelegate {
     }
   }
   
-  public func setFilter(_ filter: MessageFilter) {
+  /// Set the messages filter parameters and re-filter
+  /// - Parameters:
+  ///   - filter: a MessageFilter instance
+  ///   - filterText: a text String
+  public func setFilter(_ filter: MessageFilter, _ filterText: String) {
     _filter = filter
-  }
-
-  public func setFilterText(_ filterText: String) {
     _filterText = filterText
+    self.filterMessages()
   }
-
-  public func clear() {
-    DispatchQueue.main.async {
-      self._messages.removeAll()
-      self.filteredMessages.removeAll()
-    }
+  
+  /// Set the Show Pings Bool
+  /// - Parameter value: a Bool value
+  public func setShowPings(_ value: Bool) {
+    _showPings = value
   }
+  
+  /// Initialize the filter parameters and begin to process TcpMessages
+  /// - Parameters:
+  ///   - filter: a MessageFilter instance
+  ///   - filterText: a text String
+  public func start(_ filter: MessageFilter = .all, _ filterText: String = "") {
+    _filter = filter
+    _filterText = filterText
+    Tcp.shared.testerDelegate = self
+  }
+  
+  /// Stop processing TcpMessages
+  public func stop() {
+    Tcp.shared.testerDelegate = nil
+  }
+}
 
+extension MessagesModel {
   // ----------------------------------------------------------------------------
-  // MARK: - Private methods
+  // MARK: - TesterDelegate methods
   
-  private func addMessage(_ message: TcpMessage) {
-    DispatchQueue.main.async {
-      self._messages.append(message)
-      self.filterMessage(message)
+  /// Receive a TcpMessage from Tcp
+  /// - Parameter message: a TcpMessage struct
+  public func testerMessages(_ message: TcpMessage) {
+    
+    // ignore routine replies (i.e. replies with no error or no attached data)
+    func ignoreReply(_ text: String) -> Bool {
+      if text.first != "R" { return false }     // not a Reply
+      let parts = text.components(separatedBy: "|")
+      if parts.count < 3 { return false }       // incomplete
+      if parts[1] != kNoError { return false }  // error of some type
+      if parts[2] != "" { return false }        // additional data present
+      return true                               // otherwise, ignore it
     }
+    
+    // ignore received replies unless they are non-zero or contain additional data
+    if message.direction == .received && ignoreReply(message.text) { return }
+    // ignore sent "ping" messages unless showPings is true
+    if message.text.contains("ping") && _showPings == false { return }
+    self.addMessage(message)
   }
-  
 }

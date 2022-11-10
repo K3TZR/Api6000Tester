@@ -16,9 +16,6 @@ import Shared
 
 public struct TopButtonsView: View {
   let store: StoreOf<ApiModule>
-//  @ObservedObject var viewModel: ViewModel
-  
-  
   
   struct ViewState: Equatable {
     let isStopped: Bool
@@ -45,13 +42,6 @@ public struct TopButtonsView: View {
     }
   }
 
-  
-  
-  
-  
-  
-  
-
  public  var body: some View {
 
    WithViewStore(self.store, observe: ViewState.init) { viewStore in
@@ -61,14 +51,15 @@ public struct TopButtonsView: View {
         }
         .keyboardShortcut(viewStore.isStopped ? .defaultAction : .cancelAction)
 
-        HStack(spacing: 20) {
+        HStack(spacing: 10) {
+          Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\ApiModule.State.isGui)))
+            .frame(width: 60)
+            .disabled( !viewStore.isStopped )
           Group {
-            Toggle("Gui", isOn: viewStore.binding(get: \.isGui, send: .toggle(\ApiModule.State.isGui)))
-              .disabled( !viewStore.isStopped )
-            Toggle("Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\ApiModule.State.showTimes)))
-            Toggle("Pings", isOn: viewStore.binding(get: \.showPings, send: .toggle(\ApiModule.State.showPings)))
+            Toggle("Show Times", isOn: viewStore.binding(get: \.showTimes, send: .toggle(\ApiModule.State.showTimes)))
+            Toggle("Show Pings", isOn: viewStore.binding(get: \.showPings, send: .showPingsToggle))
           }
-          .frame(width: 60)
+          .frame(width: 100)
         }
 
         Spacer()
@@ -78,14 +69,14 @@ public struct TopButtonsView: View {
           Toggle(isOn: viewStore.binding(get: \.txAudio, send: { .txAudioButton($0)} )) {
             Text("Tx Audio") }
         }
-        .frame(width: 150)
+        .frame(width: 130)
 
         Spacer()
         ControlGroup {
           Toggle("Local", isOn: viewStore.binding(get: \.local, send: { .localButton($0) } ))
           Toggle("Smartlink", isOn: viewStore.binding(get: \.smartlink, send: { .smartlinkButton($0) } ))
         }
-        .frame(width: 150)
+        .frame(width: 130)
         .disabled( !viewStore.isStopped )
 
         Spacer()

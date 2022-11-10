@@ -37,12 +37,12 @@ private struct HeadingView: View {
   
   var body: some View {
     HStack(spacing: 10) {
+      Text("PROFILE").frame(width: 60, alignment: .leading)
+      Text("Type").frame(width: 50, alignment: .leading)
       Group {
-        Text("PROFILE")
-        Text("Type")
         Text("Current")
         Text("List")
-      }.frame(width: 60, alignment: .leading)
+      }.frame(width: 150, alignment: .leading)
     }
     Text("")
   }
@@ -53,8 +53,8 @@ private struct DetailView: View {
   
   var body: some View {
     HStack(spacing: 10) {
-      Text(profile.id.uppercased()).frame(width: 60, alignment: .leading)
-      Text(profile.current).frame(width: 60, alignment: .leading)
+      Text(profile.id.uppercased()).frame(width: 50, alignment: .leading)
+      Text(profile.current).frame(width: 150, alignment: .leading)
       Text(profile.list.reduce("", { item1, item2 in item1 + item2 + ","}))
     }
     .padding(.leading, 70)
