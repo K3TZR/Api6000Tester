@@ -8,6 +8,7 @@
 import SwiftUI
 
 import Api6000
+import ApiModel
 
 // ----------------------------------------------------------------------------
 // MARK: - View
@@ -36,7 +37,7 @@ struct TransmitView: View {
           }
           HStack(spacing: 5) {
             Text("Mon_Level")
-            Text("\(transmit.txMonitorGainSb)").foregroundColor(.green)
+            Text("\(transmit.ssbMonitorGain)").foregroundColor(.green)
           }
           HStack(spacing: 5) {
             Text("Comp_Level")

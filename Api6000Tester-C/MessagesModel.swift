@@ -8,6 +8,7 @@
 import IdentifiedCollections
 import Foundation
 
+import Tcp
 import Api6000
 import Shared
 

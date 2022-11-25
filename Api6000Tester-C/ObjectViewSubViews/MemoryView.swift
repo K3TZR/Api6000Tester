@@ -10,24 +10,24 @@
 
 import SwiftUI
 
-import Api6000
+import ApiModel
 
 // highlight
 // highlightColor
 
 struct MemoryView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var apiModel: ApiModel
   
   var body: some View {
     
-    if viewModel.memories.count == 0 {
+    if apiModel.memories.count == 0 {
       HStack(spacing: 5) {
         Text("        MEMORYs ")
         Text("None present").foregroundColor(.red)
       }
     
     } else {
-      ForEach(viewModel.memories) { memory in
+      ForEach(apiModel.memories) { memory in
         VStack(alignment: .leading) {
           DetailView1(memory: memory)
           DetailView2(memory: memory)
@@ -168,7 +168,7 @@ private struct DetailView2: View {
 // MARK: - Preview
 struct MemoryView_Previews: PreviewProvider {
   static var previews: some View {
-    MemoryView(viewModel: ViewModel.shared)
+    MemoryView(apiModel: ApiModel.shared)
       .frame(minWidth: 975)
       .padding()
   }

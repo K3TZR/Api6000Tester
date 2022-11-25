@@ -9,6 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 
 import Api6000
+import ApiModel
 import Shared
 
 // ----------------------------------------------------------------------------
@@ -37,7 +38,7 @@ struct RadioView: View {
             Text(viewModel.activePacket!.nickname)
               .foregroundColor(viewModel.activePacket!.source == .local ? .blue : .red)
 
-            Line1View(packet: viewModel.activePacket!).padding(.leading, 20)
+            Line1View(packet: viewModel.activePacket!, radio: viewModel.radio!).padding(.leading, 20)
           }
           Line2View(radio: viewModel.radio!)
           if showSubView { DetailSubView(viewModel: viewModel) }
@@ -49,7 +50,8 @@ struct RadioView: View {
 
 private struct Line1View: View {
   @ObservedObject var packet: Packet
-  
+  @ObservedObject var radio: Radio
+
   var body: some View {
     
     HStack(spacing: 20) {
@@ -68,7 +70,7 @@ private struct Line1View: View {
         
         HStack(spacing: 5) {
           Text("FW")
-          Text(packet.version).foregroundColor(.secondary)
+          Text(packet.version + "\(radio.alpha ? "(alpha)" : "")").foregroundColor(radio.alpha ? .red : .secondary)
         }
         
         HStack(spacing: 5) {

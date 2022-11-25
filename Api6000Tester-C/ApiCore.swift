@@ -14,6 +14,7 @@ import LoginFeature
 import LogFeature
 import OpusPlayer
 import PickerFeature
+import RightSideFeature
 import Shared
 import SecureStorage
 import XCGWrapper
@@ -26,6 +27,7 @@ public struct ApiModule: ReducerProtocol {
   
   public struct State: Equatable {
     // State held in User Defaults
+    var alertOnError: Bool { didSet { UserDefaults.standard.set(alertOnError, forKey: "alertOnError") } }
     var clearOnSend: Bool { didSet { UserDefaults.standard.set(clearOnSend, forKey: "clearOnSend") } }
     var clearOnStart: Bool { didSet { UserDefaults.standard.set(clearOnStart, forKey: "clearOnStart") } }
     var clearOnStop: Bool { didSet { UserDefaults.standard.set(clearOnStop, forKey: "clearOnStop") } }
@@ -64,12 +66,12 @@ public struct ApiModule: ReducerProtocol {
     var loginState: LoginFeature.State? = nil
     var pickerState: PickerFeature.State? = nil
     
-    
     var previousCommand = ""
     var commandsIndex = 0
     var commandsArray = [""]
     
     public init(
+      alertOnError: Bool = UserDefaults.standard.bool(forKey: "alertOnError"),
       clearOnSend: Bool  = UserDefaults.standard.bool(forKey: "clearOnSend"),
       clearOnStart: Bool = UserDefaults.standard.bool(forKey: "clearOnStart"),
       clearOnStop: Bool  = UserDefaults.standard.bool(forKey: "clearOnStop"),
@@ -91,6 +93,7 @@ public struct ApiModule: ReducerProtocol {
       useDefault: Bool = UserDefaults.standard.bool(forKey: "useDefault")
     )
     {
+      self.alertOnError = alertOnError
       self.clearOnStart = clearOnStart
       self.clearOnStop = clearOnStop
       self.clearOnSend = clearOnSend
@@ -133,6 +136,7 @@ public struct ApiModule: ReducerProtocol {
     case sendNextStepper
     case sendPreviousStepper
     case showPingsToggle
+    case sidebarRight
     case smartlinkButton(Bool)
     case startStopButton
     case toggle(WritableKeyPath<ApiModule.State, Bool>)
@@ -325,6 +329,9 @@ public struct ApiModule: ReducerProtocol {
         return .run { [state] send in
           await messagesModel.setShowPings(state.showPings)
         }
+        
+      case .sidebarRight:
+        return.none
         
       case .smartlinkButton(let newState):
         state.smartlink = newState
@@ -552,14 +559,16 @@ public struct ApiModule: ReducerProtocol {
         }
         
       case .showLogAlert(let logEntry):
-        // a Warning or Error has been logged.
-        // exit any sheet states
-        state.clientState = nil
-        state.loginState = nil
-        state.pickerState = nil
-        // alert the user
-        state.alertState = .init(title: TextState("\(logEntry.level == .warning ? "A Warning" : "An Error") was logged:"),
-                                 message: TextState(logEntry.msg))
+        if state.alertOnError {
+          // a Warning or Error has been logged.
+          // exit any sheet states
+          state.clientState = nil
+          state.loginState = nil
+          state.pickerState = nil
+          // alert the user
+          state.alertState = .init(title: TextState("\(logEntry.level == .warning ? "A Warning" : "An Error") was logged:"),
+                                   message: TextState(logEntry.msg))
+        }
         return .none
         
       case .testResult(let result):
@@ -666,15 +675,15 @@ public struct ApiModule: ReducerProtocol {
         return .none
       }
     }
-    // ClientModule logic
+    // ClientFeature logic
     .ifLet(\.clientState, action: /Action.client) {
       ClientFeature()
     }
-    // LoginModule logic
+    // LoginFeature logic
     .ifLet(\.loginState, action: /Action.login) {
       LoginFeature()
     }
-    // PickerModule logic
+    // PickerFeature logic
     .ifLet(\.pickerState, action: /Action.picker) {
       PickerFeature()
     }

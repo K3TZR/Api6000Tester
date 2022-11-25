@@ -48,6 +48,8 @@
 		9F573DC6291DA387001329ED /* Api6000 in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC5291DA387001329ED /* Api6000 */; };
 		9F573DC8291DA387001329ED /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC7291DA387001329ED /* Shared */; };
 		9F573DCA291DA387001329ED /* Vita in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DC9291DA387001329ED /* Vita */; };
+		9F573DCD29216B86001329ED /* EqFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DCC29216B86001329ED /* EqFeature */; };
+		9F573DD02921D507001329ED /* RightSideFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9F573DCF2921D507001329ED /* RightSideFeature */; };
 		9F5F4F02283321C5000E8145 /* Api6000TesterCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */; };
 		9F5F4F06283321C5000E8145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F05283321C5000E8145 /* Assets.xcassets */; };
 		9F5F4F09283321C5000E8145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F5F4F08283321C5000E8145 /* Preview Assets.xcassets */; };
@@ -86,7 +88,10 @@
 		9F29E85028B011A5009BE31C /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		9F29E85128B011A5009BE31C /* WanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WanView.swift; sourceTree = "<group>"; };
 		9F3A3C1328EB590D001C9E25 /* NetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkView.swift; sourceTree = "<group>"; };
+		9F3FC58B2922E10B0010CB81 /* SharedComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SharedComponents; path = ../Packages/SharedComponents; sourceTree = "<group>"; };
+		9F3FC58C2922E2F90010CB81 /* ApiComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ApiComponents; path = ../Packages/ApiComponents; sourceTree = "<group>"; };
 		9F4204482901B50900357312 /* MiscView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscView.swift; sourceTree = "<group>"; };
+		9F573DCE2921C5D7001329ED /* ViewComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ViewComponents; path = ../Packages/ViewComponents; sourceTree = "<group>"; };
 		9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Api6000Tester-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F5F4F01283321C5000E8145 /* Api6000TesterCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api6000TesterCApp.swift; sourceTree = "<group>"; };
 		9F5F4F05283321C5000E8145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -113,7 +118,9 @@
 				9F573DC8291DA387001329ED /* Shared in Frameworks */,
 				9F573DC4291DA387001329ED /* ProgressFeature in Frameworks */,
 				9F573DBC291DA387001329ED /* ClientFeature in Frameworks */,
+				9F573DD02921D507001329ED /* RightSideFeature in Frameworks */,
 				9F573DB8291DA387001329ED /* SecureStorage in Frameworks */,
+				9F573DCD29216B86001329ED /* EqFeature in Frameworks */,
 				9F573DCA291DA387001329ED /* Vita in Frameworks */,
 				9F573DC2291DA387001329ED /* PickerFeature in Frameworks */,
 				9F573DB4291DA387001329ED /* OpusPlayer in Frameworks */,
@@ -127,6 +134,9 @@
 		9F5F4EF5283321C5000E8145 = {
 			isa = PBXGroup;
 			children = (
+				9F3FC58C2922E2F90010CB81 /* ApiComponents */,
+				9F3FC58B2922E10B0010CB81 /* SharedComponents */,
+				9F573DCE2921C5D7001329ED /* ViewComponents */,
 				9F5F4F00283321C5000E8145 /* Api6000Tester-C */,
 				9F5F4EFF283321C5000E8145 /* Products */,
 				9F8B9B2D28AD1C28008E761F /* Frameworks */,
@@ -247,6 +257,8 @@
 				9F573DC5291DA387001329ED /* Api6000 */,
 				9F573DC7291DA387001329ED /* Shared */,
 				9F573DC9291DA387001329ED /* Vita */,
+				9F573DCC29216B86001329ED /* EqFeature */,
+				9F573DCF2921D507001329ED /* RightSideFeature */,
 			);
 			productName = Api6000Tester;
 			productReference = 9F5F4EFE283321C5000E8145 /* Api6000Tester-C.app */;
@@ -473,7 +485,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Api6000Tester-C/Preview Content\"";
 				DEVELOPMENT_TEAM = EE5B8TYXGA;
@@ -488,7 +500,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 6.5;
+				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -508,7 +520,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Api6000Tester-C/Preview Content\"";
 				DEVELOPMENT_TEAM = EE5B8TYXGA;
@@ -523,7 +535,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 6.5;
+				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.k3tzr.Api6000Tester-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = macosx;
@@ -571,7 +583,7 @@
 			repositoryURL = "https://github.com/K3TZR/ViewComponents.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.2.2;
+				minimumVersion = 4.3.1;
 			};
 		};
 		9F24CFC228AD4ADE0048A9FE /* XCRemoteSwiftPackageReference "ApiComponents" */ = {
@@ -579,7 +591,7 @@
 			repositoryURL = "https://github.com/K3TZR/ApiComponents.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.3.1;
+				minimumVersion = 6.5.1;
 			};
 		};
 		9F573DAC291DA2C6001329ED /* XCRemoteSwiftPackageReference "SharedComponents" */ = {
@@ -587,7 +599,7 @@
 			repositoryURL = "https://github.com/K3TZR/SharedComponents.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.1;
+				minimumVersion = 1.2.1;
 			};
 		};
 		9F5F4F12283322E6000E8145 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
@@ -665,6 +677,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9F573DAC291DA2C6001329ED /* XCRemoteSwiftPackageReference "SharedComponents" */;
 			productName = Vita;
+		};
+		9F573DCC29216B86001329ED /* EqFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F24CFB728AD48B50048A9FE /* XCRemoteSwiftPackageReference "ViewComponents" */;
+			productName = EqFeature;
+		};
+		9F573DCF2921D507001329ED /* RightSideFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RightSideFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,18 +7,19 @@
 
 import SwiftUI
 
+import ApiModel
 import Api6000
 
 // ----------------------------------------------------------------------------
 // MARK: - View
 
 struct EqualizerView: View {
-  @ObservedObject var viewModel: ViewModel
+  @ObservedObject var apiModel: ApiModel
   
   var body: some View {
     VStack(alignment: .leading) {
       HeadingView()
-      ForEach(viewModel.equalizers) { eq in
+      ForEach(apiModel.equalizers) { eq in
         DetailView(eq: eq)
       }
     }
@@ -55,14 +56,14 @@ private struct DetailView: View {
       Text(eq.id).foregroundColor(.green).frame(width: 80, alignment: .leading)
       Group {
         Text(eq.eqEnabled ? "Y" : "N").foregroundColor(eq.eqEnabled ? .green : .red)
-        Text(String(format: "%+2.0f", eq.level63Hz))
-        Text(String(format: "%+2.0f", eq.level125Hz))
-        Text(String(format: "%+2.0f", eq.level250Hz))
-        Text(String(format: "%+2.0f", eq.level500Hz))
-        Text(String(format: "%+2.0f", eq.level1000Hz))
-        Text(String(format: "%+2.0f", eq.level2000Hz))
-        Text(String(format: "%+2.0f", eq.level4000Hz))
-        Text(String(format: "%+2.0f", eq.level8000Hz))
+        Text(String(format: "%+2.0f", eq.hz63))
+        Text(String(format: "%+2.0f", eq.hz125))
+        Text(String(format: "%+2.0f", eq.hz250))
+        Text(String(format: "%+2.0f", eq.hz500))
+        Text(String(format: "%+2.0f", eq.hz1000))
+        Text(String(format: "%+2.0f", eq.hz2000))
+        Text(String(format: "%+2.0f", eq.hz4000))
+        Text(String(format: "%+2.0f", eq.hz8000))
       }.frame(width: 60)
     }
     .foregroundColor(.secondary)
@@ -76,7 +77,7 @@ private struct DetailView: View {
 
 struct EqualizerView_Previews: PreviewProvider {
   static var previews: some View {
-    EqualizerView(viewModel: ViewModel.shared)
+    EqualizerView(apiModel: ApiModel.shared)
       .frame(minWidth: 1000)
       .padding()
   }

@@ -93,7 +93,8 @@ struct GuiClientSubView: View {
   
   @Dependency(\.viewModel) var viewModel
   @Dependency(\.streamModel) var streamModel
-  
+  @Dependency(\.apiModel) var apiModel
+
   let handle: Handle
   
   var body: some View {
@@ -110,9 +111,9 @@ struct GuiClientSubView: View {
       case ObjectFilter.amplifiers:        AmplifierView(viewModel: viewModel)
       case ObjectFilter.bandSettings:      BandSettingView(viewModel: viewModel)
       case ObjectFilter.cwx:               CwxView(cwx: Cwx.shared)
-      case ObjectFilter.equalizers:        EqualizerView(viewModel: viewModel)
+      case ObjectFilter.equalizers:        EqualizerView(apiModel: apiModel)
       case ObjectFilter.interlock:         InterlockView(interlock: Interlock.shared)
-      case ObjectFilter.memories:          MemoryView(viewModel: viewModel)
+      case ObjectFilter.memories:          MemoryView(apiModel: apiModel)
       case ObjectFilter.meters:            MeterView(viewModel: viewModel, sliceId: nil, sliceClientHandle: nil, handle: handle)
       case ObjectFilter.misc:
         if viewModel.radio != nil {

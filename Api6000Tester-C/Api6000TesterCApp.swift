@@ -9,7 +9,10 @@ import ComposableArchitecture
 import SwiftUI
 
 import Api6000
+import ApiModel
+import EqFeature
 import LogFeature
+import RightSideFeature
 import Shared
 
 extension MessagesModel: DependencyKey {
@@ -56,7 +59,22 @@ extension DependencyValues {
   }
 }
 
+private struct rightSideOpenKey: EnvironmentKey {
+  static let defaultValue = false
+}
+extension EnvironmentValues {
+  var rightSideOpen: Bool {
+    get { self[rightSideOpenKey.self] }
+    set { self[rightSideOpenKey.self] = newValue }
+  }
+}
 
+enum WindowType: String {
+  case left = "Left View"
+  case log = "Log View"
+  case panadapter = "Panadapter"
+  case right = "Right View"
+}
 
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -80,7 +98,9 @@ struct Api6000TesterCApp: App {
   var appDelegate
   
   @Environment(\.openWindow) var openWindow
-  
+  @Dependency(\.viewModel) var viewModel
+  @Dependency(\.apiModel) var apiModel
+
   var body: some Scene {
 
     WindowGroup("Api6000Tester-C  (v" + Version().string + ")") {
@@ -88,32 +108,58 @@ struct Api6000TesterCApp: App {
         initialState: ApiModule.State(),
         reducer: ApiModule())
       )
-        .toolbar {
-          Button("Panadapter") { openWindow(id: "panadapter") }
-          Button("Log View") { openWindow(id: "logview") }
-          Button("Close") { NSApplication.shared.keyWindow?.close()  }
-          Button("Close All") { NSApplication.shared.terminate(self)  }
-        }
-        .frame(minWidth: 975)
-        .padding()
+      .frame(minWidth: 975)
+      .padding(.horizontal, 20)
+      .padding(.vertical, 10)
+
+      .toolbar {
+        Spacer()
+        Button(WindowType.panadapter.rawValue) { openWindow(id: WindowType.panadapter.rawValue) }
+        Button(WindowType.log.rawValue) { openWindow(id: WindowType.log.rawValue) }
+        Button(WindowType.left.rawValue) { openWindow(id: WindowType.left.rawValue) }
+        Button(WindowType.right.rawValue) { openWindow(id: WindowType.right.rawValue) }
+        Button("Close") { NSApplication.shared.terminate(self)  }
+      }
     }
-    
-    Window("Log View", id: "logview") {
+
+    Window(WindowType.log.rawValue, id: WindowType.log.rawValue) {
       LogView(store: Store(initialState: LogFeature.State(), reducer: LogFeature()) )
       .toolbar {
         Button("Close") { NSApplication.shared.keyWindow?.close()  }
         Button("Close All") { NSApplication.shared.terminate(self)  }
       }
       .frame(minWidth: 975)
-//      .padding()
     }
     .windowStyle(.hiddenTitleBar)
     .defaultPosition(.bottomTrailing)
 
+    Window(WindowType.right.rawValue, id: WindowType.right.rawValue) {
+      RightSideView(store: Store(initialState: RightSideFeature.State(), reducer: RightSideFeature()), apiModel: apiModel)
+      .toolbar {
+        Button("Close") { NSApplication.shared.keyWindow?.close()  }
+        Button("Close All") { NSApplication.shared.terminate(self)  }
+      }
+      .frame(width: 275)
+    }
+    .windowStyle(.hiddenTitleBar)
+    .windowResizability(WindowResizability.contentSize)
+    .defaultPosition(.topTrailing)
     
-    Window("Panadapter", id: "panadapter") {
+    Window(WindowType.left.rawValue, id: WindowType.left.rawValue) {
+      RightSideView(store: Store(initialState: RightSideFeature.State(), reducer: RightSideFeature()), apiModel: apiModel)
+      .toolbar {
+        Button("Close") { NSApplication.shared.keyWindow?.close()  }
+        Button("Close All") { NSApplication.shared.terminate(self)  }
+      }
+      .frame(width: 275)
+    }
+    .windowStyle(.hiddenTitleBar)
+    .windowResizability(WindowResizability.contentSize)
+    .defaultPosition(.topLeading)
+    
+    Window(WindowType.panadapter.rawValue, id: WindowType.panadapter.rawValue) {
       VStack {
-        Text("Pandapter goes here")
+        Text("\(WindowType.panadapter.rawValue) goes here")
       }
       .toolbar {
         Button("Close") { NSApplication.shared.keyWindow?.close()  }
@@ -132,12 +178,12 @@ struct Api6000TesterCApp: App {
   }
 }
 
-enum OpenWindows: String, CaseIterable {
-  case LogView = "LogView"
-  
-  func open() {
-    if let url = URL(string: "Api6000Tester://\(self.rawValue)") {
-      NSWorkspace.shared.open(url)
-    }
-  }
-}
+//enum OpenWindows: String, CaseIterable {
+//  case LogView = "LogView"
+//
+//  func open() {
+//    if let url = URL(string: "Api6000Tester://\(self.rawValue)") {
+//      NSWorkspace.shared.open(url)
+//    }
+//  }
+//}

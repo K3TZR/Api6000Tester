@@ -21,11 +21,13 @@ struct BottomButtonsView: View {
     let clearOnStop: Bool
     let fontSize: CGFloat
     let gotoLast: Bool
+    let alertOnError: Bool
     init(state: ApiModule.State) {
       self.clearOnStart = state.clearOnStart
       self.clearOnStop = state.clearOnStop
       self.fontSize = state.fontSize
       self.gotoLast = state.gotoLast
+      self.alertOnError = state.alertOnError
     }
   }
 
@@ -54,6 +56,7 @@ struct BottomButtonsView: View {
         Spacer()
         
         HStack(spacing: 40) {
+          Toggle("Alert on Error", isOn: viewStore.binding(get: \.alertOnError, send: .toggle(\.alertOnError)))
           Toggle("Clear on Start", isOn: viewStore.binding(get: \.clearOnStart, send: .toggle(\.clearOnStart)))
           Toggle("Clear on Stop", isOn: viewStore.binding(get: \.clearOnStop, send: .toggle(\.clearOnStop)))
           Button("Clear Now") { viewStore.send(.clearNowButton)}
